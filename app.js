@@ -539,7 +539,7 @@ const material = new THREE.ShaderMaterial({
 scene.add(new THREE.Mesh(geometry, material));
 
 const textureLoader = new THREE.TextureLoader();
-const texturePaths = ['assets/header-1.png', 'assets/heightMap.png', 'assets/map-9.jpg'];
+const texturePaths = ['assets/header-1.png?v=20260716-1', 'assets/heightMap.png', 'assets/map-9.jpg'];
 
 const loadTexture = (path) =>
   new Promise((resolve, reject) => {
