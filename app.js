@@ -537,7 +537,13 @@ if (pointerFine) {
 // Set from the scroll pipeline; when the hero is fully faded out we keep the
 // rAF loop alive but skip the (expensive) WebGL render entirely.
 let heroPixelsVisible = true;
+// Mobile: the hero scrolls out of view natively — stop rendering once it's gone
+let heroInView = true;
 let webglReady = false;
+
+new IntersectionObserver(([entry]) => {
+  heroInView = entry.isIntersecting;
+}).observe(heroSection);
 
 Promise.all(texturePaths.map(loadTexture)).then(([texture, displacement, flowMap]) => {
   uniforms.uTexture.value = texture;
@@ -551,7 +557,7 @@ Promise.all(texturePaths.map(loadTexture)).then(([texture, displacement, flowMap
 const renderLoop = () => {
   if (!webglReady) return;
   requestAnimationFrame(renderLoop);
-  if (!heroPixelsVisible) return;
+  if (!heroPixelsVisible || !heroInView) return;
 
   smoothedMouse.x += (targetMouse.x - smoothedMouse.x) * 0.06;
   smoothedMouse.y += (targetMouse.y - smoothedMouse.y) * 0.06;
@@ -593,6 +599,18 @@ let bodyHeights = bodyWraps.map(() => 0);
 const lastWrapHeights = bodyWraps.map(() => -1);
 const lastWrapOpacities = bodyWraps.map(() => -1);
 const lastCollapsed = bodyWraps.map(() => false);
+
+const resetHeroEffects = () => {
+  lastCanvasShift = null;
+  lastCanvasOpacity = null;
+  lastOverlayShift = null;
+  lastShade = null;
+  heroCanvas.style.transform = '';
+  heroCanvas.style.opacity = '';
+  heroOverlay.style.transform = '';
+  heroSection.style.removeProperty('--hero-shade');
+  heroPixelsVisible = true;
+};
 
 const updateHeroParallax = (y) => {
   const vh = stableVh;
@@ -652,7 +670,8 @@ const updateServicesCollapse = (y) => {
 
 const updateScrollAnimations = (scroll) => {
   currentScroll = scroll;
-  if (!prefersReducedMotion) updateHeroParallax(scroll);
+  // Mobile: the hero scrolls natively — no parallax, fade or darkening at all
+  if (!prefersReducedMotion && !mqMobile.matches) updateHeroParallax(scroll);
   updateServicesCollapse(scroll);
 };
 
@@ -701,7 +720,7 @@ const measureServices = () => {
   lastWrapOpacities.fill(-1);
   lenis?.resize();
   updateServicesCollapse(currentScroll);
-  if (!prefersReducedMotion) updateHeroParallax(currentScroll);
+  if (!prefersReducedMotion && !mqMobile.matches) updateHeroParallax(currentScroll);
 };
 
 if (serviceEls.length) {
@@ -785,6 +804,7 @@ const applyViewport = () => {
   renderer.setSize(viewportWidth, stableVh);
   uniforms.uResolution.value.set(viewportWidth, stableVh);
   setScrollMode();
+  if (mqMobile.matches) resetHeroEffects();
   measureServices();
 };
 
