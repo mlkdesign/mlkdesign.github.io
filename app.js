@@ -1329,7 +1329,7 @@ if (pixelsSection && pixelsCanvas) {
   };
 
   const accent = parseHexColor(
-    getComputedStyle(document.documentElement).getPropertyValue('--pixel-accent'),
+    getComputedStyle(document.documentElement).getPropertyValue('--accent'),
   );
   const context = pixelsCanvas.getContext('2d', { alpha: true });
   const pointer = { active: false, hasPosition: false, x: 0, y: 0, cellIndex: -1 };
