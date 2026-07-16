@@ -216,14 +216,17 @@ const stairReveal = document.querySelector('.stair-reveal');
 const preloaderCount = stairReveal?.querySelector('.stair-reveal__count');
 
 const forceThemeColor = () => {
-  let meta = document.querySelector('meta[name="theme-color"]:not([media])');
-  if (!meta) {
-    meta = document.createElement('meta');
+  let metas = Array.from(document.querySelectorAll('meta[name="theme-color"]'));
+  if (!metas.some((meta) => !meta.hasAttribute('media'))) {
+    const meta = document.createElement('meta');
     meta.setAttribute('name', 'theme-color');
     document.head.appendChild(meta);
+    metas = [...metas, meta];
   }
-  meta.setAttribute('content', '#0b0b0c');
-  requestAnimationFrame(() => meta.setAttribute('content', '#0b0b0b'));
+  metas.forEach((meta) => meta.setAttribute('content', '#0b0b0c'));
+  requestAnimationFrame(() => {
+    metas.forEach((meta) => meta.setAttribute('content', '#0b0b0b'));
+  });
 };
 
 forceThemeColor();
