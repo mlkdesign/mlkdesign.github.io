@@ -374,13 +374,16 @@ body.cursor-hide .cursor-label {
 
 .nav-toggle {
   display: none;
-  padding: 0;
+  padding: 5px;
+  margin: -5px;
   border: 0;
   background: transparent;
   color: var(--text);
   font: inherit;
   font-size: 0.78rem;
   letter-spacing: 0.16em;
+  opacity: 0.95;
+  overflow: hidden;
 }
 
 .nav-link-mask,
@@ -409,6 +412,8 @@ body.cursor-hide .cursor-label {
 
 .nav-menu a:hover .nav-link-line,
 .nav-menu a:focus-visible .nav-link-line,
+.nav-toggle:hover .nav-link-line,
+.nav-toggle:focus-visible .nav-link-line,
 .social-link:hover .social-link-line,
 .social-link:focus-visible .social-link-line {
   transform: translateY(-105%);
@@ -416,6 +421,8 @@ body.cursor-hide .cursor-label {
 
 .nav-menu a:hover .nav-link-line:last-child,
 .nav-menu a:focus-visible .nav-link-line:last-child,
+.nav-toggle:hover .nav-link-line:last-child,
+.nav-toggle:focus-visible .nav-link-line:last-child,
 .social-link:hover .social-link-line:last-child,
 .social-link:focus-visible .social-link-line:last-child {
   transform: translateY(calc(-105% - 5px));
@@ -867,6 +874,18 @@ h1 {
     padding: 1rem var(--page-inset);
   }
 
+  html,
+  body,
+  * {
+    cursor: auto !important;
+  }
+
+  .cursor-dot,
+  .cursor-ellipse,
+  .cursor-label {
+    display: none;
+  }
+
   .site-header {
     padding: 1rem var(--page-inset) 0;
   }
@@ -901,6 +920,19 @@ h1 {
     grid-template-columns: minmax(0, 1fr);
     row-gap: 0.8rem;
     column-gap: 0;
+  }
+
+  .service {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .service:hover {
+    color: var(--text);
+  }
+
+  .service:hover .service-fill {
+    height: 1px;
+    background: rgba(244, 239, 227, 0.35);
   }
 
   .service-content {
@@ -973,7 +1005,7 @@ h1 {
   }
 
   .btn {
-    font-size: clamp(0.56rem, 1.8vw, 0.7rem);
+    font-size: 16px;
     letter-spacing: 0.1em;
   }
 
