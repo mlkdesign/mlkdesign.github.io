@@ -1,41 +1,71 @@
 import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 import Lenis from 'https://unpkg.com/lenis@1.3.4/dist/lenis.mjs';
 
-const container = document.querySelector('.hero');
+// ---------------------------------------------------------------------------
+// Viewport state.
+// stableVh is intentionally NOT updated on height-only resizes: mobile Safari
+// toggles the address bar while scrolling and we must not re-layout for that.
+// ---------------------------------------------------------------------------
+const MOBILE_BREAKPOINT = 800;
+const mqMobile = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
+const pointerFine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let viewportWidth = window.innerWidth;
+let stableVh = window.innerHeight;
+
+// ---------------------------------------------------------------------------
+// Custom cursor (pointer devices only — on touch the elements are hidden)
+// ---------------------------------------------------------------------------
 const cursorDot = document.querySelector('.cursor-dot');
 const cursorEllipse = document.querySelector('.cursor-ellipse');
 const cursorLabel = document.querySelector('.cursor-label');
-let stableVh = window.innerHeight;
-let lastWidth = window.innerWidth;
-const MOBILE_BREAKPOINT = 800;
-const isMobileLayout = () => lastWidth <= MOBILE_BREAKPOINT;
-const cursorTarget = { x: 0, y: 0 };
-const cursorCurrent = { x: 0, y: 0 };
-const ellipseTarget = { x: 0, y: 0 };
-const ellipseCurrent = { x: 0, y: 0 };
 
-const onPointerMove = (event) => {
-  cursorTarget.x = event.clientX;
-  cursorTarget.y = event.clientY;
-  ellipseTarget.x = event.clientX;
-  ellipseTarget.y = event.clientY;
-};
+if (pointerFine && cursorDot && cursorEllipse) {
+  const cursorCurrent = { x: 0, y: 0 };
+  const ellipseTarget = { x: 0, y: 0 };
+  const ellipseCurrent = { x: 0, y: 0 };
 
-document.querySelectorAll('a, button').forEach((el) => {
-  el.addEventListener('mouseenter', () => document.body.classList.add('is-interactive'));
-  el.addEventListener('mouseleave', () => document.body.classList.remove('is-interactive'));
-});
+  window.addEventListener('pointermove', (event) => {
+    cursorCurrent.x = event.clientX;
+    cursorCurrent.y = event.clientY;
+    ellipseTarget.x = event.clientX;
+    ellipseTarget.y = event.clientY;
+  });
 
-window.addEventListener('pointermove', onPointerMove);
-window.addEventListener('pointerdown', () => {
-  cursorDot.style.transform = 'translate(-50%, -50%) scale(0.9)';
-  cursorEllipse.style.transform = 'translate(-50%, -50%) scale(0.95)';
-});
-window.addEventListener('pointerup', () => {
-  cursorDot.style.transform = 'translate(-50%, -50%) scale(1)';
-  cursorEllipse.style.transform = 'translate(-50%, -50%) scale(1)';
-});
+  document.querySelectorAll('a, button').forEach((el) => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('is-interactive'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('is-interactive'));
+  });
 
+  window.addEventListener('pointerdown', () => {
+    cursorDot.style.transform = 'translate(-50%, -50%) scale(0.9)';
+    cursorEllipse.style.transform = 'translate(-50%, -50%) scale(0.95)';
+  });
+  window.addEventListener('pointerup', () => {
+    cursorDot.style.transform = 'translate(-50%, -50%) scale(1)';
+    cursorEllipse.style.transform = 'translate(-50%, -50%) scale(1)';
+  });
+
+  const animateCursor = () => {
+    ellipseCurrent.x += (ellipseTarget.x - ellipseCurrent.x) * 0.12;
+    ellipseCurrent.y += (ellipseTarget.y - ellipseCurrent.y) * 0.12;
+    cursorDot.style.left = `${cursorCurrent.x}px`;
+    cursorDot.style.top = `${cursorCurrent.y}px`;
+    cursorEllipse.style.left = `${ellipseCurrent.x}px`;
+    cursorEllipse.style.top = `${ellipseCurrent.y}px`;
+    if (cursorLabel) {
+      cursorLabel.style.left = `${cursorCurrent.x}px`;
+      cursorLabel.style.top = `${cursorCurrent.y}px`;
+    }
+    requestAnimationFrame(animateCursor);
+  };
+  animateCursor();
+}
+
+// ---------------------------------------------------------------------------
+// "Start your project": DVD screensaver + follow-the-cursor inside .sp-box
+// ---------------------------------------------------------------------------
 const spBox = document.querySelector('.sp-box');
 const projectBtn = spBox?.querySelector('.btn');
 
@@ -46,14 +76,7 @@ if (spBox && projectBtn) {
   const position = { x: 0, y: 0 };
   const target = { x: 0, y: 0 };
   const velocity = { x: DVD_SPEED, y: DVD_SPEED };
-  const bounds = {
-    maxX: 0,
-    maxY: 0,
-    buttonWidth: 0,
-    buttonHeight: 0,
-    borderLeft: 0,
-    borderTop: 0,
-  };
+  const bounds = { maxX: 0, maxY: 0, buttonWidth: 0, buttonHeight: 0 };
   let isFollowing = false;
   let isMeasured = false;
   let dvdFrameId = 0;
@@ -72,16 +95,10 @@ if (spBox && projectBtn) {
   const measureDvdBounds = () => {
     const boxRect = spBox.getBoundingClientRect();
     const buttonRect = projectBtn.getBoundingClientRect();
-    const boxStyle = getComputedStyle(spBox);
-    const borderRight = parseFloat(boxStyle.borderRightWidth) || 0;
-    const borderBottom = parseFloat(boxStyle.borderBottomWidth) || 0;
-
-    bounds.borderLeft = parseFloat(boxStyle.borderLeftWidth) || 0;
-    bounds.borderTop = parseFloat(boxStyle.borderTopWidth) || 0;
     bounds.buttonWidth = buttonRect.width;
     bounds.buttonHeight = buttonRect.height;
-    bounds.maxX = Math.max(0, boxRect.width - bounds.borderLeft - borderRight - buttonRect.width);
-    bounds.maxY = Math.max(0, boxRect.height - bounds.borderTop - borderBottom - buttonRect.height);
+    bounds.maxX = Math.max(0, boxRect.width - buttonRect.width);
+    bounds.maxY = Math.max(0, boxRect.height - buttonRect.height);
 
     if (!isMeasured || dvdMotionQuery.matches) {
       position.x = bounds.maxX / 2;
@@ -99,16 +116,8 @@ if (spBox && projectBtn) {
 
   const updateFollowTarget = (event) => {
     const boxRect = spBox.getBoundingClientRect();
-    target.x = clamp(
-      event.clientX - boxRect.left - bounds.borderLeft - bounds.buttonWidth / 2,
-      0,
-      bounds.maxX,
-    );
-    target.y = clamp(
-      event.clientY - boxRect.top - bounds.borderTop - bounds.buttonHeight / 2,
-      0,
-      bounds.maxY,
-    );
+    target.x = clamp(event.clientX - boxRect.left - bounds.buttonWidth / 2, 0, bounds.maxX);
+    target.y = clamp(event.clientY - boxRect.top - bounds.buttonHeight / 2, 0, bounds.maxY);
   };
 
   const moveOnAxis = (axis, maxKey) => {
@@ -117,7 +126,6 @@ if (spBox && projectBtn) {
       position[axis] = 0;
       return;
     }
-
     position[axis] += velocity[axis];
     if (position[axis] <= 0) {
       position[axis] = 0;
@@ -136,7 +144,6 @@ if (spBox && projectBtn) {
       moveOnAxis('x', 'maxX');
       moveOnAxis('y', 'maxY');
     }
-
     renderProjectButton();
     dvdFrameId = requestAnimationFrame(dvdTick);
   };
@@ -192,55 +199,12 @@ if (spBox && projectBtn) {
   }
 }
 
-const animateCursor = () => {
-  cursorCurrent.x = cursorTarget.x;
-  cursorCurrent.y = cursorTarget.y;
-  ellipseCurrent.x += (ellipseTarget.x - ellipseCurrent.x) * 0.12;
-  ellipseCurrent.y += (ellipseTarget.y - ellipseCurrent.y) * 0.12;
-  cursorDot.style.left = `${cursorCurrent.x}px`;
-  cursorDot.style.top = `${cursorCurrent.y}px`;
-  cursorEllipse.style.left = `${ellipseCurrent.x}px`;
-  cursorEllipse.style.top = `${ellipseCurrent.y}px`;
-  if (cursorLabel) {
-    cursorLabel.style.left = `${cursorCurrent.x}px`;
-    cursorLabel.style.top = `${cursorCurrent.y}px`;
-  }
-  requestAnimationFrame(animateCursor);
-};
-animateCursor();
-
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-const heroSection = document.querySelector('.hero');
-const heroOverlay = heroSection.querySelector('.overlay');
-let heroCanvas = null;
-let currentScroll = 0;
-let aboutScrollTop = stableVh;
-// Set once services are measured: how far above the viewport the sticky stage pins
-let servicesPinShift = 0;
-
-const updateHeroParallax = (scroll) => {
-  const vh = stableVh;
-  const y = scroll;
-  const progress = Math.min(y / vh, 1);
-  if (heroCanvas) {
-    // Background image keeps its slower parallax pace…
-    heroCanvas.style.transform = `translateY(${(-progress * vh * 0.3).toFixed(1)}px)`;
-    // …but fully fades out by the moment the accordion pins
-    const fadeEnd = Math.max(1, aboutScrollTop + servicesPinShift);
-    heroCanvas.style.opacity = Math.max(0, 1 - y / fadeEnd).toFixed(3);
-  }
-  if (heroOverlay) {
-    // Hero content scrolls at normal page speed, same as the second block
-    heroOverlay.style.transform = `translateY(${(-Math.min(y, vh * 1.5)).toFixed(1)}px)`;
-  }
-  heroSection.style.setProperty('--hero-shade', (progress * 0.55).toFixed(3));
-};
-
+// ---------------------------------------------------------------------------
+// Stair-step page reveal
+// ---------------------------------------------------------------------------
 const stairReveal = document.querySelector('.stair-reveal');
 const stairRevealDone = new Promise((resolve) => {
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!stairReveal || reduced) {
+  if (!stairReveal || prefersReducedMotion) {
     stairReveal?.remove();
     resolve();
     return;
@@ -257,6 +221,9 @@ const stairRevealDone = new Promise((resolve) => {
   });
 });
 
+// ---------------------------------------------------------------------------
+// Per-character reveal (blur + slide), capped to 2s total per element
+// ---------------------------------------------------------------------------
 const REVEAL_MAX_TOTAL_SECONDS = 2;
 
 function getRevealCssSeconds(name, fallback) {
@@ -322,7 +289,7 @@ function setupReveal(el) {
     el.classList.add('is-visible');
   };
 
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (prefersReducedMotion) {
     run();
     return;
   }
@@ -343,16 +310,15 @@ function setupReveal(el) {
 }
 
 function setupFadeIn() {
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const elements = Array.from(document.querySelectorAll('[data-fade]'));
   elements.forEach((el, index) => {
     el.style.transitionDelay = `${index * 0.06}s`;
-    if (reduced) {
+    if (prefersReducedMotion) {
       el.classList.add('is-in');
     }
   });
 
-  if (reduced) return;
+  if (prefersReducedMotion) return;
 
   stairRevealDone.then(() => {
     requestAnimationFrame(() => {
@@ -362,15 +328,19 @@ function setupFadeIn() {
 }
 
 document.querySelectorAll('[data-reveal]').forEach(setupReveal);
+setupFadeIn();
 
+// ---------------------------------------------------------------------------
+// Hero h1: scramble-on-hover per character
+// ---------------------------------------------------------------------------
 const heroRevealTitle = document.querySelector('.hero h1[data-reveal]');
-const scrambleMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-if (heroRevealTitle) {
+if (heroRevealTitle && pointerFine) {
   const scrambleCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&$@/\\<>*';
   const scrambleDuration = 600;
   const scrambleInterval = 45;
   const activeScrambles = new Map();
+  const scrambleMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   const stopScramble = (char) => {
     const timers = activeScrambles.get(char);
@@ -427,16 +397,22 @@ if (heroRevealTitle) {
   });
 }
 
-setupFadeIn();
+// ---------------------------------------------------------------------------
+// WebGL hero background (three.js)
+// ---------------------------------------------------------------------------
+const heroSection = document.querySelector('.hero');
+const heroOverlay = heroSection.querySelector('.overlay');
+
+const rendererPixelRatio = () => Math.min(window.devicePixelRatio || 1, mqMobile.matches ? 1.5 : 2);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(lastWidth, stableVh);
+renderer.setPixelRatio(rendererPixelRatio());
+renderer.setSize(viewportWidth, stableVh);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.setClearColor(0x0e0e10, 1);
-container.prepend(renderer.domElement);
+renderer.setClearColor(0x0b0b0b, 1);
+heroSection.prepend(renderer.domElement);
 renderer.domElement.id = 'hero-canvas';
-heroCanvas = renderer.domElement;
+const heroCanvas = renderer.domElement;
 
 const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 camera.position.z = 1;
@@ -451,7 +427,7 @@ const uniforms = {
   uParallax: { value: new THREE.Vector2(0, 0) },
   uMouseInfluence: { value: 0.0 },
   uTime: { value: 0 },
-  uResolution: { value: new THREE.Vector2(lastWidth, stableVh) },
+  uResolution: { value: new THREE.Vector2(viewportWidth, stableVh) },
   uImageResolution: { value: new THREE.Vector2(1, 1) },
 };
 
@@ -498,6 +474,7 @@ const material = new THREE.ShaderMaterial({
       vec2 disp = texture2D(uDisplacement, uv + vec2(uTime * 0.028, -uTime * 0.018)).rg - 0.5;
       uv += disp * ripple * 0.09 * (0.75 + uMouseInfluence * 0.3);
 
+      // "cover" fit: keep the image aspect, center horizontally, never squeeze
       vec2 s = uResolution / uImageResolution;
       float scale = max(s.x, s.y);
       vec2 size = uImageResolution * scale;
@@ -509,15 +486,10 @@ const material = new THREE.ShaderMaterial({
   `,
 });
 
-const mesh = new THREE.Mesh(geometry, material);
-scene.add(mesh);
+scene.add(new THREE.Mesh(geometry, material));
 
 const textureLoader = new THREE.TextureLoader();
-const texturePaths = [
-  'assets/header-1.png',
-  'assets/heightMap.png',
-  'assets/map-9.jpg',
-];
+const texturePaths = ['assets/header-1.png', 'assets/heightMap.png', 'assets/map-9.jpg'];
 
 const loadTexture = (path) =>
   new Promise((resolve, reject) => {
@@ -536,24 +508,17 @@ const loadTexture = (path) =>
     );
   });
 
-const pointerFine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-let targetMouse = { x: 0.5, y: 0.5 };
-let smoothedMouse = { x: 0.5, y: 0.5 };
+const targetMouse = { x: 0.5, y: 0.5 };
+const smoothedMouse = { x: 0.5, y: 0.5 };
 let influence = 0.0;
 let activePointer = false;
 
-const updateMouse = (x, y) => {
-  targetMouse.x = x;
-  targetMouse.y = y;
-  activePointer = true;
-  influence = 1.0;
-};
-
 if (pointerFine) {
   window.addEventListener('pointermove', (event) => {
-    const x = event.clientX / lastWidth;
-    const y = 1 - event.clientY / stableVh;
-    updateMouse(x, y);
+    targetMouse.x = event.clientX / viewportWidth;
+    targetMouse.y = 1 - event.clientY / stableVh;
+    activePointer = true;
+    influence = 1.0;
   });
 
   window.addEventListener('pointerleave', () => {
@@ -561,20 +526,24 @@ if (pointerFine) {
   });
 }
 
-let ready = false;
+// Set from the scroll pipeline; when the hero is fully faded out we keep the
+// rAF loop alive but skip the (expensive) WebGL render entirely.
+let heroPixelsVisible = true;
+let webglReady = false;
+
 Promise.all(texturePaths.map(loadTexture)).then(([texture, displacement, flowMap]) => {
   uniforms.uTexture.value = texture;
   uniforms.uDisplacement.value = displacement;
   uniforms.uFlowMap.value = flowMap;
   uniforms.uImageResolution.value.set(texture.image.width, texture.image.height);
-  ready = true;
-  animate();
+  webglReady = true;
+  requestAnimationFrame(renderLoop);
 });
 
-const animate = () => {
-  if (!ready) {
-    return;
-  }
+const renderLoop = () => {
+  if (!webglReady) return;
+  requestAnimationFrame(renderLoop);
+  if (!heroPixelsVisible) return;
 
   smoothedMouse.x += (targetMouse.x - smoothedMouse.x) * 0.06;
   smoothedMouse.y += (targetMouse.y - smoothedMouse.y) * 0.06;
@@ -591,58 +560,143 @@ const animate = () => {
   uniforms.uTime.value += 0.016;
 
   renderer.render(scene, camera);
-  requestAnimationFrame(animate);
 };
 
+// ---------------------------------------------------------------------------
+// Scroll pipeline. ONE consumer per frame; every style write is cached and
+// skipped when the value did not actually change (no layout/paint for free).
+// ---------------------------------------------------------------------------
 const aboutSection = document.querySelector('.about');
+const aboutSticky = document.querySelector('.about-sticky');
+const siteHeader = document.querySelector('.site-header');
 const serviceEls = Array.from(document.querySelectorAll('.service'));
-let measureServices = () => {};
-let updateServicesCollapse = () => {};
-if (aboutSection && serviceEls.length) {
-  const bodyWraps = serviceEls.map((el) => el.querySelector('.service-body-wrap'));
-  const sticky = document.querySelector('.about-sticky');
-  const header = document.querySelector('.site-header');
-  let bodyHeights = bodyWraps.map(() => 0);
-  let cachedPinStart = 0;
-  let cachedPinDistance = 0;
+const bodyWraps = serviceEls.map((el) => el.querySelector('.service-body-wrap'));
 
-  updateServicesCollapse = (scroll) => {
-    if (cachedPinDistance <= 0) return;
+let currentScroll = 0;
+let cachedPinStart = stableVh; // scroll position where the accordion pins
+let cachedPinDistance = 0;     // scroll distance that drives the full collapse
 
-    const progress = Math.min(1, Math.max(0, (scroll - cachedPinStart) / cachedPinDistance));
-    serviceEls.forEach((el, i) => {
-      const local = Math.min(1, Math.max(0, progress * serviceEls.length - i));
-      bodyWraps[i].style.height = `${Math.round(bodyHeights[i] * (1 - local))}px`;
-      bodyWraps[i].style.opacity = `${1 - local}`;
-      el.classList.toggle('is-collapsed', local >= 1);
-    });
-  };
+// Cached last-applied values (avoid redundant style writes)
+let lastCanvasShift = null;
+let lastCanvasOpacity = null;
+let lastOverlayShift = null;
+let lastShade = null;
+let bodyHeights = bodyWraps.map(() => 0);
+const lastWrapHeights = bodyWraps.map(() => -1);
+const lastWrapOpacities = bodyWraps.map(() => -1);
+const lastCollapsed = bodyWraps.map(() => false);
 
-  measureServices = () => {
-    bodyWraps.forEach((wrap) => {
-      wrap.style.height = 'auto';
-    });
-    bodyHeights = bodyWraps.map((wrap) => wrap.scrollHeight);
-    const nextAboutTop = aboutSection.offsetTop;
-    const nextAboutHeight = aboutSection.offsetHeight;
-    let nextPinShift = servicesPinShift;
+const updateHeroParallax = (y) => {
+  const vh = stableVh;
+  const progress = Math.min(y / vh, 1);
 
-    if (sticky && header && serviceEls[0]) {
-      const headerBottom = header.getBoundingClientRect().bottom;
-      const firstServiceTop = serviceEls[0].getBoundingClientRect().top - sticky.getBoundingClientRect().top;
-      nextPinShift = Math.max(0, Math.round(firstServiceTop - headerBottom - 30));
+  // Background image: slower parallax pace + full fade-out by the pin point
+  const canvasShift = Math.round(-progress * vh * 0.3 * 10) / 10;
+  const canvasOpacity = Math.round(Math.max(0, 1 - y / Math.max(1, cachedPinStart)) * 1000) / 1000;
+  if (canvasShift !== lastCanvasShift) {
+    lastCanvasShift = canvasShift;
+    heroCanvas.style.transform = `translateY(${canvasShift}px)`;
+  }
+  if (canvasOpacity !== lastCanvasOpacity) {
+    lastCanvasOpacity = canvasOpacity;
+    heroCanvas.style.opacity = canvasOpacity;
+  }
+  heroPixelsVisible = canvasOpacity > 0.001;
+
+  // Hero content: scrolls away at normal page speed, always fully opaque
+  const overlayShift = Math.round(-Math.min(y, vh * 1.5));
+  if (overlayShift !== lastOverlayShift) {
+    lastOverlayShift = overlayShift;
+    heroOverlay.style.transform = `translateY(${overlayShift}px)`;
+  }
+
+  const shade = Math.round(progress * 0.55 * 1000) / 1000;
+  if (shade !== lastShade) {
+    lastShade = shade;
+    heroSection.style.setProperty('--hero-shade', shade);
+  }
+};
+
+const updateServicesCollapse = (y) => {
+  if (cachedPinDistance <= 0) return;
+
+  const progress = Math.min(1, Math.max(0, (y - cachedPinStart) / cachedPinDistance));
+  for (let i = 0; i < serviceEls.length; i++) {
+    const local = Math.min(1, Math.max(0, progress * serviceEls.length - i));
+    const height = Math.round(bodyHeights[i] * (1 - local));
+    const opacity = Math.round((1 - local) * 100) / 100;
+    const collapsed = local >= 1;
+
+    if (height !== lastWrapHeights[i]) {
+      lastWrapHeights[i] = height;
+      bodyWraps[i].style.height = `${height}px`;
     }
+    if (opacity !== lastWrapOpacities[i]) {
+      lastWrapOpacities[i] = opacity;
+      bodyWraps[i].style.opacity = opacity;
+    }
+    if (collapsed !== lastCollapsed[i]) {
+      lastCollapsed[i] = collapsed;
+      serviceEls[i].classList.toggle('is-collapsed', collapsed);
+    }
+  }
+};
 
-    servicesPinShift = nextPinShift;
-    aboutScrollTop = nextAboutTop;
-    cachedPinStart = nextAboutTop + servicesPinShift;
-    cachedPinDistance = nextAboutHeight - stableVh - servicesPinShift;
-    if (sticky) sticky.style.top = `${-servicesPinShift}px`;
-    updateServicesCollapse(currentScroll);
-  };
+const updateScrollAnimations = (scroll) => {
+  currentScroll = scroll;
+  if (!prefersReducedMotion) updateHeroParallax(scroll);
+  updateServicesCollapse(scroll);
+};
 
-  (document.fonts?.ready || Promise.resolve()).then(measureServices);
+// ---------------------------------------------------------------------------
+// Services: measurement + pin geometry.
+// The .about height is computed here so that the accordion is ALWAYS fully
+// collapsed while the stage is still pinned (any viewport size), and only
+// then the page continues scrolling.
+// ---------------------------------------------------------------------------
+const COLLAPSE_VH_PER_ITEM = 0.45;
+const PIN_END_BUFFER = 160;
 
+const measureServices = () => {
+  if (!aboutSection || !aboutSticky || !serviceEls.length) return;
+
+  // -- writes: unlock natural heights
+  bodyWraps.forEach((wrap) => {
+    wrap.style.height = 'auto';
+  });
+
+  // -- reads (single layout pass)
+  bodyHeights = bodyWraps.map((wrap) => wrap.scrollHeight);
+  const totalBody = bodyHeights.reduce((sum, h) => sum + h, 0);
+  const expandedStageHeight = aboutSticky.offsetHeight;
+  const aboutTop = aboutSection.offsetTop;
+  const headerBottom = siteHeader ? siteHeader.getBoundingClientRect().bottom : 0;
+  const firstServiceTop =
+    serviceEls[0].getBoundingClientRect().top - aboutSticky.getBoundingClientRect().top;
+
+  // -- compute
+  // Pin the stage above the viewport so the first service stops 30px below
+  // the fixed header the moment the accordion starts collapsing.
+  const pinShift = Math.max(0, Math.round(firstServiceTop - headerBottom - 30));
+  const collapsedStageHeight = Math.max(stableVh, expandedStageHeight - totalBody);
+  const collapseDistance = Math.round(stableVh * COLLAPSE_VH_PER_ITEM * serviceEls.length);
+  // Section height that keeps the stage pinned until progress reaches 1
+  const aboutHeight = collapseDistance + collapsedStageHeight + pinShift + PIN_END_BUFFER;
+
+  cachedPinStart = aboutTop + pinShift;
+  cachedPinDistance = collapseDistance;
+
+  // -- writes
+  aboutSticky.style.top = `${-pinShift}px`;
+  aboutSection.style.height = `${aboutHeight}px`;
+  lastWrapHeights.fill(-1);
+  lastWrapOpacities.fill(-1);
+  lenis?.resize();
+  updateServicesCollapse(currentScroll);
+  if (!prefersReducedMotion) updateHeroParallax(currentScroll);
+};
+
+if (serviceEls.length) {
   if (prefersReducedMotion) {
     serviceEls.forEach((el) => el.classList.add('is-in'));
   } else {
@@ -658,70 +712,90 @@ if (aboutSection && serviceEls.length) {
     serviceEls.forEach((el) => serviceObserver.observe(el));
   }
 
-  serviceEls.forEach((el) => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-more'));
-    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-more'));
-  });
+  if (pointerFine) {
+    serviceEls.forEach((el) => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-more'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-more'));
+    });
+  }
 }
 
-let viewportRefreshFrame = 0;
-let forceViewportRefresh = false;
+// ---------------------------------------------------------------------------
+// Scroll source: Lenis on desktop only. Mobile uses fully native scrolling
+// with a rAF-throttled listener (Lenis is never created there).
+// ---------------------------------------------------------------------------
+let lenis = null;
+let nativeScrollScheduled = false;
 
-const applyStableViewport = () => {
-  const width = window.innerWidth;
-  if (!forceViewportRefresh && width === lastWidth) return;
-
-  forceViewportRefresh = false;
-  lastWidth = width;
-  stableVh = window.innerHeight;
-  renderer.setSize(lastWidth, stableVh);
-  uniforms.uResolution.value.set(lastWidth, stableVh);
-  lenis.options.duration = isMobileLayout() ? 0 : 1.1;
-  lenis.options.smoothWheel = !prefersReducedMotion && !isMobileLayout();
-  lenis.resize();
-  measureServices();
-  if (!prefersReducedMotion) updateHeroParallax(currentScroll);
-};
-
-const scheduleStableViewport = (force = false) => {
-  forceViewportRefresh ||= force;
-  cancelAnimationFrame(viewportRefreshFrame);
-  viewportRefreshFrame = requestAnimationFrame(() => {
-    viewportRefreshFrame = requestAnimationFrame(applyStableViewport);
+const onNativeScroll = () => {
+  if (nativeScrollScheduled) return;
+  nativeScrollScheduled = true;
+  requestAnimationFrame(() => {
+    nativeScrollScheduled = false;
+    updateScrollAnimations(window.scrollY);
   });
 };
 
-const onResize = () => {
-  if (window.innerWidth === lastWidth) return;
-  scheduleStableViewport();
+const setScrollMode = () => {
+  const useLenis = !mqMobile.matches && !prefersReducedMotion;
+
+  if (useLenis && !lenis) {
+    window.removeEventListener('scroll', onNativeScroll);
+    lenis = new Lenis({
+      duration: 1.1,
+      smoothWheel: true,
+      syncTouch: false,
+      // Safari height-only viewport changes must not trigger dimension reads
+      autoResize: false,
+    });
+    lenis.on('scroll', ({ scroll }) => updateScrollAnimations(scroll));
+  } else if (!useLenis) {
+    if (lenis) {
+      lenis.destroy();
+      lenis = null;
+    }
+    window.addEventListener('scroll', onNativeScroll, { passive: true });
+  }
 };
 
-window.addEventListener('resize', onResize);
-window.addEventListener('orientationchange', () => scheduleStableViewport(true));
+const masterRaf = (time) => {
+  lenis?.raf(time);
+  requestAnimationFrame(masterRaf);
+};
+requestAnimationFrame(masterRaf);
 
-const lenis = new Lenis({
-  duration: isMobileLayout() ? 0 : 1.1,
-  // Mobile uses native, unsmoothed scrolling; Lenis remains the single scroll emitter.
-  smoothWheel: !prefersReducedMotion && !isMobileLayout(),
-  // Keep native touch momentum; Lenis only reports its synchronized scroll value.
-  syncTouch: false,
-  // Safari height-only viewport changes must not trigger internal dimension reads.
-  autoResize: false,
+// ---------------------------------------------------------------------------
+// Resize: react to WIDTH changes and orientation only. Height-only resizes
+// (mobile Safari address bar) never trigger re-layout or re-measure.
+// ---------------------------------------------------------------------------
+let viewportRefreshFrame = 0;
+
+const applyViewport = () => {
+  viewportWidth = window.innerWidth;
+  stableVh = window.innerHeight;
+  renderer.setPixelRatio(rendererPixelRatio());
+  renderer.setSize(viewportWidth, stableVh);
+  uniforms.uResolution.value.set(viewportWidth, stableVh);
+  setScrollMode();
+  measureServices();
+};
+
+const scheduleViewportRefresh = () => {
+  cancelAnimationFrame(viewportRefreshFrame);
+  viewportRefreshFrame = requestAnimationFrame(applyViewport);
+};
+
+window.addEventListener('resize', () => {
+  if (window.innerWidth === viewportWidth) return;
+  scheduleViewportRefresh();
 });
+window.addEventListener('orientationchange', scheduleViewportRefresh);
+mqMobile.addEventListener('change', scheduleViewportRefresh);
 
-const updateScrollAnimations = (scroll) => {
-  currentScroll = scroll;
-  if (!prefersReducedMotion) updateHeroParallax(scroll);
-  updateServicesCollapse(scroll);
-};
-
-lenis.on('scroll', ({ scroll }) => updateScrollAnimations(scroll));
-
-const lenisRaf = (time) => {
-  lenis.raf(time);
-  requestAnimationFrame(lenisRaf);
-};
-
-currentScroll = Number.isFinite(lenis.scroll) ? lenis.scroll : 0;
-updateScrollAnimations(currentScroll);
-requestAnimationFrame(lenisRaf);
+// ---------------------------------------------------------------------------
+// Init
+// ---------------------------------------------------------------------------
+setScrollMode();
+measureServices();
+(document.fonts?.ready || Promise.resolve()).then(measureServices);
+updateScrollAnimations(window.scrollY);
