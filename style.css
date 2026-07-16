@@ -103,6 +103,26 @@ body {
   transform: translateY(-102%);
 }
 
+/* Load percentage: big black digits, bottom-right, same on all viewports */
+.stair-reveal__count {
+  position: absolute;
+  right: var(--page-inset);
+  bottom: 1.2rem;
+  z-index: 3;
+  color: #0a0a0a;
+  font-size: clamp(3.5rem, 11vw, 8rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  transition: opacity 0.35s var(--ease), transform 0.45s var(--ease);
+}
+
+.stair-reveal.is-open .stair-reveal__count {
+  opacity: 0;
+  transform: translateY(-40px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .stair-reveal {
     display: none;

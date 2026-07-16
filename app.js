@@ -208,9 +208,58 @@ if (spBox && projectBtn) {
 }
 
 // ---------------------------------------------------------------------------
-// Stair-step page reveal
+// Preloader + stair-step reveal.
+// The white stair screen acts as the preloader: it stays until the site is
+// fully loaded (fonts, hero textures, window load), showing the percentage
+// bottom-right. Only then the stairs open and content animations follow.
 // ---------------------------------------------------------------------------
 const stairReveal = document.querySelector('.stair-reveal');
+const preloaderCount = stairReveal?.querySelector('.stair-reveal__count');
+
+const LOAD_UNITS = { fonts: 20, tex0: 20, tex1: 20, tex2: 20, page: 20 };
+const loadedUnits = new Set();
+let loadProgressTarget = 0;
+
+const markLoaded = (key) => {
+  if (!(key in LOAD_UNITS) || loadedUnits.has(key)) return;
+  loadedUnits.add(key);
+  let total = 0;
+  loadedUnits.forEach((k) => {
+    total += LOAD_UNITS[k];
+  });
+  loadProgressTarget = total;
+};
+
+(document.fonts?.ready || Promise.resolve()).then(() => markLoaded('fonts'));
+if (document.readyState === 'complete') {
+  markLoaded('page');
+} else {
+  window.addEventListener('load', () => markLoaded('page'), { once: true });
+}
+// Safety net: a failed resource must never trap the user on the preloader
+setTimeout(() => Object.keys(LOAD_UNITS).forEach(markLoaded), 12000);
+
+// Resolves when the displayed counter has smoothly reached 100%
+const siteReady = new Promise((resolve) => {
+  let displayed = 0;
+  let shownPercent = -1;
+  const tick = () => {
+    displayed += (loadProgressTarget - displayed) * 0.14;
+    if (loadProgressTarget >= 100 && displayed > 99.2) displayed = 100;
+    const percent = Math.round(displayed);
+    if (percent !== shownPercent && preloaderCount) {
+      shownPercent = percent;
+      preloaderCount.textContent = `${percent}%`;
+    }
+    if (displayed >= 100) {
+      resolve();
+      return;
+    }
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+});
+
 const stairRevealDone = new Promise((resolve) => {
   if (!stairReveal || prefersReducedMotion) {
     stairReveal?.remove();
@@ -218,14 +267,14 @@ const stairRevealDone = new Promise((resolve) => {
     return;
   }
 
-  (document.fonts?.ready || Promise.resolve()).then(() => {
+  siteReady.then(() => {
     setTimeout(() => {
       stairReveal.classList.add('is-open');
       // Content starts animating while the back layer is still clearing
       setTimeout(resolve, 700);
       // Last back step: 0.16s layer delay + 7 * 0.055s stagger + 0.75s duration
       setTimeout(() => stairReveal.remove(), 1500);
-    }, 250);
+    }, 200);
   });
 });
 
@@ -545,7 +594,14 @@ new IntersectionObserver(([entry]) => {
   heroInView = entry.isIntersecting;
 }).observe(heroSection);
 
-Promise.all(texturePaths.map(loadTexture)).then(([texture, displacement, flowMap]) => {
+Promise.all(
+  texturePaths.map((path, i) =>
+    loadTexture(path).then((texture) => {
+      markLoaded(`tex${i}`);
+      return texture;
+    }),
+  ),
+).then(([texture, displacement, flowMap]) => {
   uniforms.uTexture.value = texture;
   uniforms.uDisplacement.value = displacement;
   uniforms.uFlowMap.value = flowMap;
