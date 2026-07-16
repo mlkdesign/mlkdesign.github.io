@@ -845,7 +845,11 @@ if (serviceTagContainers.length) {
       state.width = rect.width;
       state.height = rect.height;
       const titleRect = state.service?.querySelector('.service-title')?.getBoundingClientRect();
-      state.ceilingY = titleRect ? Math.min(0, titleRect.top - rect.top) : 0;
+      state.ceilingY = mqMobile.matches
+        ? 0
+        : titleRect
+          ? Math.min(0, titleRect.top - rect.top)
+          : 0;
       state.container.style.setProperty('--tag-ceiling-y', `${state.ceilingY}px`);
       rebuildTagBoundaries(state);
 
@@ -1213,7 +1217,7 @@ if (worksSection && workCards.length) {
 }
 
 // ---------------------------------------------------------------------------
-// MLK.STUDIO pixel grid: one responsive Canvas 2D surface. The static grid is
+// MLK / MLK.STUDIO pixel grid: one responsive Canvas 2D surface. The static grid is
 // redrawn only on resize; rAF runs while hovered or while residual heat fades.
 // ---------------------------------------------------------------------------
 const pixelsSection = document.querySelector('.pixels');
@@ -1225,7 +1229,8 @@ if (pixelsSection && pixelsCanvas) {
   const PIXEL_STEP = PIXEL_SIZE + PIXEL_GAP;
   const PIXEL_FADE_DURATION = 1000;
   const PIXEL_PATH_SAMPLE_STEP = 2;
-  const PIXEL_LOGO = 'MLK.STUDIO';
+  const PIXEL_LOGO_DESKTOP = 'MLK.STUDIO';
+  const PIXEL_LOGO_MOBILE = 'MLK';
   const PIXEL_LOGO_HEIGHT = 7;
   const PIXEL_LOGO_INSET_CELLS = 1;
   const GLYPHS = {
@@ -1241,19 +1246,29 @@ if (pixelsSection && pixelsCanvas) {
     O: ['01110', '10001', '10001', '10001', '10001', '10001', '01110'],
   };
 
-  const logoCells = new Set();
-  let logoWidth = 0;
+  const buildPixelLogo = (text) => {
+    const cells = new Set();
+    let width = 0;
 
-  [...PIXEL_LOGO].forEach((character, characterIndex) => {
-    const glyph = GLYPHS[character];
-    glyph.forEach((row, rowIndex) => {
-      [...row].forEach((value, colIndex) => {
-        if (value === '1') logoCells.add(`${logoWidth + colIndex},${rowIndex}`);
+    [...text].forEach((character, characterIndex) => {
+      const glyph = GLYPHS[character];
+      glyph.forEach((row, rowIndex) => {
+        [...row].forEach((value, colIndex) => {
+          if (value === '1') cells.add(`${width + colIndex},${rowIndex}`);
+        });
       });
+      width += glyph[0].length;
+      if (characterIndex < text.length - 1) width += 1;
     });
-    logoWidth += glyph[0].length;
-    if (characterIndex < PIXEL_LOGO.length - 1) logoWidth += 1;
-  });
+
+    return { cells, width };
+  };
+
+  const pixelLogos = {
+    desktop: buildPixelLogo(PIXEL_LOGO_DESKTOP),
+    mobile: buildPixelLogo(PIXEL_LOGO_MOBILE),
+  };
+  let activePixelLogo = pixelLogos.desktop;
 
   const parseHexColor = (value) => {
     const match = value.trim().match(/^#([\da-f]{6})$/i);
@@ -1297,14 +1312,14 @@ if (pixelsSection && pixelsCanvas) {
     ) return false;
 
     const sourceCol = Math.min(
-      logoWidth - 1,
-      Math.floor((logoCol / logoColumns) * logoWidth),
+      activePixelLogo.width - 1,
+      Math.floor((logoCol / logoColumns) * activePixelLogo.width),
     );
     const sourceRow = Math.min(
       PIXEL_LOGO_HEIGHT - 1,
       Math.floor((logoRow / logoRows) * PIXEL_LOGO_HEIGHT),
     );
-    return logoCells.has(`${sourceCol},${sourceRow}`);
+    return activePixelLogo.cells.has(`${sourceCol},${sourceRow}`);
   };
 
   const pixelColor = (baseAlpha, factor) => {
@@ -1410,6 +1425,7 @@ if (pixelsSection && pixelsCanvas) {
 
     columns = Math.max(0, Math.floor((cssWidth + PIXEL_GAP) / PIXEL_STEP));
     rows = Math.max(0, Math.floor((cssHeight + PIXEL_GAP) / PIXEL_STEP));
+    activePixelLogo = mqMobile.matches ? pixelLogos.mobile : pixelLogos.desktop;
     const gridWidth = columns > 0 ? columns * PIXEL_SIZE + (columns - 1) * PIXEL_GAP : 0;
     const gridHeight = rows > 0 ? rows * PIXEL_SIZE + (rows - 1) * PIXEL_GAP : 0;
     gridOffsetX = (cssWidth - gridWidth) / 2;
@@ -1470,6 +1486,18 @@ if (pixelsSection && pixelsCanvas) {
 // Mobile stays native.
 // ---------------------------------------------------------------------------
 let lenis = null;
+const HERO_PARALLAX_STRENGTH = 0.3;
+let lastHeroParallaxOffset = Number.NaN;
+
+const updateHeroParallax = (scroll) => {
+  const enabled = !mqMobile.matches && !prefersReducedMotion;
+  const clampedScroll = Math.min(stableVh, Math.max(0, scroll));
+  const offset = enabled ? clampedScroll * HERO_PARALLAX_STRENGTH : 0;
+  if (Math.abs(offset - lastHeroParallaxOffset) < 0.1) return;
+
+  lastHeroParallaxOffset = offset;
+  heroCanvas.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
+};
 
 const setScrollMode = () => {
   const useLenis = !mqMobile.matches && !prefersReducedMotion;
@@ -1482,12 +1510,15 @@ const setScrollMode = () => {
       syncTouch: false,
       autoResize: false,
     });
+    lenis.on('scroll', ({ scroll }) => updateHeroParallax(scroll));
   } else if (!useLenis) {
     if (lenis) {
       lenis.destroy();
       lenis = null;
     }
   }
+
+  updateHeroParallax(lenis?.scroll ?? window.scrollY);
 };
 
 const anchorHeader = document.querySelector('.site-header');

@@ -164,6 +164,12 @@ body::before {
   pointer-events: none;
 }
 
+@media (min-width: 801px) {
+  #hero-canvas {
+    will-change: transform;
+  }
+}
+
 .overlay {
   position: absolute;
   inset: 0;
@@ -1388,22 +1394,66 @@ a[data-fade].is-in:focus-visible {
   }
 
   .service-content {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "title description"
+      "tools description"
+      "tags tags";
+    align-items: start;
+    column-gap: 15px;
+    row-gap: 1rem;
     min-width: 0;
   }
 
+  .service-title {
+    grid-area: title;
+  }
+
+  .service-body-wrap,
+  .service-body,
+  .service-desc {
+    display: contents;
+  }
+
+  .service-desc > p:not(.service-tools) {
+    grid-area: description;
+  }
+
+  .service-desc .service-tools {
+    grid-area: tools;
+    margin: 0;
+  }
+
   .service-body {
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-    gap: 1.2rem;
+    padding-top: 0;
+  }
+
+  .service-tags {
+    grid-area: tags;
+    width: 100%;
+    height: 240px;
+    min-height: 240px;
+    margin-top: 0.4rem;
   }
 
   .stats-grid {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    column-gap: 15px;
     row-gap: 1.6rem;
   }
 
+  .stats-intro {
+    grid-column: 1 / -1;
+  }
+
   .stats-grid .stat {
+    flex-direction: column;
+    align-items: flex-start;
     width: 100%;
     justify-content: flex-start;
+    gap: 0.5rem;
   }
 
   .stat-num {
