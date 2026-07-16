@@ -7,6 +7,10 @@ const cursorEllipse = document.querySelector('.cursor-ellipse');
 const cursorLabel = document.querySelector('.cursor-label');
 let stableVh = window.innerHeight;
 let lastWidth = window.innerWidth;
+const MOBILE_BREAKPOINT = 800;
+const MOBILE_PIN_BUFFER = 60;
+const MOBILE_COLLAPSE_VIEWPORTS = 1.5;
+const isMobileLayout = () => lastWidth <= MOBILE_BREAKPOINT;
 const cursorTarget = { x: 0, y: 0 };
 const cursorCurrent = { x: 0, y: 0 };
 const ellipseTarget = { x: 0, y: 0 };
@@ -605,6 +609,7 @@ if (aboutSection && serviceEls.length) {
   let serviceHeights = serviceEls.map(() => 1);
   let cachedPinStart = 0;
   let cachedPinDistance = 0;
+  let cachedPinRelease = 0;
   let pinActive = false;
   const lastLocals = serviceEls.map(() => Number.NaN);
   const lastShifts = serviceEls.map(() => Number.NaN);
@@ -616,7 +621,7 @@ if (aboutSection && serviceEls.length) {
 
     const rawProgress = (scroll - cachedPinStart) / cachedPinDistance;
     const progress = Math.min(1, Math.max(0, rawProgress));
-    const nextPinActive = rawProgress >= 0 && rawProgress <= 1;
+    const nextPinActive = rawProgress >= 0 && scroll <= cachedPinRelease;
     let collapsedHeight = 0;
 
     for (let i = 0; i < serviceEls.length; i += 1) {
@@ -661,6 +666,7 @@ if (aboutSection && serviceEls.length) {
     const currentServiceHeights = serviceEls.map((el) => el.offsetHeight);
     const nextAboutTop = aboutSection.offsetTop;
     const nextAboutHeight = aboutSection.offsetHeight;
+    const nextStickyHeight = sticky?.offsetHeight || stableVh;
     let nextPinShift = servicesPinShift;
 
     if (sticky && header && serviceEls[0]) {
@@ -677,7 +683,26 @@ if (aboutSection && serviceEls.length) {
     servicesPinShift = nextPinShift;
     aboutScrollTop = nextAboutTop;
     cachedPinStart = nextAboutTop + servicesPinShift;
-    cachedPinDistance = nextAboutHeight - stableVh - servicesPinShift;
+
+    if (isMobileLayout()) {
+      const totalBodyHeight = bodyHeights.reduce((sum, height) => sum + height, 0);
+      const collapseDistance = Math.ceil(Math.max(
+        totalBodyHeight,
+        stableVh * MOBILE_COLLAPSE_VIEWPORTS,
+      ));
+      const mobileAboutHeight = Math.ceil(
+        nextStickyHeight + collapseDistance + MOBILE_PIN_BUFFER,
+      );
+
+      aboutSection.style.setProperty('--about-mobile-height', `${mobileAboutHeight}px`);
+      cachedPinDistance = collapseDistance;
+      cachedPinRelease = cachedPinStart + collapseDistance + MOBILE_PIN_BUFFER;
+    } else {
+      aboutSection.style.removeProperty('--about-mobile-height');
+      cachedPinDistance = nextAboutHeight - stableVh - servicesPinShift;
+      cachedPinRelease = cachedPinStart + cachedPinDistance;
+    }
+
     bodyWraps.forEach((wrap, i) => {
       wrap.style.height = `${bodyHeights[i]}px`;
       lastLocals[i] = Number.NaN;
@@ -722,6 +747,8 @@ const applyStableViewport = () => {
   stableVh = window.innerHeight;
   renderer.setSize(lastWidth, stableVh);
   uniforms.uResolution.value.set(lastWidth, stableVh);
+  lenis.options.duration = isMobileLayout() ? 0 : 1.1;
+  lenis.options.smoothWheel = !prefersReducedMotion && !isMobileLayout();
   lenis.resize();
   measureServices();
   if (!prefersReducedMotion) updateHeroParallax(currentScroll);
@@ -744,8 +771,9 @@ window.addEventListener('resize', onResize);
 window.addEventListener('orientationchange', () => scheduleStableViewport(true));
 
 const lenis = new Lenis({
-  duration: 1.1,
-  smoothWheel: !prefersReducedMotion,
+  duration: isMobileLayout() ? 0 : 1.1,
+  // Mobile uses native, unsmoothed scrolling; Lenis remains the single scroll emitter.
+  smoothWheel: !prefersReducedMotion && !isMobileLayout(),
   // Keep native touch momentum; Lenis only reports its synchronized scroll value.
   syncTouch: false,
   // Safari height-only viewport changes must not trigger internal dimension reads.
