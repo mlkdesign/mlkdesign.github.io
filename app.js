@@ -7,10 +7,10 @@ const cursorEllipse = document.querySelector('.cursor-ellipse');
 const cursorLabel = document.querySelector('.cursor-label');
 let stableVh = window.innerHeight;
 let lastWidth = window.innerWidth;
-const cursorTarget = { x: lastWidth / 2, y: stableVh / 2 };
-const cursorCurrent = { x: lastWidth / 2, y: stableVh / 2 };
-const ellipseTarget = { x: lastWidth / 2, y: stableVh / 2 };
-const ellipseCurrent = { x: lastWidth / 2, y: stableVh / 2 };
+const cursorTarget = { x: 0, y: 0 };
+const cursorCurrent = { x: 0, y: 0 };
+const ellipseTarget = { x: 0, y: 0 };
+const ellipseCurrent = { x: 0, y: 0 };
 
 const onPointerMove = (event) => {
   cursorTarget.x = event.clientX;
@@ -210,41 +210,30 @@ animateCursor();
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const heroSection = document.querySelector('.hero');
+const heroOverlay = heroSection.querySelector('.overlay');
+let heroCanvas = null;
+let currentScroll = 0;
+let aboutScrollTop = stableVh;
 // Set once services are measured: how far above the viewport the sticky stage pins
 let servicesPinShift = 0;
 
-const updateHeroParallax = () => {
+const updateHeroParallax = (scroll) => {
   const vh = stableVh;
-  const y = window.scrollY;
+  const y = scroll;
   const progress = Math.min(y / vh, 1);
-  const canvas = document.getElementById('hero-canvas');
-  if (canvas) {
+  if (heroCanvas) {
     // Background image keeps its slower parallax pace…
-    canvas.style.transform = `translateY(${(-progress * vh * 0.3).toFixed(1)}px)`;
+    heroCanvas.style.transform = `translateY(${(-progress * vh * 0.3).toFixed(1)}px)`;
     // …but fully fades out by the moment the accordion pins
-    const about = document.querySelector('.about');
-    const fadeEnd = Math.max(1, (about ? about.offsetTop : vh) + servicesPinShift);
-    canvas.style.opacity = Math.max(0, 1 - y / fadeEnd).toFixed(3);
+    const fadeEnd = Math.max(1, aboutScrollTop + servicesPinShift);
+    heroCanvas.style.opacity = Math.max(0, 1 - y / fadeEnd).toFixed(3);
   }
-  const overlay = heroSection.querySelector('.overlay');
-  if (overlay) {
+  if (heroOverlay) {
     // Hero content scrolls at normal page speed, same as the second block
-    overlay.style.transform = `translateY(${(-Math.min(y, vh * 1.5)).toFixed(1)}px)`;
+    heroOverlay.style.transform = `translateY(${(-Math.min(y, vh * 1.5)).toFixed(1)}px)`;
   }
   heroSection.style.setProperty('--hero-shade', (progress * 0.55).toFixed(3));
 };
-
-if (!prefersReducedMotion) {
-  const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
-  const lenisRaf = (time) => {
-    lenis.raf(time);
-    requestAnimationFrame(lenisRaf);
-  };
-  requestAnimationFrame(lenisRaf);
-
-  window.addEventListener('scroll', updateHeroParallax, { passive: true });
-  updateHeroParallax();
-}
 
 const stairReveal = document.querySelector('.stair-reveal');
 const stairRevealDone = new Promise((resolve) => {
@@ -445,6 +434,7 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.setClearColor(0x0e0e10, 1);
 container.prepend(renderer.domElement);
 renderer.domElement.id = 'hero-canvas';
+heroCanvas = renderer.domElement;
 
 const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 camera.position.z = 1;
@@ -605,43 +595,98 @@ const animate = () => {
 const aboutSection = document.querySelector('.about');
 const serviceEls = Array.from(document.querySelectorAll('.service'));
 let measureServices = () => {};
+let updateServicesCollapse = () => {};
 if (aboutSection && serviceEls.length) {
   const bodyWraps = serviceEls.map((el) => el.querySelector('.service-body-wrap'));
+  const serviceBodies = bodyWraps.map((wrap) => wrap.querySelector('.service-body'));
+  const sticky = document.querySelector('.about-sticky');
+  const header = document.querySelector('.site-header');
   let bodyHeights = bodyWraps.map(() => 0);
+  let serviceHeights = serviceEls.map(() => 1);
+  let cachedPinStart = 0;
+  let cachedPinDistance = 0;
+  let pinActive = false;
+  const lastLocals = serviceEls.map(() => Number.NaN);
+  const lastShifts = serviceEls.map(() => Number.NaN);
+  const nextLocals = serviceEls.map(() => 0);
+  const nextShifts = serviceEls.map(() => 0);
 
-  const updateServicesCollapse = () => {
-    const vh = stableVh;
-    const pinStart = aboutSection.offsetTop + servicesPinShift;
-    const pinDistance = aboutSection.offsetHeight - vh - servicesPinShift;
-    if (pinDistance <= 0) return;
-    const progress = Math.min(1, Math.max(0, (window.scrollY - pinStart) / pinDistance));
-    serviceEls.forEach((el, i) => {
+  updateServicesCollapse = (scroll) => {
+    if (cachedPinDistance <= 0) return;
+
+    const rawProgress = (scroll - cachedPinStart) / cachedPinDistance;
+    const progress = Math.min(1, Math.max(0, rawProgress));
+    const nextPinActive = rawProgress >= 0 && rawProgress <= 1;
+    let collapsedHeight = 0;
+
+    for (let i = 0; i < serviceEls.length; i += 1) {
       const local = Math.min(1, Math.max(0, progress * serviceEls.length - i));
-      bodyWraps[i].style.height = `${Math.round(bodyHeights[i] * (1 - local))}px`;
-      bodyWraps[i].style.opacity = `${1 - local}`;
-      el.classList.toggle('is-collapsed', local >= 1);
-    });
+      nextLocals[i] = local;
+      nextShifts[i] = collapsedHeight;
+      collapsedHeight += bodyHeights[i] * local;
+    }
+
+    if (nextPinActive !== pinActive) {
+      pinActive = nextPinActive;
+      aboutSection.classList.toggle('is-pin-active', pinActive);
+    }
+
+    for (let i = 0; i < serviceEls.length; i += 1) {
+      const el = serviceEls[i];
+      const local = nextLocals[i];
+      const shift = nextShifts[i];
+
+      if (Math.abs(shift - lastShifts[i]) >= 0.1 || Number.isNaN(lastShifts[i])) {
+        el.style.transform = `translate3d(0, ${(-shift).toFixed(2)}px, 0)`;
+        lastShifts[i] = shift;
+      }
+
+      if (Math.abs(local - lastLocals[i]) >= 0.001 || Number.isNaN(lastLocals[i])) {
+        const remaining = 1 - local;
+        const visibleHeight = serviceHeights[i] - bodyHeights[i] * local;
+        const fillScale = Math.max(0, visibleHeight / serviceHeights[i]);
+        bodyWraps[i].style.clipPath = `inset(0 0 ${(local * 100).toFixed(3)}% 0)`;
+        bodyWraps[i].style.opacity = remaining.toFixed(3);
+        el.style.setProperty('--service-fill-scale', fillScale.toFixed(4));
+        el.classList.toggle('is-collapsed', local >= 1);
+        lastLocals[i] = local;
+      }
+    }
   };
 
   measureServices = () => {
-    bodyWraps.forEach((wrap, i) => {
-      wrap.style.height = 'auto';
-      bodyHeights[i] = wrap.scrollHeight;
-    });
-    // Pin the stage higher than the viewport top so the first service
-    // stops 30px below the fixed header before the accordion starts
-    const sticky = document.querySelector('.about-sticky');
-    const header = document.querySelector('.site-header');
+    // Read phase: all geometry is collected before any inline style is changed.
+    const nextBodyHeights = serviceBodies.map((body) => body.scrollHeight);
+    const currentWrapHeights = bodyWraps.map((wrap) => wrap.offsetHeight);
+    const currentServiceHeights = serviceEls.map((el) => el.offsetHeight);
+    const nextAboutTop = aboutSection.offsetTop;
+    const nextAboutHeight = aboutSection.offsetHeight;
+    let nextPinShift = servicesPinShift;
+
     if (sticky && header && serviceEls[0]) {
       const headerBottom = header.getBoundingClientRect().bottom;
       const firstServiceTop = serviceEls[0].getBoundingClientRect().top - sticky.getBoundingClientRect().top;
-      servicesPinShift = Math.max(0, Math.round(firstServiceTop - headerBottom - 30));
-      sticky.style.top = `${-servicesPinShift}px`;
+      nextPinShift = Math.max(0, Math.round(firstServiceTop - headerBottom - 30));
     }
-    updateServicesCollapse();
+
+    // Write phase: fixed wrapper heights are updated only after width/orientation changes.
+    bodyHeights = nextBodyHeights;
+    serviceHeights = currentServiceHeights.map(
+      (height, i) => Math.max(1, height - currentWrapHeights[i] + bodyHeights[i]),
+    );
+    servicesPinShift = nextPinShift;
+    aboutScrollTop = nextAboutTop;
+    cachedPinStart = nextAboutTop + servicesPinShift;
+    cachedPinDistance = nextAboutHeight - stableVh - servicesPinShift;
+    bodyWraps.forEach((wrap, i) => {
+      wrap.style.height = `${bodyHeights[i]}px`;
+      lastLocals[i] = Number.NaN;
+      lastShifts[i] = Number.NaN;
+    });
+    if (sticky) sticky.style.top = `${-servicesPinShift}px`;
+    updateServicesCollapse(currentScroll);
   };
 
-  window.addEventListener('scroll', updateServicesCollapse, { passive: true });
   (document.fonts?.ready || Promise.resolve()).then(measureServices);
 
   if (prefersReducedMotion) {
@@ -677,8 +722,9 @@ const applyStableViewport = () => {
   stableVh = window.innerHeight;
   renderer.setSize(lastWidth, stableVh);
   uniforms.uResolution.value.set(lastWidth, stableVh);
+  lenis.resize();
   measureServices();
-  if (!prefersReducedMotion) updateHeroParallax();
+  if (!prefersReducedMotion) updateHeroParallax(currentScroll);
 };
 
 const scheduleStableViewport = (force = false) => {
@@ -696,3 +742,29 @@ const onResize = () => {
 
 window.addEventListener('resize', onResize);
 window.addEventListener('orientationchange', () => scheduleStableViewport(true));
+
+const lenis = new Lenis({
+  duration: 1.1,
+  smoothWheel: !prefersReducedMotion,
+  // Keep native touch momentum; Lenis only reports its synchronized scroll value.
+  syncTouch: false,
+  // Safari height-only viewport changes must not trigger internal dimension reads.
+  autoResize: false,
+});
+
+const updateScrollAnimations = (scroll) => {
+  currentScroll = scroll;
+  if (!prefersReducedMotion) updateHeroParallax(scroll);
+  updateServicesCollapse(scroll);
+};
+
+lenis.on('scroll', ({ scroll }) => updateScrollAnimations(scroll));
+
+const lenisRaf = (time) => {
+  lenis.raf(time);
+  requestAnimationFrame(lenisRaf);
+};
+
+currentScroll = Number.isFinite(lenis.scroll) ? lenis.scroll : 0;
+updateScrollAnimations(currentScroll);
+requestAnimationFrame(lenisRaf);
