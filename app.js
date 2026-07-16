@@ -457,7 +457,6 @@ if (heroRevealTitle && pointerFine) {
 // WebGL hero background (three.js)
 // ---------------------------------------------------------------------------
 const heroSection = document.querySelector('.hero');
-const heroOverlay = heroSection.querySelector('.overlay');
 
 const rendererPixelRatio = () => Math.min(window.devicePixelRatio || 1, mqMobile.matches ? 1.5 : 2);
 
@@ -480,7 +479,6 @@ const uniforms = {
   uDisplacement: { value: null },
   uFlowMap: { value: null },
   uMouse: { value: new THREE.Vector2(0.5, 0.5) },
-  uParallax: { value: new THREE.Vector2(0, 0) },
   uMouseInfluence: { value: 0.0 },
   uTime: { value: 0 },
   uResolution: { value: new THREE.Vector2(viewportWidth, stableVh) },
@@ -503,7 +501,6 @@ const material = new THREE.ShaderMaterial({
     uniform sampler2D uDisplacement;
     uniform sampler2D uFlowMap;
     uniform vec2 uMouse;
-    uniform vec2 uParallax;
     uniform float uMouseInfluence;
     uniform float uTime;
     uniform vec2 uResolution;
@@ -512,9 +509,6 @@ const material = new THREE.ShaderMaterial({
 
     void main() {
       vec2 uv = vUv;
-
-      vec2 parallax = uParallax / uResolution;
-      uv += parallax;
 
       vec2 ambient = texture2D(uDisplacement, uv * 1.18 + vec2(uTime * 0.012, uTime * 0.008)).rg - 0.5;
       uv += ambient * 0.012;
@@ -582,9 +576,6 @@ if (pointerFine) {
   });
 }
 
-// Set from the scroll pipeline; when the hero is fully faded out we keep the
-// rAF loop alive but skip the (expensive) WebGL render entirely.
-let heroPixelsVisible = true;
 // Mobile: the hero scrolls out of view natively — stop rendering once it's gone
 let heroInView = true;
 let webglReady = false;
@@ -612,7 +603,7 @@ Promise.all(
 const renderLoop = () => {
   if (!webglReady) return;
   requestAnimationFrame(renderLoop);
-  if (!heroPixelsVisible || !heroInView) return;
+  if (!heroInView) return;
 
   smoothedMouse.x += (targetMouse.x - smoothedMouse.x) * 0.06;
   smoothedMouse.y += (targetMouse.y - smoothedMouse.y) * 0.06;
@@ -624,7 +615,6 @@ const renderLoop = () => {
   }
 
   uniforms.uMouse.value.set(smoothedMouse.x, smoothedMouse.y);
-  uniforms.uParallax.value.set((0.5 - smoothedMouse.x) * 30, (0.5 - smoothedMouse.y) * 30);
   uniforms.uMouseInfluence.value = influence;
   uniforms.uTime.value += 0.016;
 
@@ -645,58 +635,10 @@ let currentScroll = 0;
 let cachedPinStart = stableVh; // scroll position where the accordion pins
 let cachedPinDistance = 0;     // scroll distance that drives the full collapse
 
-// Cached last-applied values (avoid redundant style writes)
-let lastCanvasShift = null;
-let lastCanvasOpacity = null;
-let lastOverlayShift = null;
-let lastShade = null;
 let bodyHeights = bodyWraps.map(() => 0);
 const lastWrapHeights = bodyWraps.map(() => -1);
 const lastWrapOpacities = bodyWraps.map(() => -1);
 const lastCollapsed = bodyWraps.map(() => false);
-
-const resetHeroEffects = () => {
-  lastCanvasShift = null;
-  lastCanvasOpacity = null;
-  lastOverlayShift = null;
-  lastShade = null;
-  heroCanvas.style.transform = '';
-  heroCanvas.style.opacity = '';
-  heroOverlay.style.transform = '';
-  heroSection.style.removeProperty('--hero-shade');
-  heroPixelsVisible = true;
-};
-
-const updateHeroParallax = (y) => {
-  const vh = stableVh;
-  const progress = Math.min(y / vh, 1);
-
-  // Background image: slower parallax pace + full fade-out by the pin point
-  const canvasShift = Math.round(-progress * vh * 0.3 * 10) / 10;
-  const canvasOpacity = Math.round(Math.max(0, 1 - y / Math.max(1, cachedPinStart)) * 1000) / 1000;
-  if (canvasShift !== lastCanvasShift) {
-    lastCanvasShift = canvasShift;
-    heroCanvas.style.transform = `translateY(${canvasShift}px)`;
-  }
-  if (canvasOpacity !== lastCanvasOpacity) {
-    lastCanvasOpacity = canvasOpacity;
-    heroCanvas.style.opacity = canvasOpacity;
-  }
-  heroPixelsVisible = canvasOpacity > 0.001;
-
-  // Hero content: scrolls away at normal page speed, always fully opaque
-  const overlayShift = Math.round(-Math.min(y, vh * 1.5));
-  if (overlayShift !== lastOverlayShift) {
-    lastOverlayShift = overlayShift;
-    heroOverlay.style.transform = `translateY(${overlayShift}px)`;
-  }
-
-  const shade = Math.round(progress * 0.55 * 1000) / 1000;
-  if (shade !== lastShade) {
-    lastShade = shade;
-    heroSection.style.setProperty('--hero-shade', shade);
-  }
-};
 
 const updateServicesCollapse = (y) => {
   if (cachedPinDistance <= 0) return;
@@ -725,8 +667,6 @@ const updateServicesCollapse = (y) => {
 
 const updateScrollAnimations = (scroll) => {
   currentScroll = scroll;
-  // Mobile: the hero scrolls natively — no parallax, fade or darkening at all
-  if (!prefersReducedMotion && !mqMobile.matches) updateHeroParallax(scroll);
   updateServicesCollapse(scroll);
 };
 
@@ -774,7 +714,6 @@ const measureServices = () => {
   lastWrapHeights.fill(-1);
   lastWrapOpacities.fill(-1);
   updateServicesCollapse(currentScroll);
-  if (!prefersReducedMotion && !mqMobile.matches) updateHeroParallax(currentScroll);
 };
 
 if (serviceEls.length) {
@@ -830,7 +769,6 @@ const applyViewport = () => {
   renderer.setPixelRatio(rendererPixelRatio());
   renderer.setSize(viewportWidth, stableVh);
   uniforms.uResolution.value.set(viewportWidth, stableVh);
-  if (mqMobile.matches) resetHeroEffects();
   measureServices();
 };
 
