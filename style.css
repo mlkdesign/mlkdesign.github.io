@@ -39,8 +39,6 @@ body {
 
 body {
   position: relative;
-  min-height: 100vh;
-  min-height: 100svh;
 }
 
 body::before {
@@ -65,28 +63,6 @@ body::before {
   inset: 0;
   z-index: 9998;
   overflow: hidden;
-  background: transparent;
-}
-
-.stair-reveal::before,
-.stair-reveal::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  z-index: 3;
-  background: #0b0b0b;
-  pointer-events: none;
-}
-
-.stair-reveal::before {
-  top: 0;
-  height: max(env(safe-area-inset-top), 2px);
-}
-
-.stair-reveal::after {
-  bottom: 0;
-  height: max(env(safe-area-inset-bottom), 2px);
 }
 
 .stair-reveal__layer {
@@ -828,6 +804,10 @@ h1 {
 }
 
 @media (max-width: 800px) {
+  .stair-reveal {
+    display: none;
+  }
+
   :root {
     --page-inset: 1rem;
   }
@@ -839,17 +819,7 @@ h1 {
 
 @media (max-width: 800px) {
   .overlay {
-    position: relative;
-    inset: auto;
-    min-height: 100vh;
-    min-height: 100svh;
     padding: 1rem var(--page-inset);
-  }
-
-  .hero {
-    height: auto;
-    min-height: 100vh;
-    min-height: 100svh;
   }
 
   html,

@@ -216,17 +216,14 @@ const stairReveal = document.querySelector('.stair-reveal');
 const preloaderCount = stairReveal?.querySelector('.stair-reveal__count');
 
 const forceThemeColor = () => {
-  let metas = Array.from(document.querySelectorAll('meta[name="theme-color"]'));
-  if (!metas.some((meta) => !meta.hasAttribute('media'))) {
-    const meta = document.createElement('meta');
+  let meta = document.querySelector('meta[name="theme-color"]:not([media])');
+  if (!meta) {
+    meta = document.createElement('meta');
     meta.setAttribute('name', 'theme-color');
     document.head.appendChild(meta);
-    metas = [...metas, meta];
   }
-  metas.forEach((meta) => meta.setAttribute('content', '#0b0b0c'));
-  requestAnimationFrame(() => {
-    metas.forEach((meta) => meta.setAttribute('content', '#0b0b0b'));
-  });
+  meta.setAttribute('content', '#0b0b0c');
+  requestAnimationFrame(() => meta.setAttribute('content', '#0b0b0b'));
 };
 
 forceThemeColor();
@@ -276,7 +273,7 @@ const siteReady = new Promise((resolve) => {
 });
 
 const stairRevealDone = new Promise((resolve) => {
-  if (!stairReveal || prefersReducedMotion) {
+  if (!stairReveal || prefersReducedMotion || mqMobile.matches) {
     stairReveal?.remove();
     forceThemeColor();
     resolve();
