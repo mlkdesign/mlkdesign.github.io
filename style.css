@@ -2273,12 +2273,13 @@ a[data-fade].is-in:focus-visible {
     height: calc(100vh - 100px);
     height: calc(100svh - 100px);
     min-height: 0;
-    overflow: visible;
+    overflow: hidden;
   }
 
   .team-stage {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
     height: 100%;
     overflow: visible;
   }
@@ -2336,9 +2337,11 @@ a[data-fade].is-in:focus-visible {
     inset: auto;
     grid-column: 1;
     grid-row: 3;
+    align-self: start;
     justify-self: center;
     width: 200vw;
     height: auto;
+    min-height: 0;
     margin-top: 30px;
     aspect-ratio: 1742 / 980;
     overflow: visible;
@@ -2352,16 +2355,14 @@ a[data-fade].is-in:focus-visible {
   }
 
   .team-caption {
-    position: relative;
+    position: absolute;
     right: auto;
-    bottom: auto;
-    left: auto;
+    bottom: 0;
+    left: 0;
     z-index: 4;
-    grid-column: 1;
-    grid-row: 4;
     width: 100%;
     max-width: none;
-    margin-top: 24px;
+    margin: 0;
   }
 
   .team-caption__copy {
@@ -2520,7 +2521,7 @@ a[data-fade].is-in:focus-visible {
 
   .form-modal__panel {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto minmax(220px, 40svh);
+    grid-template-rows: minmax(0, 1fr);
     overflow-y: auto;
   }
 
@@ -2529,11 +2530,7 @@ a[data-fade].is-in:focus-visible {
   }
 
   .form-modal__media {
-    grid-row: 2;
-    width: 100%;
-    min-height: 220px;
-    margin: 0;
-    padding: 0;
+    display: none;
   }
 
   .form-modal__image {
@@ -2551,7 +2548,7 @@ a[data-fade].is-in:focus-visible {
   .form-modal__side {
     grid-row: 1;
     width: 100%;
-    min-height: 60svh;
+    min-height: 100%;
     padding: 4.8rem var(--page-inset) calc(1.5rem + env(safe-area-inset-bottom, 0px));
     overflow: visible;
   }
