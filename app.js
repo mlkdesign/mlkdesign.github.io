@@ -22,19 +22,37 @@ const cursorDot = document.querySelector('.cursor-dot');
 const cursorEllipse = document.querySelector('.cursor-ellipse');
 
 if (pointerFine && cursorDot && cursorEllipse) {
-  const cursorCurrent = { x: 0, y: 0 };
   const ellipseTarget = { x: 0, y: 0 };
   const ellipseCurrent = { x: 0, y: 0 };
+  let cursorFrame = 0;
+
+  const animateCursor = () => {
+    ellipseCurrent.x += (ellipseTarget.x - ellipseCurrent.x) * 0.12;
+    ellipseCurrent.y += (ellipseTarget.y - ellipseCurrent.y) * 0.12;
+    cursorEllipse.style.left = `${ellipseCurrent.x}px`;
+    cursorEllipse.style.top = `${ellipseCurrent.y}px`;
+
+    const stillMoving = Math.abs(ellipseTarget.x - ellipseCurrent.x) > 0.05
+      || Math.abs(ellipseTarget.y - ellipseCurrent.y) > 0.05;
+    cursorFrame = stillMoving ? requestAnimationFrame(animateCursor) : 0;
+  };
 
   window.addEventListener('pointermove', (event) => {
-    cursorCurrent.x = event.clientX;
-    cursorCurrent.y = event.clientY;
     ellipseTarget.x = event.clientX;
     ellipseTarget.y = event.clientY;
+    cursorDot.style.left = `${event.clientX}px`;
+    cursorDot.style.top = `${event.clientY}px`;
+    if (!cursorFrame) cursorFrame = requestAnimationFrame(animateCursor);
   });
 
   document.querySelectorAll('a, button, input, textarea, select').forEach((el) => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('is-interactive'));
+    el.addEventListener('mouseenter', () => {
+      if (el.matches('[data-language].is-active')) {
+        document.body.classList.remove('is-interactive');
+        return;
+      }
+      document.body.classList.add('is-interactive');
+    });
     el.addEventListener('mouseleave', () => document.body.classList.remove('is-interactive'));
   });
 
@@ -47,16 +65,6 @@ if (pointerFine && cursorDot && cursorEllipse) {
     cursorEllipse.style.transform = 'translate(-50%, -50%) scale(1)';
   });
 
-  const animateCursor = () => {
-    ellipseCurrent.x += (ellipseTarget.x - ellipseCurrent.x) * 0.12;
-    ellipseCurrent.y += (ellipseTarget.y - ellipseCurrent.y) * 0.12;
-    cursorDot.style.left = `${cursorCurrent.x}px`;
-    cursorDot.style.top = `${cursorCurrent.y}px`;
-    cursorEllipse.style.left = `${ellipseCurrent.x}px`;
-    cursorEllipse.style.top = `${ellipseCurrent.y}px`;
-    requestAnimationFrame(animateCursor);
-  };
-  animateCursor();
 }
 
 // ---------------------------------------------------------------------------
@@ -557,25 +565,25 @@ const SERVICE_TRANSLATIONS = {
     {
       title: 'UI/UX Design',
       description: 'We design intuitive digital experiences that balance aesthetics, usability, and business goals.',
-      tools: 'Tools: Figma · Adobe Photoshop',
+      tools: 'Figma · Adobe Photoshop',
       tags: ['web design', 'mobile app design', 'design systems', 'product prototyping', 'user flows & wireframes', 'interactive prototypes'],
     },
     {
       title: 'Web Development',
       description: 'We build fast, scalable digital products and websites engineered for performance and growth.',
-      tools: 'Tools: Webflow · Framer · HTML5 · CSS3 · JavaScript · TypeScript · React · Node.js · REST APIs',
+      tools: 'Webflow · Framer · HTML5 · CSS3 · JavaScript · TypeScript · React · Node.js · REST APIs',
       tags: ['landing pages', 'corporate websites', 'cms development', 'frontend development', 'backend integration', 'custom features'],
     },
     {
       title: 'Motion & Animation',
       description: 'We create motion that improves interactions, guides attention, and brings products to life.',
-      tools: 'Tools: Adobe After Effects · Figma Motion',
+      tools: 'Adobe After Effects · Figma Motion',
       tags: ['interface animations', 'micro interactions', 'scroll animations', 'lottie animations', 'product presentations', 'explainer videos'],
     },
     {
       title: 'Illustration & Visual Assets',
       description: 'We create custom visuals that strengthen brand identity and improve communication.',
-      tools: 'Tools: Adobe Illustrator · Procreate · Affinity Designer',
+      tools: 'Adobe Illustrator · Procreate · Affinity Designer',
       tags: ['custom illustrations', 'icon systems', 'brand visual assets', 'marketing graphics', 'presentation design', 'social media visuals'],
     },
   ],
@@ -583,25 +591,25 @@ const SERVICE_TRANSLATIONS = {
     {
       title: 'UI/UX Дизайн',
       description: 'Ми створюємо інтуїтивні цифрові продукти, що поєднують естетику, зручність і бізнес-цілі.',
-      tools: 'Інструменти: Figma · Adobe Photoshop',
+      tools: 'Figma · Adobe Photoshop',
       tags: ['вебдизайн', 'дизайн мобільних застосунків', 'дизайн-системи', 'прототипування продуктів', 'user flow та варфрейми', 'інтерактивні прототипи'],
     },
     {
       title: 'Веброзробка',
       description: 'Ми створюємо швидкі й масштабовані цифрові продукти та сайти, розраховані на продуктивність і зростання.',
-      tools: 'Інструменти: Webflow · Framer · HTML5 · CSS3 · JavaScript · TypeScript · React · Node.js · REST APIs',
+      tools: 'Webflow · Framer · HTML5 · CSS3 · JavaScript · TypeScript · React · Node.js · REST APIs',
       tags: ['лендінги', 'корпоративні сайти', 'розробка CMS', 'фронтенд-розробка', 'інтеграція бекенду', 'індивідуальні функції'],
     },
     {
       title: 'Моушн і анімація',
       description: 'Ми створюємо анімацію, що покращує взаємодію, спрямовує увагу та оживляє продукти.',
-      tools: 'Інструменти: Adobe After Effects · Figma Motion',
+      tools: 'Adobe After Effects · Figma Motion',
       tags: ['анімації інтерфейсу', 'мікровзаємодії', 'scroll-анімації', 'Lottie-анімації', 'презентації продуктів', 'пояснювальні відео'],
     },
     {
       title: 'Ілюстрації та візуальні матеріали',
       description: 'Ми створюємо унікальні візуальні матеріали, що посилюють ідентичність бренду та покращують комунікацію.',
-      tools: 'Інструменти: Adobe Illustrator · Procreate · Affinity Designer',
+      tools: 'Adobe Illustrator · Procreate · Affinity Designer',
       tags: ['авторські ілюстрації', 'системи іконок', 'візуальні матеріали бренду', 'маркетингова графіка', 'дизайн презентацій', 'візуали для соцмереж'],
     },
   ],
@@ -692,7 +700,7 @@ const setTranslatedContent = (element, value, useHtml = false) => {
   }
 };
 
-const applyLanguage = (language, { persist = false, notify = false } = {}) => {
+const applyLanguage = (language) => {
   const nextLanguage = language === 'uk' ? 'uk' : 'en';
   const strings = UI_TRANSLATIONS[nextLanguage];
   activeLanguage = nextLanguage;
@@ -746,20 +754,6 @@ const applyLanguage = (language, { persist = false, notify = false } = {}) => {
     button.classList.toggle('is-active', selected);
     button.setAttribute('aria-pressed', String(selected));
   });
-
-  if (persist) {
-    try {
-      localStorage.setItem(languagePreferenceKey, nextLanguage);
-    } catch {
-      // Keep the selected language for this page when storage is unavailable.
-    }
-  }
-
-  if (notify) {
-    window.dispatchEvent(new CustomEvent('mlk:languagechange', {
-      detail: { language: nextLanguage },
-    }));
-  }
 };
 
 try {
@@ -918,6 +912,7 @@ const uniforms = {
   uTime: { value: 0 },
   uResolution: { value: new THREE.Vector2(viewportWidth, initialRendererHeight) },
   uImageResolution: { value: new THREE.Vector2(1, 1) },
+  uCoverAlignY: { value: mqMobile.matches ? 0.5 : 0.0 },
 };
 
 const material = new THREE.ShaderMaterial({
@@ -941,6 +936,7 @@ const material = new THREE.ShaderMaterial({
     uniform float uTime;
     uniform vec2 uResolution;
     uniform vec2 uImageResolution;
+    uniform float uCoverAlignY;
     varying vec2 vUv;
 
     void main() {
@@ -963,11 +959,12 @@ const material = new THREE.ShaderMaterial({
       vec2 disp = texture2D(uDisplacement, uv + vec2(uTime * 0.028, -uTime * 0.018)).rg - 0.5;
       uv += disp * ripple * 0.09 * (0.75 + uMouseInfluence * 0.3);
 
-      // "cover" fit: keep the image aspect, center horizontally, never squeeze
+      // "cover" fit: center horizontally; bottom-align on desktop
       vec2 s = uResolution / uImageResolution;
       float scale = max(s.x, s.y);
       vec2 size = uImageResolution * scale;
-      vec2 offset = (uResolution - size) * 0.5;
+      vec2 overflow = uResolution - size;
+      vec2 offset = vec2(overflow.x * 0.5, overflow.y * uCoverAlignY);
       vec2 coverUv = (uv * uResolution - offset) / size;
 
       gl_FragColor = texture2D(uTexture, coverUv);
@@ -1018,30 +1015,11 @@ if (pointerFine) {
 // Mobile: the hero scrolls out of view natively — stop rendering once it's gone
 let heroInView = true;
 let webglReady = false;
-
-new IntersectionObserver(([entry]) => {
-  heroInView = entry.isIntersecting;
-}).observe(heroSection);
-
-Promise.all(
-  texturePaths.map((path, i) =>
-    loadTexture(path).finally(() => markLoaded(`tex${i}`)),
-  ),
-).then(([texture, displacement, flowMap]) => {
-  uniforms.uTexture.value = texture;
-  uniforms.uDisplacement.value = displacement;
-  uniforms.uFlowMap.value = flowMap;
-  uniforms.uImageResolution.value.set(texture.image.width, texture.image.height);
-  webglReady = true;
-  requestAnimationFrame(renderLoop);
-}).catch((error) => {
-  console.error('Hero textures failed to load:', error);
-});
+let heroRenderFrame = 0;
 
 const renderLoop = () => {
-  if (!webglReady) return;
-  requestAnimationFrame(renderLoop);
-  if (!heroInView) return;
+  heroRenderFrame = 0;
+  if (!webglReady || !heroInView) return;
 
   smoothedMouse.x += (targetMouse.x - smoothedMouse.x) * 0.06;
   smoothedMouse.y += (targetMouse.y - smoothedMouse.y) * 0.06;
@@ -1058,7 +1036,39 @@ const renderLoop = () => {
   uniforms.uTime.value += 0.016;
 
   renderer.render(scene, camera);
+  heroRenderFrame = requestAnimationFrame(renderLoop);
 };
+
+const startHeroRender = () => {
+  if (webglReady && heroInView && !heroRenderFrame) {
+    heroRenderFrame = requestAnimationFrame(renderLoop);
+  }
+};
+
+new IntersectionObserver(([entry]) => {
+  heroInView = entry.isIntersecting;
+  if (heroInView) {
+    startHeroRender();
+  } else {
+    cancelAnimationFrame(heroRenderFrame);
+    heroRenderFrame = 0;
+  }
+}).observe(heroSection);
+
+Promise.all(
+  texturePaths.map((path, i) =>
+    loadTexture(path).finally(() => markLoaded(`tex${i}`)),
+  ),
+).then(([texture, displacement, flowMap]) => {
+  uniforms.uTexture.value = texture;
+  uniforms.uDisplacement.value = displacement;
+  uniforms.uFlowMap.value = flowMap;
+  uniforms.uImageResolution.value.set(texture.image.width, texture.image.height);
+  webglReady = true;
+  startHeroRender();
+}).catch((error) => {
+  console.error('Hero textures failed to load:', error);
+});
 
 // ---------------------------------------------------------------------------
 // Services: natural-height sticky stack. No scroll-driven layout writes.
@@ -1342,23 +1352,6 @@ if (serviceTagContainers.length) {
       resizeTagPhysics(state);
       if (state.startRequested) startTagCascade(state);
     };
-
-    window.addEventListener('mlk:languagechange', () => {
-      requestAnimationFrame(() => {
-        tagPhysicsStates.forEach((state) => {
-          if (!state.ready) return;
-          state.records.forEach((record) => {
-            const rect = record.element.getBoundingClientRect();
-            if (rect.width < 1 || rect.height < 1 || record.width < 1 || record.height < 1) return;
-            Body.scale(record.body, rect.width / record.width, rect.height / record.height);
-            record.width = rect.width;
-            record.height = rect.height;
-            Sleeping.set(record.body, false);
-          });
-          resizeTagPhysics(state);
-        });
-      });
-    });
 
     const servicePhysicsObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach((entry) => {
@@ -1833,8 +1826,27 @@ if (pixelsSection && pixelsCanvas) {
 // Mobile stays native.
 // ---------------------------------------------------------------------------
 let lenis = null;
+let lenisFrame = 0;
 const HERO_PARALLAX_STRENGTH = 0.3;
 let lastHeroParallaxOffset = Number.NaN;
+
+const runLenisFrame = (time) => {
+  if (!lenis) {
+    lenisFrame = 0;
+    return;
+  }
+  lenis.raf(time);
+  lenisFrame = requestAnimationFrame(runLenisFrame);
+};
+
+const startLenisFrame = () => {
+  if (!lenisFrame) lenisFrame = requestAnimationFrame(runLenisFrame);
+};
+
+const stopLenisFrame = () => {
+  cancelAnimationFrame(lenisFrame);
+  lenisFrame = 0;
+};
 
 const updateHeroParallax = (scroll) => {
   const enabled = !mqMobile.matches && !prefersReducedMotion;
@@ -1858,8 +1870,10 @@ const setScrollMode = () => {
       autoResize: false,
     });
     lenis.on('scroll', ({ scroll }) => updateHeroParallax(scroll));
+    startLenisFrame();
   } else if (!useLenis) {
     if (lenis) {
+      stopLenisFrame();
       lenis.destroy();
       lenis = null;
     }
@@ -2011,9 +2025,7 @@ if (formModal) {
       item.element.style.transform = `translate3d(${item.x.toFixed(2)}px, ${item.y.toFixed(2)}px, 0)`;
     });
 
-    // Keep one loop alive while the modal is open so pointer updates never
-    // spawn competing animation frames.
-    if (modalOpen || moving) {
+    if (moving) {
       modalFloatFrame = requestAnimationFrame(renderModalFloats);
     }
   };
@@ -2151,6 +2163,7 @@ if (formModal) {
         item.targetX = modalPointer.x * item.depth * 90;
         item.targetY = modalPointer.y * item.depth * 90;
       });
+      startModalFloats();
     }, { passive: true });
 
     formModal.addEventListener('pointerleave', () => {
@@ -2158,15 +2171,10 @@ if (formModal) {
         item.targetX = 0;
         item.targetY = 0;
       });
+      startModalFloats();
     }, { passive: true });
   }
 }
-
-const masterRaf = (time) => {
-  lenis?.raf(time);
-  requestAnimationFrame(masterRaf);
-};
-requestAnimationFrame(masterRaf);
 
 // ---------------------------------------------------------------------------
 // Resize: react to WIDTH changes and orientation only. Height-only resizes
@@ -2181,6 +2189,7 @@ const applyViewport = () => {
   renderer.setPixelRatio(rendererPixelRatio());
   renderer.setSize(viewportWidth, canvasHeight, false);
   uniforms.uResolution.value.set(viewportWidth, canvasHeight);
+  uniforms.uCoverAlignY.value = mqMobile.matches ? 0.5 : 0.0;
   setScrollMode();
   measureWorks();
   lenis?.resize();
@@ -2197,13 +2206,6 @@ window.addEventListener('resize', () => {
 });
 window.addEventListener('orientationchange', scheduleViewportRefresh);
 mqMobile.addEventListener('change', scheduleViewportRefresh);
-
-window.addEventListener('mlk:languagechange', () => {
-  requestAnimationFrame(() => {
-    measureWorks();
-    lenis?.resize();
-  });
-});
 
 // ---------------------------------------------------------------------------
 // Init
