@@ -494,6 +494,8 @@ const UI_TRANSLATIONS = {
     statYears: 'Years of<br>experience',
     statProjects: 'Projects<br>delivered',
     statTeam: 'Team<br>members',
+    teamTitle: 'Different disciplines. One shared vision for exceptional digital products.',
+    teamMembers: 'Team members',
     worksIntro: 'A selection of projects crafted for ambitious brands and companies around the world.',
     worksTitle: 'Selected works',
     worksCta: 'your project could be here',
@@ -535,6 +537,8 @@ const UI_TRANSLATIONS = {
     statYears: 'Років<br>досвіду',
     statProjects: 'Реалізованих<br>проєктів',
     statTeam: 'Учасників<br>команди',
+    teamTitle: 'Різні дисципліни. Єдине бачення виняткових цифрових продуктів.',
+    teamMembers: 'Учасники команди',
     worksIntro: 'Добірка проєктів, створених для амбітних брендів і компаній з усього світу.',
     worksTitle: 'Кращі проєкти',
     worksCta: 'тут може бути ваш проєкт',
@@ -615,6 +619,73 @@ const SERVICE_TRANSLATIONS = {
   ],
 };
 
+const TEAM_TRANSLATIONS = {
+  en: [
+    {
+      name: 'Anna Kovalenko',
+      role: 'HR Manager',
+      description: 'Builds a thoughtful team culture and brings together people who thrive on ambitious, collaborative work.',
+    },
+    {
+      name: 'Alex Morgan',
+      role: 'Project Manager',
+      description: 'Keeps strategy, communication, and delivery aligned from the first workshop through the final launch.',
+    },
+    {
+      name: 'Daniel Reed',
+      role: 'Full-Stack Developer',
+      description: 'Turns product ideas into fast, reliable systems designed to perform smoothly and scale with confidence.',
+    },
+    {
+      name: 'Milka Lisa',
+      role: 'Illustrator',
+      description: 'Creates distinctive illustrations, visual assets, and brand graphics that give every product its own character.',
+    },
+    {
+      name: 'Milka Jack',
+      role: 'UI/UX Designer',
+      description: 'Shapes clear interfaces and intuitive user journeys where visual character and usability work together.',
+    },
+    {
+      name: 'Mark Evans',
+      role: 'QA Engineer',
+      description: 'Tests every interaction and edge case to make sure each release feels polished, stable, and dependable.',
+    },
+  ],
+  uk: [
+    {
+      name: 'Анна Коваленко',
+      role: 'HR-менеджер',
+      description: 'Розвиває продуману командну культуру та об’єднує людей, яким близька амбітна спільна робота.',
+    },
+    {
+      name: 'Алекс Морган',
+      role: 'Менеджер проєктів',
+      description: 'Узгоджує стратегію, комунікацію та реалізацію від першого воркшопу до фінального запуску.',
+    },
+    {
+      name: 'Даніель Рід',
+      role: 'Full-Stack розробник',
+      description: 'Перетворює продуктові ідеї на швидкі й надійні системи, готові до стабільної роботи та масштабування.',
+    },
+    {
+      name: 'Мілка Єлизавета',
+      role: 'Ілюстратор',
+      description: 'Створює виразні ілюстрації, візуальні матеріали та бренд-графіку, що надають кожному продукту власного характеру.',
+    },
+    {
+      name: 'Мілка Євгеній',
+      role: 'UI/UX дизайнер',
+      description: 'Проєктує зрозумілі інтерфейси та інтуїтивні сценарії, у яких візуальний характер поєднується зі зручністю.',
+    },
+    {
+      name: 'Марк Еванс',
+      role: 'QA інженер',
+      description: 'Перевіряє кожну взаємодію та крайній сценарій, щоб кожен реліз був якісним, стабільним і надійним.',
+    },
+  ],
+};
+
 const I18N_TEXT_BINDINGS = {
   preloader: '.stair-reveal__text',
   navServices: '.nav-menu a[href="#services"] .nav-link-line',
@@ -629,6 +700,7 @@ const I18N_TEXT_BINDINGS = {
   aboutTitle: '.about-title',
   statsTitle: '.stats-title',
   statsIntro: '.stats-intro',
+  teamTitle: '.team-title',
   worksIntro: '.works-intro',
   worksTitle: '.works-title',
   worksCta: '.work-card__cta span',
@@ -737,8 +809,9 @@ const applyLanguage = (language) => {
     ['.site-header .nav', 'aria-label', 'primaryNavigation'],
     ['.form-modal__header .nav', 'aria-label', 'modalNavigation'],
     ['.language-switcher', 'aria-label', 'language'],
-    ['.works-arrow--prev', 'aria-label', 'previousProject'],
-    ['.works-arrow--next', 'aria-label', 'nextProject'],
+    ['.works-nav .works-arrow--prev', 'aria-label', 'previousProject'],
+    ['.works-nav .works-arrow--next', 'aria-label', 'nextProject'],
+    ['.team-roles', 'aria-label', 'teamMembers'],
     ['.form-modal', 'aria-label', 'projectRequest'],
     ['.form-modal__close', 'aria-label', 'close'],
     ['.form-modal__socials', 'aria-label', 'socialMedia'],
@@ -754,6 +827,25 @@ const applyLanguage = (language) => {
     button.classList.toggle('is-active', selected);
     button.setAttribute('aria-pressed', String(selected));
   });
+
+  const teamMembers = TEAM_TRANSLATIONS[nextLanguage];
+  document.querySelectorAll('.team-role').forEach((role, index) => {
+    const member = teamMembers[index];
+    if (!member) return;
+    setTranslatedContent(role.querySelector('.team-role__label'), member.role);
+    role.setAttribute('aria-label', member.role);
+  });
+  const initialTeamMember = teamMembers[3];
+  if (initialTeamMember) {
+    setTranslatedContent(
+      document.querySelector('.team-caption__name'),
+      `${initialTeamMember.name}, ${initialTeamMember.role}`,
+    );
+    setTranslatedContent(
+      document.querySelector('.team-caption__desc'),
+      initialTeamMember.description,
+    );
+  }
 };
 
 try {
@@ -813,71 +905,71 @@ document.querySelectorAll('[data-reveal]').forEach(setupReveal);
 setupFadeIn();
 
 // ---------------------------------------------------------------------------
-// Hero h1: scramble-on-hover per character
+// Reusable scramble-on-hover for reveal titles
 // ---------------------------------------------------------------------------
-const heroRevealTitle = document.querySelector('.hero h1[data-reveal]');
+const scrambleCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&$@/\\<>*';
+const activeScrambles = new Map();
+const scrambleMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-if (heroRevealTitle && pointerFine) {
-  const scrambleCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&$@/\\<>*';
-  const scrambleDuration = 600;
-  const scrambleInterval = 45;
-  const activeScrambles = new Map();
-  const scrambleMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+const stopScramble = (char) => {
+  const timers = activeScrambles.get(char);
+  if (timers) {
+    clearInterval(timers.intervalId);
+    clearTimeout(timers.timeoutId);
+    activeScrambles.delete(char);
+  }
 
-  const stopScramble = (char) => {
-    const timers = activeScrambles.get(char);
-    if (timers) {
-      clearInterval(timers.intervalId);
-      clearTimeout(timers.timeoutId);
-      activeScrambles.delete(char);
-    }
+  if (char.dataset.original !== undefined) {
+    char.textContent = char.dataset.original;
+  }
+  char.classList.remove('is-scrambling');
+  char.style.removeProperty('--scramble-char-width');
+};
 
-    if (char.dataset.original !== undefined) {
-      char.textContent = char.dataset.original;
-    }
-    char.classList.remove('is-scrambling');
-    char.style.removeProperty('--scramble-char-width');
+const startScramble = (char) => {
+  if (scrambleMotionQuery.matches || !char.textContent || /^\s+$/.test(char.textContent)) return;
+
+  if (char.dataset.original === undefined) {
+    char.dataset.original = char.textContent;
+  }
+
+  stopScramble(char);
+  char.style.setProperty('--scramble-char-width', `${char.getBoundingClientRect().width}px`);
+  char.classList.add('is-scrambling');
+  const useLowercase = /^[a-z]$/.test(char.dataset.original);
+
+  const updateCharacter = () => {
+    const randomIndex = Math.floor(Math.random() * scrambleCharacters.length);
+    const randomCharacter = scrambleCharacters[randomIndex];
+    char.textContent = useLowercase ? randomCharacter.toLowerCase() : randomCharacter;
   };
 
-  const startScramble = (char) => {
-    if (scrambleMotionQuery.matches || !char.textContent || /^\s+$/.test(char.textContent)) return;
+  updateCharacter();
+  const intervalId = setInterval(updateCharacter, 45);
+  const timeoutId = setTimeout(() => stopScramble(char), 600);
+  activeScrambles.set(char, { intervalId, timeoutId });
+};
 
-    if (char.dataset.original === undefined) {
-      char.dataset.original = char.textContent;
-    }
+const setupScramble = (title) => {
+  if (!title || !pointerFine) return;
 
-    stopScramble(char);
-    char.style.setProperty('--scramble-char-width', `${char.getBoundingClientRect().width}px`);
-    char.classList.add('is-scrambling');
-    const useLowercase = /^[a-z]$/.test(char.dataset.original);
-
-    const updateCharacter = () => {
-      const randomIndex = Math.floor(Math.random() * scrambleCharacters.length);
-      const randomCharacter = scrambleCharacters[randomIndex];
-      char.textContent = useLowercase ? randomCharacter.toLowerCase() : randomCharacter;
-    };
-
-    updateCharacter();
-    const intervalId = setInterval(updateCharacter, scrambleInterval);
-    const timeoutId = setTimeout(() => stopScramble(char), scrambleDuration);
-    activeScrambles.set(char, { intervalId, timeoutId });
-  };
-
-  heroRevealTitle.addEventListener('mouseover', (event) => {
+  title.addEventListener('mouseover', (event) => {
     if (!(event.target instanceof HTMLElement) || !event.target.classList.contains('char')) return;
     startScramble(event.target);
   });
 
-  heroRevealTitle.addEventListener('mouseout', (event) => {
+  title.addEventListener('mouseout', (event) => {
     if (!(event.target instanceof HTMLElement) || !event.target.classList.contains('char')) return;
     stopScramble(event.target);
   });
+};
 
-  scrambleMotionQuery.addEventListener('change', (event) => {
-    if (!event.matches) return;
-    [...activeScrambles.keys()].forEach(stopScramble);
-  });
-}
+document.querySelectorAll('.hero h1[data-reveal], .team-title[data-reveal]').forEach(setupScramble);
+
+scrambleMotionQuery.addEventListener('change', (event) => {
+  if (!event.matches) return;
+  [...activeScrambles.keys()].forEach(stopScramble);
+});
 
 // ---------------------------------------------------------------------------
 // WebGL hero background (three.js)
@@ -1489,6 +1581,279 @@ if (statsSection && statNums.length) {
       }, { once: true });
     }
   }
+}
+
+// ---------------------------------------------------------------------------
+// Team: responsive cell grid, photo selection, captions and idle rotation.
+// ---------------------------------------------------------------------------
+let resizeTeam = () => {};
+
+const teamSection = document.querySelector('.team');
+const teamStage = teamSection?.querySelector('.team-stage');
+const teamGrid = teamSection?.querySelector('.team-grid');
+const teamRolesLayer = teamSection?.querySelector('.team-roles');
+const teamRoles = Array.from(teamSection?.querySelectorAll('.team-role') || []);
+const teamImages = Array.from(teamSection?.querySelectorAll('.team-media__image') || []);
+const teamCaptionName = teamSection?.querySelector('.team-caption__name');
+const teamCaptionDescription = teamSection?.querySelector('.team-caption__desc');
+
+if (
+  teamSection
+  && teamStage
+  && teamGrid
+  && teamRolesLayer
+  && teamRoles.length
+  && teamImages.length
+  && teamCaptionName
+  && teamCaptionDescription
+) {
+  const TEAM_CELL_SIZE = 125;
+  const TEAM_PARALLAX_STRENGTH = 24;
+  const TEAM_ROTATION_DELAY = 4000;
+  const ROLE_LAYOUT = [
+    { role: 'HR Manager', colFromRight: 1, row: 0 },
+    { role: 'Project Manager', colFromRight: 3, row: 1 },
+    { role: 'Full-Stack Developer', colFromRight: 0, row: 2 },
+    { role: 'Illustrator', colFromRight: 2, row: 3 },
+    { role: 'UI/UX Designer', colFromRight: 3, row: 4 },
+    { role: 'QA Engineer', colFromRight: 1, row: 5 },
+  ];
+  const teamPointer = {
+    currentX: 0,
+    currentY: 0,
+    targetX: 0,
+    targetY: 0,
+  };
+  let activeTeamIndex = 3;
+  let teamGridColumns = 0;
+  let teamGridRows = 0;
+  let teamVisible = false;
+  let teamHoverPaused = false;
+  let teamRotationTimer = 0;
+  let teamParallaxFrame = 0;
+  let captionTimers = [];
+
+  const currentTeamMembers = () => TEAM_TRANSLATIONS[activeLanguage] || TEAM_TRANSLATIONS.en;
+
+  const clearCaptionMotion = () => {
+    captionTimers.forEach(clearTimeout);
+    captionTimers = [];
+    [teamCaptionName, teamCaptionDescription].forEach((element) => {
+      element.getAnimations().forEach((animation) => animation.cancel());
+    });
+  };
+
+  const swapCaption = (index, direction = 1, immediate = false) => {
+    const member = currentTeamMembers()[index];
+    if (!member) return;
+    const name = `${member.name}, ${member.role}`;
+
+    clearCaptionMotion();
+    if (immediate || prefersReducedMotion) {
+      teamCaptionName.textContent = name;
+      teamCaptionDescription.textContent = member.description;
+      return;
+    }
+
+    const outgoingX = direction >= 0 ? -28 : 28;
+    const incomingX = -outgoingX;
+    const swapElement = (element, text, delay) => {
+      const exitAnimation = element.animate(
+        [
+          { opacity: 1, transform: 'translate3d(0, 0, 0)' },
+          { opacity: 0, transform: `translate3d(${outgoingX}px, 0, 0)` },
+        ],
+        { duration: 180, delay, easing: 'ease-in', fill: 'forwards' },
+      );
+
+      const timer = window.setTimeout(() => {
+        exitAnimation.cancel();
+        element.textContent = text;
+        const enterAnimation = element.animate(
+          [
+            { opacity: 0, transform: `translate3d(${incomingX}px, 0, 0)` },
+            { opacity: 1, transform: 'translate3d(0, 0, 0)' },
+          ],
+          { duration: 450, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
+        );
+        enterAnimation.onfinish = () => enterAnimation.cancel();
+      }, 180 + delay);
+      captionTimers.push(timer);
+    };
+
+    swapElement(teamCaptionName, name, 0);
+    swapElement(teamCaptionDescription, member.description, 300);
+  };
+
+  const applyActivePhotoTransform = () => {
+    const activeImage = teamImages[activeTeamIndex];
+    if (!activeImage) return;
+    activeImage.style.transform = `translate3d(${teamPointer.currentX.toFixed(2)}px, ${teamPointer.currentY.toFixed(2)}px, 0)`;
+  };
+
+  const selectTeamMember = (index, direction = 1, immediate = false) => {
+    const nextIndex = (index + teamRoles.length) % teamRoles.length;
+    if (nextIndex === activeTeamIndex && !immediate) return;
+
+    activeTeamIndex = nextIndex;
+    teamRoles.forEach((role, roleIndex) => {
+      const selected = roleIndex === activeTeamIndex;
+      role.classList.toggle('is-active', selected);
+      role.setAttribute('aria-pressed', String(selected));
+    });
+    teamImages.forEach((image, imageIndex) => {
+      image.classList.toggle('is-active', imageIndex === activeTeamIndex);
+    });
+    applyActivePhotoTransform();
+    swapCaption(activeTeamIndex, direction, immediate);
+  };
+
+  const stopTeamRotation = () => {
+    clearTimeout(teamRotationTimer);
+    teamRotationTimer = 0;
+  };
+
+  const startTeamRotation = () => {
+    stopTeamRotation();
+    if (prefersReducedMotion || !teamVisible || teamHoverPaused || teamRoles.length < 2) return;
+
+    teamRotationTimer = window.setTimeout(() => {
+      const offset = 1 + Math.floor(Math.random() * (teamRoles.length - 1));
+      selectTeamMember(activeTeamIndex + offset, 1);
+      startTeamRotation();
+    }, TEAM_ROTATION_DELAY);
+  };
+
+  const renderTeamParallax = () => {
+    teamParallaxFrame = 0;
+    if (!teamVisible || !pointerFine || prefersReducedMotion || mqMobile.matches) return;
+
+    teamPointer.currentX += (teamPointer.targetX - teamPointer.currentX) * 0.12;
+    teamPointer.currentY += (teamPointer.targetY - teamPointer.currentY) * 0.12;
+    applyActivePhotoTransform();
+
+    const moving = Math.abs(teamPointer.targetX - teamPointer.currentX) > 0.03
+      || Math.abs(teamPointer.targetY - teamPointer.currentY) > 0.03;
+    if (moving) teamParallaxFrame = requestAnimationFrame(renderTeamParallax);
+  };
+
+  const startTeamParallax = () => {
+    if (!teamParallaxFrame && teamVisible && pointerFine && !prefersReducedMotion && !mqMobile.matches) {
+      teamParallaxFrame = requestAnimationFrame(renderTeamParallax);
+    }
+  };
+
+  resizeTeam = () => {
+    const width = teamStage.clientWidth;
+    const height = teamStage.clientHeight;
+    const columns = Math.max(1, Math.floor(width / TEAM_CELL_SIZE));
+    const rows = Math.max(1, Math.floor(height / TEAM_CELL_SIZE));
+    const gridWidth = columns * TEAM_CELL_SIZE;
+    const gridHeight = rows * TEAM_CELL_SIZE;
+
+    teamGrid.style.width = '100%';
+    teamGrid.style.height = '100%';
+    teamGrid.style.gridTemplateColumns = `repeat(${columns}, ${TEAM_CELL_SIZE}px)`;
+    teamGrid.style.gridAutoRows = `${TEAM_CELL_SIZE}px`;
+    teamGrid.style.setProperty('--team-grid-offset-y', `${(height - gridHeight) / 2}px`);
+    teamRolesLayer.style.width = `${gridWidth}px`;
+    teamRolesLayer.style.height = `${gridHeight}px`;
+    teamRolesLayer.style.gridTemplateColumns = `repeat(${columns}, ${TEAM_CELL_SIZE}px)`;
+    teamRolesLayer.style.gridAutoRows = `${TEAM_CELL_SIZE}px`;
+
+    if (mqMobile.matches) {
+      cancelAnimationFrame(teamParallaxFrame);
+      teamParallaxFrame = 0;
+      teamPointer.currentX = 0;
+      teamPointer.currentY = 0;
+      teamPointer.targetX = 0;
+      teamPointer.targetY = 0;
+      teamImages.forEach((image) => {
+        image.style.transform = '';
+      });
+    }
+
+    if (columns !== teamGridColumns || rows !== teamGridRows) {
+      teamGridColumns = columns;
+      teamGridRows = rows;
+      const fragment = document.createDocumentFragment();
+      for (let index = 0; index < columns * rows; index += 1) {
+        const cell = document.createElement('span');
+        cell.className = 'team-cell';
+        fragment.appendChild(cell);
+      }
+      teamGrid.replaceChildren(fragment);
+    }
+
+    const rowStart = Math.max(0, Math.floor((rows - ROLE_LAYOUT.length) / 2));
+    teamRoles.forEach((role, index) => {
+      const layout = ROLE_LAYOUT.find((item) => item.role === role.dataset.role)
+        || ROLE_LAYOUT[index];
+      const column = Math.max(1, columns - layout.colFromRight);
+      const row = Math.max(1, Math.min(rows, rowStart + layout.row + 1));
+      role.style.gridColumn = String(column);
+      role.style.gridRow = String(row);
+    });
+  };
+
+  teamImages.forEach((image) => {
+    const markMissing = () => image.classList.add('is-missing');
+    if (image.complete && image.naturalWidth === 0) markMissing();
+    else image.addEventListener('error', markMissing, { once: true });
+  });
+
+  teamRoles.forEach((role, index) => {
+    if (pointerFine) {
+      role.addEventListener('pointerenter', () => {
+        teamHoverPaused = true;
+        stopTeamRotation();
+        selectTeamMember(index, index < activeTeamIndex ? -1 : 1);
+      });
+      role.addEventListener('pointerleave', () => {
+        teamHoverPaused = false;
+        startTeamRotation();
+      });
+    }
+
+    role.addEventListener('click', () => {
+      selectTeamMember(index, index < activeTeamIndex ? -1 : 1);
+      startTeamRotation();
+    });
+  });
+
+  if (pointerFine && !prefersReducedMotion) {
+    teamStage.addEventListener('pointermove', (event) => {
+      if (mqMobile.matches) return;
+      const rect = teamStage.getBoundingClientRect();
+      const mouseX = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+      const mouseY = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
+      teamPointer.targetX = (0.5 - mouseX) * TEAM_PARALLAX_STRENGTH;
+      teamPointer.targetY = (0.5 - mouseY) * TEAM_PARALLAX_STRENGTH;
+      startTeamParallax();
+    }, { passive: true });
+
+    teamStage.addEventListener('pointerleave', () => {
+      teamPointer.targetX = 0;
+      teamPointer.targetY = 0;
+      startTeamParallax();
+    }, { passive: true });
+  }
+
+  new IntersectionObserver(([entry]) => {
+    teamVisible = entry.isIntersecting;
+    if (teamVisible) {
+      startTeamRotation();
+      startTeamParallax();
+    } else {
+      stopTeamRotation();
+      cancelAnimationFrame(teamParallaxFrame);
+      teamParallaxFrame = 0;
+      swapCaption(activeTeamIndex, 1, true);
+    }
+  }, { threshold: 0.1 }).observe(teamSection);
+
+  resizeTeam();
+  selectTeamMember(activeTeamIndex, 1, true);
 }
 
 // ---------------------------------------------------------------------------
@@ -2191,6 +2556,7 @@ const applyViewport = () => {
   uniforms.uResolution.value.set(viewportWidth, canvasHeight);
   uniforms.uCoverAlignY.value = mqMobile.matches ? 0.5 : 0.0;
   setScrollMode();
+  resizeTeam();
   measureWorks();
   lenis?.resize();
 };

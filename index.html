@@ -12,7 +12,7 @@
     <title>Interract — Hero</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300&amp;display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -57,12 +57,6 @@
                   <span class="nav-link-line">services</span>
                 </span>
               </a>
-              <a href="#works">
-                <span class="nav-link-mask">
-                  <span class="nav-link-line">our works</span>
-                  <span class="nav-link-line">our works</span>
-                </span>
-              </a>
               <a href="#about-us">
                 <span class="nav-link-mask">
                   <span class="nav-link-line">about us</span>
@@ -73,6 +67,12 @@
                 <span class="nav-link-mask">
                   <span class="nav-link-line">team</span>
                   <span class="nav-link-line">team</span>
+                </span>
+              </a>
+              <a href="#works">
+                <span class="nav-link-mask">
+                  <span class="nav-link-line">our works</span>
+                  <span class="nav-link-line">our works</span>
                 </span>
               </a>
               <div class="language-switcher" aria-label="Language">
@@ -275,7 +275,7 @@
         <div class="stats-grid">
           <h2 class="stats-title" id="about-us" data-reveal>We build digital experiences that look exceptional and perform flawlessly. Every detail matters. Every decision has purpose. Strategy, design, and technology moving in the same direction.</h2>
 
-          <p class="stats-intro" id="team">A small team with years of experience turning ambitious ideas into digital products.</p>
+          <p class="stats-intro">A small team with years of experience turning ambitious ideas into digital products.</p>
 
           <div class="stat">
             <span class="stat-num" data-count-to="5" data-suffix="+">00+</span>
@@ -288,6 +288,53 @@
           <div class="stat">
             <span class="stat-num" data-count-to="5" data-suffix="">00</span>
             <span class="stat-label">Team<br />members</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="team" id="team" aria-labelledby="team-title">
+      <div class="team-stage">
+        <div class="team-media" aria-hidden="true">
+          <img class="team-media__image" src="assets/HR Manager.jpg" alt="" loading="eager" decoding="async" />
+          <img class="team-media__image" src="assets/Project Manager.jpg" alt="" loading="eager" decoding="async" />
+          <img class="team-media__image" src="assets/Developer.jpg" alt="" loading="eager" decoding="async" />
+          <img class="team-media__image is-active" src="assets/Illustrator.jpg" alt="" loading="eager" decoding="async" />
+          <img class="team-media__image" src="assets/UIUX Designer.jpg" alt="" loading="eager" decoding="async" />
+          <img class="team-media__image" src="assets/QA Engineer.jpg" alt="" loading="eager" decoding="async" />
+        </div>
+
+        <div class="team-grid" aria-hidden="true"></div>
+
+        <div class="team-roles" aria-label="Team members">
+          <button class="team-role" type="button" data-index="0" data-role="HR Manager" data-person="team-1" aria-pressed="false">
+            <span class="team-role__label">HR Manager</span>
+          </button>
+          <button class="team-role" type="button" data-index="1" data-role="Project Manager" data-person="team-2" aria-pressed="false">
+            <span class="team-role__label">Project Manager</span>
+          </button>
+          <button class="team-role" type="button" data-index="2" data-role="Full-Stack Developer" data-person="team-3" aria-pressed="false">
+            <span class="team-role__label">Full-Stack Developer</span>
+          </button>
+          <button class="team-role is-active" type="button" data-index="3" data-role="Illustrator" data-person="team-4" aria-pressed="true">
+            <span class="team-role__label">Illustrator</span>
+          </button>
+          <button class="team-role" type="button" data-index="4" data-role="UI/UX Designer" data-person="team-5" aria-pressed="false">
+            <span class="team-role__label">UI/UX Designer</span>
+          </button>
+          <button class="team-role" type="button" data-index="5" data-role="QA Engineer" data-person="team-6" aria-pressed="false">
+            <span class="team-role__label">QA Engineer</span>
+          </button>
+        </div>
+
+        <div class="team-ui">
+          <h2 class="team-title" id="team-title" data-reveal>Different disciplines. One shared vision for exceptional digital products.</h2>
+
+          <div class="team-caption">
+            <div class="team-caption__copy" aria-live="polite">
+              <div class="team-caption__name">Milka Lisa, Illustrator</div>
+              <p class="team-caption__desc">Creates distinctive illustrations, visual assets, and brand graphics that give every product its own character.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -385,12 +432,6 @@
                     <span class="nav-link-line">services</span>
                   </span>
                 </a>
-                <a href="#works" data-form-nav>
-                  <span class="nav-link-mask">
-                    <span class="nav-link-line">our works</span>
-                    <span class="nav-link-line">our works</span>
-                  </span>
-                </a>
                 <a href="#about-us" data-form-nav>
                   <span class="nav-link-mask">
                     <span class="nav-link-line">about us</span>
@@ -401,6 +442,12 @@
                   <span class="nav-link-mask">
                     <span class="nav-link-line">team</span>
                     <span class="nav-link-line">team</span>
+                  </span>
+                </a>
+                <a href="#works" data-form-nav>
+                  <span class="nav-link-mask">
+                    <span class="nav-link-line">our works</span>
+                    <span class="nav-link-line">our works</span>
                   </span>
                 </a>
                 <div class="language-switcher" aria-label="Language">
