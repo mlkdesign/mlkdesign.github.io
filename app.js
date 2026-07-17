@@ -332,6 +332,45 @@ const stairRevealDone = new Promise((resolve) => {
 });
 
 // ---------------------------------------------------------------------------
+// Cookie preference banner: reveal three seconds after the site is ready.
+// ---------------------------------------------------------------------------
+{
+  const cookieBanner = document.querySelector('.cookie-banner');
+  const cookieChoiceButtons = cookieBanner?.querySelectorAll('[data-cookie-choice]') || [];
+  const cookiePreferenceKey = 'mlk-cookie-preference';
+  let savedPreference = null;
+
+  try {
+    savedPreference = localStorage.getItem(cookiePreferenceKey);
+  } catch {
+    // Storage can be unavailable in restrictive/private browsing contexts.
+  }
+
+  if (cookieBanner && !savedPreference) {
+    stairRevealDone.then(() => {
+      window.setTimeout(() => {
+        cookieBanner.classList.add('is-visible');
+        cookieBanner.setAttribute('aria-hidden', 'false');
+      }, 3000);
+    });
+  }
+
+  cookieChoiceButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const preference = button.dataset.cookieChoice;
+      try {
+        localStorage.setItem(cookiePreferenceKey, preference);
+      } catch {
+        // The visual choice still applies for the current page.
+      }
+      document.body.dataset.cookiePreference = preference;
+      cookieBanner.classList.remove('is-visible');
+      cookieBanner.setAttribute('aria-hidden', 'true');
+    });
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Per-character reveal (blur + slide), capped to 2s total per element
 // ---------------------------------------------------------------------------
 const REVEAL_MAX_TOTAL_SECONDS = 2;
@@ -418,6 +457,292 @@ function setupReveal(el) {
     observer.observe(el);
   }
 }
+
+// ---------------------------------------------------------------------------
+// English / Ukrainian interface translation.
+// ---------------------------------------------------------------------------
+const UI_TRANSLATIONS = {
+  en: {
+    pageTitle: 'MLK.STUDIO — Digital experiences',
+    preloader: 'Creating digital experiences.',
+    navServices: 'services',
+    navWorks: 'our works',
+    navAbout: 'about us',
+    navContact: 'contact us',
+    navMenu: 'menu',
+    heroButton: 'start your project',
+    heroTitle: 'We are evolving the way bold ideas become powerful digital products.',
+    aboutSub: 'From first concept to final launch, we design, build, animate and refine every detail to create experiences that perform beautifully and scale effortlessly.',
+    aboutTitle: 'We combine design and technology to turn ideas into digital products.',
+    statsTitle: 'We build digital experiences that look exceptional and perform flawlessly. Every detail matters. Every decision has purpose. Strategy, design, and technology moving in the same direction.',
+    statsIntro: 'A small team with years of experience turning ambitious ideas into digital products.',
+    statYears: 'Years of<br>experience',
+    statProjects: 'Projects<br>delivered',
+    statTeam: 'Team<br>members',
+    worksIntro: 'A selection of projects crafted for ambitious brands and companies around the world.',
+    worksTitle: 'Selected works',
+    worksCta: 'your project could be here',
+    worksProcess: 'Behind every project is a process built around strategy, clarity and attention to detail.',
+    finalTitle: 'Still thinking?<br>Write to us right now!',
+    cookieTitle: 'Cookie settings',
+    cookieDescription: 'We use cookies to improve your experience, analyze traffic, and optimize site performance. By continuing to browse, you agree to our use of cookies.',
+    accept: 'accept',
+    decline: 'decline',
+    formName: 'name',
+    formEmail: 'email',
+    formDetails: 'project details',
+    formRequest: 'request',
+    primaryNavigation: 'Primary navigation',
+    modalNavigation: 'Modal navigation',
+    language: 'Language',
+    previousProject: 'Previous project',
+    nextProject: 'Next project',
+    projectRequest: 'Project request',
+    close: 'Close',
+    socialMedia: 'Social media',
+  },
+  uk: {
+    pageTitle: 'MLK.STUDIO — Цифрові продукти',
+    preloader: 'Створюємо цифрові продукти.',
+    navServices: 'послуги',
+    navWorks: 'наші роботи',
+    navAbout: 'про нас',
+    navContact: 'зв’язатися',
+    navMenu: 'меню',
+    heroButton: 'розпочати проєкт',
+    heroTitle: 'Ми змінюємо підхід, перетворюючи сміливі ідеї на потужні цифрові продукти.',
+    aboutSub: 'Від першої концепції до фінального запуску ми проєктуємо, розробляємо, анімуємо й удосконалюємо кожну деталь, створюючи рішення, що бездоганно працюють і легко масштабуються.',
+    aboutTitle: 'Ми поєднуємо дизайн і технології, щоб перетворювати ідеї на цифрові продукти.',
+    statsTitle: 'Ми створюємо цифрові продукти, які мають винятковий вигляд і працюють бездоганно. Кожна деталь має значення. Кожне рішення має мету. Стратегія, дизайн і технології рухаються в одному напрямку.',
+    statsIntro: 'Невелика команда з багаторічним досвідом перетворення амбітних ідей на цифрові продукти.',
+    statYears: 'Років<br>досвіду',
+    statProjects: 'Реалізованих<br>проєктів',
+    statTeam: 'Учасників<br>команди',
+    worksIntro: 'Добірка проєктів, створених для амбітних брендів і компаній з усього світу.',
+    worksTitle: 'Обрані роботи',
+    worksCta: 'тут може бути ваш проєкт',
+    worksProcess: 'За кожним проєктом стоїть процес, побудований на стратегії, ясності та увазі до деталей.',
+    finalTitle: 'Ще думаєте?<br>Напишіть нам просто зараз!',
+    cookieTitle: 'Налаштування cookie',
+    cookieDescription: 'Ми використовуємо cookie, щоб покращувати ваш досвід, аналізувати трафік та оптимізувати роботу сайту. Продовжуючи перегляд, ви погоджуєтеся на використання cookie.',
+    accept: 'прийняти',
+    decline: 'відхилити',
+    formName: 'ім’я',
+    formEmail: 'електронна пошта',
+    formDetails: 'деталі проєкту',
+    formRequest: 'надіслати',
+    primaryNavigation: 'Основна навігація',
+    modalNavigation: 'Навігація форми',
+    language: 'Мова',
+    previousProject: 'Попередній проєкт',
+    nextProject: 'Наступний проєкт',
+    projectRequest: 'Заявка на проєкт',
+    close: 'Закрити',
+    socialMedia: 'Соціальні мережі',
+  },
+};
+
+const SERVICE_TRANSLATIONS = {
+  en: [
+    {
+      title: 'UI/UX Design',
+      description: 'We design intuitive digital experiences that balance aesthetics, usability, and business goals.',
+      tools: 'Tools: Figma · Adobe Photoshop',
+      tags: ['web design', 'mobile app design', 'design systems', 'product prototyping', 'user flows & wireframes', 'interactive prototypes'],
+    },
+    {
+      title: 'Web Development',
+      description: 'We build fast, scalable digital products and websites engineered for performance and growth.',
+      tools: 'Tools: Webflow · Framer · HTML5 · CSS3 · JavaScript · TypeScript · React · Node.js · REST APIs',
+      tags: ['landing pages', 'corporate websites', 'cms development', 'frontend development', 'backend integration', 'custom features'],
+    },
+    {
+      title: 'Motion & Animation',
+      description: 'We create motion that improves interactions, guides attention, and brings products to life.',
+      tools: 'Tools: Adobe After Effects · Figma Motion',
+      tags: ['interface animations', 'micro interactions', 'scroll animations', 'lottie animations', 'product presentations', 'explainer videos'],
+    },
+    {
+      title: 'Illustration & Visual Assets',
+      description: 'We create custom visuals that strengthen brand identity and improve communication.',
+      tools: 'Tools: Adobe Illustrator · Procreate · Affinity Designer',
+      tags: ['custom illustrations', 'icon systems', 'brand visual assets', 'marketing graphics', 'presentation design', 'social media visuals'],
+    },
+  ],
+  uk: [
+    {
+      title: 'UI/UX Дизайн',
+      description: 'Ми створюємо інтуїтивні цифрові продукти, що поєднують естетику, зручність і бізнес-цілі.',
+      tools: 'Інструменти: Figma · Adobe Photoshop',
+      tags: ['вебдизайн', 'дизайн мобільних застосунків', 'дизайн-системи', 'прототипування продуктів', 'користувацькі сценарії та вайрфрейми', 'інтерактивні прототипи'],
+    },
+    {
+      title: 'Веброзробка',
+      description: 'Ми створюємо швидкі й масштабовані цифрові продукти та сайти, розраховані на продуктивність і зростання.',
+      tools: 'Інструменти: Webflow · Framer · HTML5 · CSS3 · JavaScript · TypeScript · React · Node.js · REST APIs',
+      tags: ['лендінги', 'корпоративні сайти', 'розробка CMS', 'фронтенд-розробка', 'інтеграція бекенду', 'індивідуальні функції'],
+    },
+    {
+      title: 'Моушн і анімація',
+      description: 'Ми створюємо анімацію, що покращує взаємодію, спрямовує увагу та оживляє продукти.',
+      tools: 'Інструменти: Adobe After Effects · Figma Motion',
+      tags: ['анімації інтерфейсу', 'мікровзаємодії', 'scroll-анімації', 'Lottie-анімації', 'презентації продуктів', 'пояснювальні відео'],
+    },
+    {
+      title: 'Ілюстрації та візуальні матеріали',
+      description: 'Ми створюємо унікальні візуальні матеріали, що посилюють ідентичність бренду та покращують комунікацію.',
+      tools: 'Інструменти: Adobe Illustrator · Procreate · Affinity Designer',
+      tags: ['авторські ілюстрації', 'системи іконок', 'візуальні матеріали бренду', 'маркетингова графіка', 'дизайн презентацій', 'візуали для соцмереж'],
+    },
+  ],
+};
+
+const I18N_TEXT_BINDINGS = {
+  preloader: '.stair-reveal__text',
+  navServices: '.nav-menu a[href="#services"] .nav-link-line',
+  navWorks: '.nav-menu a[href="#works"] .nav-link-line',
+  navAbout: '.nav-menu a[href="#about-us"] .nav-link-line',
+  navContact: '.nav-menu .book .nav-link-line',
+  navMenu: '.nav-toggle .nav-link-line',
+  heroButton: '.hero .btn__line',
+  heroTitle: '.hero h1',
+  aboutSub: '.about-sub',
+  aboutTitle: '.about-title',
+  statsTitle: '.stats-title',
+  statsIntro: '.stats-intro',
+  worksIntro: '.works-intro',
+  worksTitle: '.works-title',
+  worksCta: '.work-card__cta span',
+  worksProcess: '.works-process-lead',
+  finalTitle: '.contact-cta__title',
+  navContactFinal: '.contact-cta__button .btn__line',
+  cookieTitle: '.cookie-banner__title',
+  cookieDescription: '.cookie-banner__description',
+  accept: '.cookie-banner__button--accept',
+  decline: '.cookie-banner__button--decline .nav-link-line',
+  formName: '.request-field[for="request-name"] > span',
+  formEmail: '.request-field[for="request-email"] > span',
+  formDetails: '.request-field[for="request-details"] > span',
+  formRequest: '.request-btn .btn__line',
+};
+
+const I18N_HTML_KEYS = new Set(['statYears', 'statProjects', 'statTeam', 'finalTitle']);
+const languageButtons = Array.from(document.querySelectorAll('[data-language]'));
+const languagePreferenceKey = 'mlk-language';
+let activeLanguage = 'en';
+
+const setTranslatedContent = (element, value, useHtml = false) => {
+  if (!element || typeof value !== 'string') return;
+  const revealWasReady = element.dataset.revealReady === 'true';
+  const revealWasTriggered = element.dataset.revealTriggered === 'true';
+
+  if (revealWasReady) {
+    element.classList.remove('is-visible');
+    delete element.dataset.revealReady;
+    delete element.dataset.revealTriggered;
+  }
+
+  if (useHtml) element.innerHTML = value;
+  else element.textContent = value;
+
+  if (!revealWasReady) return;
+  splitReveal(element);
+  if (revealWasTriggered) {
+    element.dataset.revealTriggered = 'true';
+    element.classList.add('is-visible');
+  }
+};
+
+const applyLanguage = (language, { persist = false, notify = false } = {}) => {
+  const nextLanguage = language === 'uk' ? 'uk' : 'en';
+  const strings = UI_TRANSLATIONS[nextLanguage];
+  activeLanguage = nextLanguage;
+  document.documentElement.lang = nextLanguage;
+  document.title = strings.pageTitle;
+
+  Object.entries(I18N_TEXT_BINDINGS).forEach(([key, selector]) => {
+    const translationKey = key === 'navContactFinal' ? 'navContact' : key;
+    document.querySelectorAll(selector).forEach((element) => {
+      setTranslatedContent(element, strings[translationKey], I18N_HTML_KEYS.has(translationKey));
+    });
+  });
+
+  const statLabelKeys = ['statYears', 'statProjects', 'statTeam'];
+  document.querySelectorAll('.stat-label').forEach((element, index) => {
+    const key = statLabelKeys[index];
+    if (key) setTranslatedContent(element, strings[key], true);
+  });
+
+  document.querySelectorAll('.service').forEach((service, index) => {
+    const serviceStrings = SERVICE_TRANSLATIONS[nextLanguage][index];
+    if (!serviceStrings) return;
+    setTranslatedContent(service.querySelector('.service-title'), serviceStrings.title);
+    setTranslatedContent(service.querySelector('.service-desc > p:not(.service-tools)'), serviceStrings.description);
+    setTranslatedContent(service.querySelector('.service-tools'), serviceStrings.tools);
+    const tags = service.querySelectorAll('.tag');
+    tags.forEach((tag, tagIndex) => {
+      if (serviceStrings.tags[tagIndex]) tag.textContent = serviceStrings.tags[tagIndex];
+    });
+    service.querySelector('.service-tags')?.setAttribute('aria-label', serviceStrings.tags.join(', '));
+  });
+
+  const attributeBindings = [
+    ['.site-header .nav', 'aria-label', 'primaryNavigation'],
+    ['.form-modal__header .nav', 'aria-label', 'modalNavigation'],
+    ['.language-switcher', 'aria-label', 'language'],
+    ['.works-arrow--prev', 'aria-label', 'previousProject'],
+    ['.works-arrow--next', 'aria-label', 'nextProject'],
+    ['.form-modal', 'aria-label', 'projectRequest'],
+    ['.form-modal__close', 'aria-label', 'close'],
+    ['.form-modal__socials', 'aria-label', 'socialMedia'],
+    ['.cookie-banner', 'aria-label', 'cookieTitle'],
+  ];
+  attributeBindings.forEach(([selector, attribute, key]) => {
+    document.querySelectorAll(selector).forEach((element) => element.setAttribute(attribute, strings[key]));
+  });
+
+  languageButtons.forEach((button) => {
+    const selected = button.dataset.language === nextLanguage;
+    button.classList.toggle('is-active', selected);
+    button.setAttribute('aria-pressed', String(selected));
+  });
+
+  if (persist) {
+    try {
+      localStorage.setItem(languagePreferenceKey, nextLanguage);
+    } catch {
+      // Keep the selected language for this page when storage is unavailable.
+    }
+  }
+
+  if (notify) {
+    window.dispatchEvent(new CustomEvent('mlk:languagechange', {
+      detail: { language: nextLanguage },
+    }));
+  }
+};
+
+try {
+  const storedLanguage = localStorage.getItem(languagePreferenceKey);
+  if (storedLanguage === 'uk' || storedLanguage === 'en') {
+    activeLanguage = storedLanguage;
+  } else {
+    const browserLanguage = navigator.languages?.[0] || navigator.language || 'en';
+    activeLanguage = browserLanguage.toLowerCase().startsWith('uk') ? 'uk' : 'en';
+  }
+} catch {
+  activeLanguage = (navigator.language || 'en').toLowerCase().startsWith('uk') ? 'uk' : 'en';
+}
+
+applyLanguage(activeLanguage);
+
+languageButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    const nextLanguage = button.dataset.language;
+    if (nextLanguage === activeLanguage) return;
+    applyLanguage(nextLanguage, { persist: true, notify: true });
+  });
+});
 
 function setupFadeIn() {
   const elements = Array.from(document.querySelectorAll('[data-fade]'));
@@ -964,6 +1289,23 @@ if (serviceTagContainers.length) {
       resizeTagPhysics(state);
       if (state.startRequested) startTagCascade(state);
     };
+
+    window.addEventListener('mlk:languagechange', () => {
+      requestAnimationFrame(() => {
+        tagPhysicsStates.forEach((state) => {
+          if (!state.ready) return;
+          state.records.forEach((record) => {
+            const rect = record.element.getBoundingClientRect();
+            if (rect.width < 1 || rect.height < 1 || record.width < 1 || record.height < 1) return;
+            Body.scale(record.body, rect.width / record.width, rect.height / record.height);
+            record.width = rect.width;
+            record.height = rect.height;
+            Sleeping.set(record.body, false);
+          });
+          resizeTagPhysics(state);
+        });
+      });
+    });
 
     const servicePhysicsObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach((entry) => {
@@ -1897,6 +2239,13 @@ window.addEventListener('resize', () => {
 });
 window.addEventListener('orientationchange', scheduleViewportRefresh);
 mqMobile.addEventListener('change', scheduleViewportRefresh);
+
+window.addEventListener('mlk:languagechange', () => {
+  requestAnimationFrame(() => {
+    measureWorks();
+    lenis?.resize();
+  });
+});
 
 // ---------------------------------------------------------------------------
 // Init
