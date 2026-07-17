@@ -1746,20 +1746,22 @@ if (
   resizeTeam = () => {
     const width = teamStage.clientWidth;
     const height = teamStage.clientHeight;
-    const columns = Math.max(1, Math.floor(width / TEAM_CELL_SIZE));
-    const rows = Math.max(1, Math.floor(height / TEAM_CELL_SIZE));
-    const gridWidth = columns * TEAM_CELL_SIZE;
-    const gridHeight = rows * TEAM_CELL_SIZE;
+    const columns = Math.max(1, Math.round(width / TEAM_CELL_SIZE));
+    const cellSize = width / columns;
+    const rows = Math.max(1, Math.floor(height / cellSize));
+    const gridWidth = width;
+    const gridHeight = rows * cellSize;
 
+    teamStage.style.setProperty('--team-cell-size', `${cellSize}px`);
     teamGrid.style.width = '100%';
     teamGrid.style.height = '100%';
-    teamGrid.style.gridTemplateColumns = `repeat(${columns}, ${TEAM_CELL_SIZE}px)`;
-    teamGrid.style.gridAutoRows = `${TEAM_CELL_SIZE}px`;
+    teamGrid.style.gridTemplateColumns = `repeat(${columns}, ${cellSize}px)`;
+    teamGrid.style.gridAutoRows = `${cellSize}px`;
     teamGrid.style.setProperty('--team-grid-offset-y', `${(height - gridHeight) / 2}px`);
     teamRolesLayer.style.width = `${gridWidth}px`;
     teamRolesLayer.style.height = `${gridHeight}px`;
-    teamRolesLayer.style.gridTemplateColumns = `repeat(${columns}, ${TEAM_CELL_SIZE}px)`;
-    teamRolesLayer.style.gridAutoRows = `${TEAM_CELL_SIZE}px`;
+    teamRolesLayer.style.gridTemplateColumns = `repeat(${columns}, ${cellSize}px)`;
+    teamRolesLayer.style.gridAutoRows = `${cellSize}px`;
 
     if (mqMobile.matches) {
       cancelAnimationFrame(teamParallaxFrame);

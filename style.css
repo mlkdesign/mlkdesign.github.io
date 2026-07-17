@@ -1069,7 +1069,7 @@ h1 {
       transparent 1px 100%
     );
   background-position: left top, right top;
-  background-size: 100% 100%, 125px 100%;
+  background-size: 100% 100%, var(--team-cell-size, 125px) 100%;
   background-repeat: no-repeat, repeat-x;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 50%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0%, #000 50%, transparent 100%);
@@ -1082,7 +1082,7 @@ h1 {
     transparent 1px 100%
   );
   background-position: left var(--team-grid-offset-y, 0px);
-  background-size: 100% 125px;
+  background-size: 100% var(--team-cell-size, 125px);
   background-repeat: repeat-y;
   -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 50%, transparent 100%);
   mask-image: linear-gradient(to right, transparent 0%, #000 50%, transparent 100%);
@@ -1091,8 +1091,8 @@ h1 {
 .team-cell {
   position: relative;
   z-index: 1;
-  width: 125px;
-  height: 125px;
+  width: var(--team-cell-size, 125px);
+  height: var(--team-cell-size, 125px);
   background: transparent;
   pointer-events: auto;
   transition: background-color 1s var(--ease);
@@ -1118,8 +1118,8 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 125px;
-  height: 125px;
+  width: var(--team-cell-size, 125px);
+  height: var(--team-cell-size, 125px);
   padding: 1rem;
   border: 0;
   border-radius: 0;
