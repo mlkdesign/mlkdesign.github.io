@@ -2270,7 +2270,8 @@ a[data-fade].is-in:focus-visible {
   }
 
   .team {
-    height: auto;
+    height: calc(100vh - 100px);
+    height: calc(100svh - 100px);
     min-height: 0;
     overflow: visible;
   }
@@ -2278,7 +2279,7 @@ a[data-fade].is-in:focus-visible {
   .team-stage {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    height: auto;
+    height: 100%;
     overflow: visible;
   }
 
