@@ -474,6 +474,7 @@ const UI_TRANSLATIONS = {
     navServices: 'services',
     navWorks: 'our works',
     navAbout: 'about us',
+    navTeam: 'team',
     navContact: 'contact us',
     navMenu: 'menu',
     heroButton: 'start your project',
@@ -514,6 +515,7 @@ const UI_TRANSLATIONS = {
     navServices: 'послуги',
     navWorks: 'наші роботи',
     navAbout: 'про нас',
+    navTeam: 'команда',
     navContact: 'зв’язатися',
     navMenu: 'меню',
     heroButton: 'розпочати проєкт',
@@ -610,7 +612,8 @@ const I18N_TEXT_BINDINGS = {
   navServices: '.nav-menu a[href="#services"] .nav-link-line',
   navWorks: '.nav-menu a[href="#works"] .nav-link-line',
   navAbout: '.nav-menu a[href="#about-us"] .nav-link-line',
-  navContact: '.nav-menu .book .nav-link-line',
+  navTeam: '.nav-menu a[href="#team"] .nav-link-line',
+  navContact: '.nav-menu .book .nav-link-line, .form-modal__contact-spacer',
   navMenu: '.nav-toggle .nav-link-line',
   heroButton: '.hero .btn__line',
   heroTitle: '.hero h1',
@@ -626,7 +629,7 @@ const I18N_TEXT_BINDINGS = {
   navContactFinal: '.contact-cta__button .btn__line',
   cookieTitle: '.cookie-banner__title',
   cookieDescription: '.cookie-banner__description',
-  accept: '.cookie-banner__button--accept',
+  accept: '.cookie-banner__button--accept .nav-link-line',
   decline: '.cookie-banner__button--decline .nav-link-line',
   formName: '.request-field[for="request-name"] > span',
   formEmail: '.request-field[for="request-email"] > span',
@@ -1519,6 +1522,12 @@ let worksPointerId = null;
 let worksDragStartX = 0;
 let worksDragStartPosition = 0;
 let worksDragMoved = false;
+let worksDragLastX = 0;
+let worksDragLastTime = 0;
+let worksDragVelocity = 0;
+let worksPointerType = '';
+let worksInertiaFrame = 0;
+let worksInertiaPreviousTime = 0;
 let suppressWorksClick = false;
 let worksWheelEndTimer = 0;
 
@@ -1535,8 +1544,55 @@ const renderWorksSlider = () => {
   if (worksNext) worksNext.disabled = worksPosition >= worksMaxPosition - 0.5;
 };
 
+const stopWorksInertia = () => {
+  cancelAnimationFrame(worksInertiaFrame);
+  worksInertiaFrame = 0;
+  worksInertiaPreviousTime = 0;
+  worksTrack?.classList.remove('is-direct-manipulation');
+};
+
+const startWorksInertia = (initialVelocity) => {
+  const MAX_VELOCITY = 2.5;
+  const STOP_VELOCITY = 0.015;
+  const FRAME_FRICTION = 0.94;
+  let velocity = Math.max(-MAX_VELOCITY, Math.min(MAX_VELOCITY, initialVelocity));
+
+  if (Math.abs(velocity) < STOP_VELOCITY) {
+    stopWorksInertia();
+    return;
+  }
+
+  worksTrack?.classList.add('is-direct-manipulation');
+  worksInertiaPreviousTime = performance.now();
+
+  const tick = (time) => {
+    const delta = Math.min(32, Math.max(1, time - worksInertiaPreviousTime));
+    worksInertiaPreviousTime = time;
+
+    const previousPosition = worksPosition;
+    worksPosition = clampWorksPosition(worksPosition + velocity * delta);
+    renderWorksSlider();
+
+    const hitBoundary = worksPosition === previousPosition && (
+      worksPosition <= 0 || worksPosition >= worksMaxPosition
+    );
+    velocity *= Math.pow(FRAME_FRICTION, delta / (1000 / 60));
+
+    if (hitBoundary || Math.abs(velocity) < STOP_VELOCITY) {
+      stopWorksInertia();
+      return;
+    }
+
+    worksInertiaFrame = requestAnimationFrame(tick);
+  };
+
+  worksInertiaFrame = requestAnimationFrame(tick);
+};
+
 const measureWorks = () => {
   if (!worksInner || !worksTitle || !worksViewport || !worksTrack || !workCards.length) return;
+
+  stopWorksInertia();
 
   const innerStyles = getComputedStyle(worksInner);
   worksStartOffset = mqMobile.matches
@@ -1554,11 +1610,13 @@ const measureWorks = () => {
 };
 
 worksPrev?.addEventListener('click', () => {
+  stopWorksInertia();
   worksPosition = clampWorksPosition(worksPosition - WORK_SLIDE_STEP);
   renderWorksSlider();
 });
 
 worksNext?.addEventListener('click', () => {
+  stopWorksInertia();
   worksPosition = clampWorksPosition(worksPosition + WORK_SLIDE_STEP);
   renderWorksSlider();
 });
@@ -1576,6 +1634,7 @@ worksViewport?.addEventListener('wheel', (event) => {
 
   event.preventDefault();
   event.stopPropagation();
+  stopWorksInertia();
   worksTrack?.classList.add('is-direct-manipulation');
   worksPosition = nextPosition;
   renderWorksSlider();
@@ -1590,10 +1649,15 @@ worksViewport?.addEventListener('pointerdown', (event) => {
   if (!event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
 
   window.clearTimeout(worksWheelEndTimer);
+  stopWorksInertia();
   worksPointerId = event.pointerId;
+  worksPointerType = event.pointerType;
   worksDragStartX = event.clientX;
   worksDragStartPosition = worksPosition;
   worksDragMoved = false;
+  worksDragLastX = event.clientX;
+  worksDragLastTime = performance.now();
+  worksDragVelocity = 0;
 });
 
 worksViewport?.addEventListener('pointermove', (event) => {
@@ -1608,6 +1672,12 @@ worksViewport?.addEventListener('pointermove', (event) => {
   }
   worksTrack?.classList.add('is-direct-manipulation');
   worksViewport.classList.add('is-dragging');
+  const now = performance.now();
+  const deltaTime = Math.max(1, now - worksDragLastTime);
+  const instantVelocity = (worksDragLastX - event.clientX) / deltaTime;
+  worksDragVelocity = worksDragVelocity * 0.65 + instantVelocity * 0.35;
+  worksDragLastX = event.clientX;
+  worksDragLastTime = now;
   worksPosition = clampWorksPosition(worksDragStartPosition - dragDistance);
   renderWorksSlider();
 });
@@ -1626,10 +1696,23 @@ const finishWorksDrag = (event) => {
     }, 0);
   }
 
+  const shouldStartInertia =
+    event.type !== 'pointercancel' &&
+    worksDragMoved &&
+    worksPointerType === 'touch' &&
+    mqMobile.matches &&
+    !prefersReducedMotion;
+  const releaseDelay = performance.now() - worksDragLastTime;
+  const releaseVelocity = releaseDelay > 80
+    ? 0
+    : worksDragVelocity * Math.max(0, 1 - releaseDelay / 100);
+
   worksPointerId = null;
+  worksPointerType = '';
   worksDragMoved = false;
   worksViewport?.classList.remove('is-dragging');
-  worksTrack?.classList.remove('is-direct-manipulation');
+  if (shouldStartInertia) startWorksInertia(releaseVelocity);
+  else worksTrack?.classList.remove('is-direct-manipulation');
 };
 
 window.addEventListener('pointerup', finishWorksDrag);
