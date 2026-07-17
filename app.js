@@ -337,6 +337,7 @@ const stairRevealDone = new Promise((resolve) => {
 {
   const cookieBanner = document.querySelector('.cookie-banner');
   const cookieChoiceButtons = cookieBanner?.querySelectorAll('[data-cookie-choice]') || [];
+  const cookieCloseButton = cookieBanner?.querySelector('[data-cookie-close]');
   const cookiePreferenceKey = 'mlk-cookie-preference';
   let savedPreference = null;
 
@@ -367,6 +368,11 @@ const stairRevealDone = new Promise((resolve) => {
       cookieBanner.classList.remove('is-visible');
       cookieBanner.setAttribute('aria-hidden', 'true');
     });
+  });
+
+  cookieCloseButton?.addEventListener('click', () => {
+    cookieBanner.classList.remove('is-visible');
+    cookieBanner.setAttribute('aria-hidden', 'true');
   });
 }
 
@@ -485,6 +491,7 @@ const UI_TRANSLATIONS = {
     worksProcess: 'Behind every project is a process built around strategy, clarity and attention to detail.',
     finalTitle: 'Still thinking?<br>Write to us right now!',
     cookieTitle: 'Cookie settings',
+    cookieClose: 'Close cookie settings',
     cookieDescription: 'We use cookies to improve your experience, analyze traffic, and optimize site performance. By continuing to browse, you agree to our use of cookies.',
     accept: 'accept',
     decline: 'decline',
@@ -524,6 +531,7 @@ const UI_TRANSLATIONS = {
     worksProcess: 'За кожним проєктом стоїть процес, побудований на стратегії, ясності та увазі до деталей.',
     finalTitle: 'Ще думаєте?<br>Напишіть нам просто зараз!',
     cookieTitle: 'Налаштування cookie',
+    cookieClose: 'Закрити налаштування cookie',
     cookieDescription: 'Ми використовуємо cookie, щоб покращувати ваш досвід, аналізувати трафік та оптимізувати роботу сайту. Продовжуючи перегляд, ви погоджуєтеся на використання cookie.',
     accept: 'прийняти',
     decline: 'відхилити',
@@ -629,7 +637,35 @@ const I18N_TEXT_BINDINGS = {
 const I18N_HTML_KEYS = new Set(['statYears', 'statProjects', 'statTeam', 'finalTitle']);
 const languageButtons = Array.from(document.querySelectorAll('[data-language]'));
 const languagePreferenceKey = 'mlk-language';
+const languageScrollResetKey = 'mlk-language-scroll-reset';
 let activeLanguage = 'en';
+
+const forcePageScrollTop = () => {
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+  window.scrollTo(0, 0);
+};
+
+let resetScrollAfterLanguageReload = false;
+try {
+  resetScrollAfterLanguageReload = sessionStorage.getItem(languageScrollResetKey) === 'true';
+  if (resetScrollAfterLanguageReload) sessionStorage.removeItem(languageScrollResetKey);
+} catch {
+  // The pre-reload reset below still covers browsers without session storage.
+}
+
+if (resetScrollAfterLanguageReload) {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  forcePageScrollTop();
+  requestAnimationFrame(forcePageScrollTop);
+  window.addEventListener('pageshow', () => {
+    forcePageScrollTop();
+    requestAnimationFrame(forcePageScrollTop);
+    window.setTimeout(() => {
+      if ('scrollRestoration' in history) history.scrollRestoration = 'auto';
+    }, 0);
+  }, { once: true });
+}
 
 const setTranslatedContent = (element, value, useHtml = false) => {
   if (!element || typeof value !== 'string') return;
@@ -696,6 +732,7 @@ const applyLanguage = (language, { persist = false, notify = false } = {}) => {
     ['.form-modal__close', 'aria-label', 'close'],
     ['.form-modal__socials', 'aria-label', 'socialMedia'],
     ['.cookie-banner', 'aria-label', 'cookieTitle'],
+    ['.cookie-banner__close', 'aria-label', 'cookieClose'],
   ];
   attributeBindings.forEach(([selector, attribute, key]) => {
     document.querySelectorAll(selector).forEach((element) => element.setAttribute(attribute, strings[key]));
@@ -740,7 +777,20 @@ languageButtons.forEach((button) => {
   button.addEventListener('click', () => {
     const nextLanguage = button.dataset.language;
     if (nextLanguage === activeLanguage) return;
-    applyLanguage(nextLanguage, { persist: true, notify: true });
+    try {
+      localStorage.setItem(languagePreferenceKey, nextLanguage);
+    } catch {
+      // Reload still proceeds in restrictive browsing contexts.
+    }
+    try {
+      sessionStorage.setItem(languageScrollResetKey, 'true');
+    } catch {
+      // The immediate scroll reset below remains as a fallback.
+    }
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    forcePageScrollTop();
+    history.replaceState(history.state, '', `${window.location.pathname}${window.location.search}`);
+    requestAnimationFrame(() => window.location.reload());
   });
 });
 

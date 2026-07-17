@@ -1393,7 +1393,7 @@ h1 {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 30px;
-  padding: 15px;
+  padding: 15px 46px 15px 15px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.1);
   -webkit-backdrop-filter: blur(32px);
@@ -1494,6 +1494,41 @@ h1 {
 .cookie-banner__button--decline:hover .nav-link-line:last-child,
 .cookie-banner__button--decline:focus-visible .nav-link-line:last-child {
   transform: translateY(calc(-105% - 5px));
+}
+
+.cookie-banner__close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  opacity: 0.6;
+  transition: opacity 0.3s var(--ease);
+}
+
+.cookie-banner__close img {
+  display: block;
+  width: 16px;
+  height: 16px;
+  filter: brightness(0) invert(1);
+  transform: rotate(0deg);
+  transition: transform 0.35s var(--ease);
+}
+
+.cookie-banner__close:hover,
+.cookie-banner__close:focus-visible {
+  opacity: 1;
+}
+
+.cookie-banner__close:hover img,
+.cookie-banner__close:focus-visible img {
+  transform: rotate(90deg);
 }
 
 @media (max-width: 800px) {
