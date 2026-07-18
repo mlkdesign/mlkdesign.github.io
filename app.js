@@ -1939,11 +1939,24 @@ const createPageTransition = () => {
   return transition;
 };
 
+const clearPageTransitionState = () => {
+  document.body.classList.remove('is-page-transitioning');
+  document.querySelectorAll('.page-transition').forEach((transition) => transition.remove());
+};
+
+window.addEventListener('pagehide', clearPageTransitionState);
+window.addEventListener('pageshow', (event) => {
+  if (!event.persisted) return;
+  clearPageTransitionState();
+  lenis?.resize();
+  lenis?.start();
+});
+
 document.querySelectorAll('[data-case-link]').forEach((link) => {
   link.addEventListener('click', (event) => {
     if (
       event.defaultPrevented
-      || event.button !== 0
+      || (typeof event.button === 'number' && event.button !== 0)
       || event.metaKey
       || event.ctrlKey
       || event.shiftKey

@@ -104,6 +104,7 @@ const CASE_PROJECTS = {
   },
   5: {
     image: 'assets/case-5.avif',
+    visitUrl: 'Kowalski%20%26%20Partners/',
     copy: {
       en: {
         pageTitle: 'Kowalski & Partners — MLK.STUDIO',
@@ -419,6 +420,19 @@ const createPageTransition = () => {
   return transition;
 };
 
+const clearPageTransitionState = () => {
+  document.body.classList.remove('is-page-transitioning');
+  document.querySelectorAll('.page-transition').forEach((transition) => transition.remove());
+};
+
+window.addEventListener('pagehide', clearPageTransitionState);
+window.addEventListener('pageshow', (event) => {
+  if (!event.persisted) return;
+  clearPageTransitionState();
+  lenis?.resize();
+  lenis?.start();
+});
+
 const navigateWithTransition = (destination) => {
   if (prefersReducedMotion) {
     window.location.assign(destination);
@@ -426,17 +440,16 @@ const navigateWithTransition = (destination) => {
   }
   lenis?.stop();
   const transition = createPageTransition();
-  document.body.classList.add('is-page-transitioning');
   transition.getBoundingClientRect();
   transition.classList.add('is-closing');
   window.setTimeout(() => window.location.assign(destination), 1160);
 };
 
-document.querySelectorAll('a[href^="index.html"]').forEach((link) => {
+document.querySelectorAll('[data-page-transition], a[href^="index.html"]').forEach((link) => {
   link.addEventListener('click', (event) => {
     if (
       event.defaultPrevented
-      || event.button !== 0
+      || (typeof event.button === 'number' && event.button !== 0)
       || event.metaKey
       || event.ctrlKey
       || event.shiftKey
