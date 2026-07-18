@@ -684,17 +684,17 @@ const SERVICE_TRANSLATIONS = {
 const TEAM_TRANSLATIONS = {
   en: [
     {
-      name: 'Anna Kovalenko',
+      name: 'Anastasiia Tuhai',
       role: 'HR Manager',
       description: 'Builds a thoughtful team culture and brings together people who thrive on ambitious, collaborative work.',
     },
     {
-      name: 'Alex Morgan',
+      name: 'Kate Grigorova',
       role: 'Project Manager',
       description: 'Keeps strategy, communication, and delivery aligned from the first workshop through the final launch.',
     },
     {
-      name: 'Daniel Reed',
+      name: 'Andrii Vasiukov',
       role: 'Full-Stack Developer',
       description: 'Turns product ideas into fast, reliable systems designed to perform smoothly and scale with confidence.',
     },
@@ -709,24 +709,24 @@ const TEAM_TRANSLATIONS = {
       description: 'Shapes clear interfaces and intuitive user journeys where visual character and usability work together.',
     },
     {
-      name: 'Mark Evans',
+      name: 'Jack Vodolaskiy',
       role: 'QA Engineer',
       description: 'Tests every interaction and edge case to make sure each release feels polished, stable, and dependable.',
     },
   ],
   uk: [
     {
-      name: 'Анна Коваленко',
+      name: 'Анастасія Тугай',
       role: 'HR-менеджер',
       description: 'Розвиває продуману командну культуру та об’єднує людей, яким близька амбітна спільна робота.',
     },
     {
-      name: 'Алекс Морган',
+      name: 'Катерина Григорова',
       role: 'Менеджер проєктів',
       description: 'Узгоджує стратегію, комунікацію та реалізацію від першого воркшопу до фінального запуску.',
     },
     {
-      name: 'Даніель Рід',
+      name: 'Андрій Валюков',
       role: 'Full-Stack розробник',
       description: 'Перетворює продуктові ідеї на швидкі й надійні системи, готові до стабільної роботи та масштабування.',
     },
@@ -741,7 +741,7 @@ const TEAM_TRANSLATIONS = {
       description: 'Проєктує зрозумілі інтерфейси та інтуїтивні сценарії, у яких візуальний характер поєднується зі зручністю.',
     },
     {
-      name: 'Марк Еванс',
+      name: 'Євгеній Водоласький',
       role: 'QA інженер',
       description: 'Перевіряє кожну взаємодію та крайній сценарій, щоб кожен реліз був якісним, стабільним і надійним.',
     },
