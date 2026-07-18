@@ -317,10 +317,6 @@ body.is-page-transitioning {
   100% { transform: translate(0, 0); }
 }
 
-body.is-scrolling .noise {
-  animation-play-state: paused;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .noise {
     animation: none;

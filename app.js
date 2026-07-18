@@ -709,7 +709,7 @@ const TEAM_TRANSLATIONS = {
       description: 'Shapes clear interfaces and intuitive user journeys where visual character and usability work together.',
     },
     {
-      name: 'Jack Vodolaskiy',
+      name: 'Yevhen Vodolaskyi',
       role: 'QA Engineer',
       description: 'Tests every interaction and edge case to make sure each release feels polished, stable, and dependable.',
     },
