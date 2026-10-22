@@ -891,9 +891,9 @@ const applyLanguage = (language) => {
     ['.team-roles', 'aria-label', 'teamMembers'],
     ['.form-modal', 'aria-label', 'projectRequest'],
     ['.form-modal__close', 'aria-label', 'close'],
-    ['.form-modal__socials .social-link--telegram', 'aria-label', 'telegramContact'],
-    ['.form-modal__socials .social-link--whatsapp', 'aria-label', 'whatsappContact'],
-    ['.form-modal__socials', 'aria-label', 'socialMedia'],
+    ['.social-link--telegram', 'aria-label', 'telegramContact'],
+    ['.social-link--whatsapp', 'aria-label', 'whatsappContact'],
+    ['.social-links, .form-modal__socials', 'aria-label', 'socialMedia'],
     ['.cookie-banner', 'aria-label', 'cookieTitle'],
     ['.cookie-banner__close', 'aria-label', 'cookieClose'],
   ];

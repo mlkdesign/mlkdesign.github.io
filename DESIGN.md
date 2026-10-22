@@ -5,7 +5,7 @@
 - Mode: production, preserve.
 - Register: personal portfolio / creative studio.
 - Anchor: the existing MLK.STUDIO Swiss-minimal visual language: monochrome surfaces, Noto Sans 300, wide tracking, hairline rules, square corner markers and restrained motion.
-- Scope: targeted evolution of the project-request modal only. Keep the existing information architecture, copy voice, field names and social links intact while enabling real form delivery.
+- Scope: targeted evolution of social links and the project-request modal. Keep the existing information architecture, copy voice, field names and layout system intact.
 
 ## Existing tokens
 
@@ -18,6 +18,8 @@
 | Muted modal text | `rgba(10, 10, 10, 0.58)` |
 | Modal hairline | `rgba(10, 10, 10, 0.24)` |
 | Brand accent | `#ff5a1f` |
+| Link resting opacity | `0.6` on dark and light surfaces |
+| Link hover/focus opacity | `1` on dark and light surfaces |
 | Typeface | `"Noto Sans", "Helvetica Neue", Arial, sans-serif`, weight 300 |
 | Spacing base | 4 px, using the established `rem` and `clamp()` scale |
 | Radius | 0 for form and contact controls |
@@ -31,6 +33,19 @@
 - Interaction: keep the established opacity and rolling-text hover/focus animation, add a restrained pressed state and a visible keyboard focus ring. Existing mobile and reduced-motion behavior remains authoritative.
 - Accessibility: every link has a descriptive accessible name; decorative SVGs are hidden from assistive technology; external links use `target="_blank"` and `rel="noopener noreferrer"`.
 - No custom widget is introduced; native anchor keyboard behavior is retained.
+
+## Home social-links row
+
+- Content: mirror the Contact row with Instagram, LinkedIn, Behance, Upwork, Telegram and WhatsApp, using the same 16 px monochrome SVG family and accessible names.
+- Desktop layout: preserve the hero grid anchor by keeping Instagram in the left column and distributing the remaining five links across the right side; the last link remains right-aligned.
+- Responsive layout: below the safe single-row width, allow the six links to wrap with balanced spacing and no horizontal overflow.
+- Interaction: all text and icons inherit the row's monochrome color and move from the global resting opacity to full opacity on hover and keyboard focus.
+
+## Link contrast states
+
+- Native links across dark and white surfaces use one global opacity contract: `0.6` at rest and `1` on hover or `:focus-visible`.
+- Component-specific color transitions may add motion or framing, but must not override the full-opacity hover/focus result.
+- Active and disabled states remain intentionally dimmer and are not treated as hover states.
 
 ## Project-request delivery
 
