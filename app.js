@@ -572,6 +572,12 @@ const UI_TRANSLATIONS = {
     formEmail: 'email',
     formDetails: 'project details',
     formRequest: 'request',
+    formSending: 'sending…',
+    formSuccess: "Request sent. We'll get back to you soon.",
+    formError: 'We could not send your request. Please try again or contact us via Telegram or WhatsApp.',
+    formRequired: 'Please complete all three fields and enter a valid email address.',
+    telegramContact: 'Contact us on Telegram, @EugeneMilka',
+    whatsappContact: 'Contact us on WhatsApp, +380 73 826 53 54',
     primaryNavigation: 'Primary navigation',
     modalNavigation: 'Modal navigation',
     language: 'Language',
@@ -615,6 +621,12 @@ const UI_TRANSLATIONS = {
     formEmail: 'електронна пошта',
     formDetails: 'деталі проєкту',
     formRequest: 'надіслати',
+    formSending: 'надсилаємо…',
+    formSuccess: 'Заявку надіслано. Ми зв’яжемося з вами найближчим часом.',
+    formError: 'Не вдалося надіслати заявку. Спробуйте ще раз або напишіть нам у Telegram чи WhatsApp.',
+    formRequired: 'Заповніть усі три поля та вкажіть коректну електронну адресу.',
+    telegramContact: 'Написати нам у Telegram, @EugeneMilka',
+    whatsappContact: 'Написати нам у WhatsApp, +380 73 826 53 54',
     primaryNavigation: 'Основна навігація',
     modalNavigation: 'Навігація форми',
     language: 'Мова',
@@ -879,6 +891,8 @@ const applyLanguage = (language) => {
     ['.team-roles', 'aria-label', 'teamMembers'],
     ['.form-modal', 'aria-label', 'projectRequest'],
     ['.form-modal__close', 'aria-label', 'close'],
+    ['.form-modal__socials .social-link--telegram', 'aria-label', 'telegramContact'],
+    ['.form-modal__socials .social-link--whatsapp', 'aria-label', 'whatsappContact'],
     ['.form-modal__socials', 'aria-label', 'socialMedia'],
     ['.cookie-banner', 'aria-label', 'cookieTitle'],
     ['.cookie-banner__close', 'aria-label', 'cookieClose'],
@@ -2592,7 +2606,9 @@ if (formModal) {
   const formPanel = formModal.querySelector('.form-modal__panel');
   const formClose = formModal.querySelector('.form-modal__close');
   const requestForm = formModal.querySelector('.request-form');
-  const firstFormField = requestForm?.querySelector('input, textarea');
+  const firstFormField = requestForm?.querySelector('.request-field input, .request-field textarea');
+  const requestButton = requestForm?.querySelector('.request-btn');
+  const requestStatus = requestForm?.querySelector('.request-form__status');
   const formFloats = Array.from(formModal.querySelectorAll('.form-modal__media .float'))
     .map((element) => ({
       element,
@@ -2613,6 +2629,7 @@ if (formModal) {
   let lockedScrollY = 0;
   let savedBodyStyles = null;
   let usesFixedBodyLock = false;
+  let requestSubmitting = false;
 
   formModal.inert = true;
 
@@ -2779,8 +2796,67 @@ if (formModal) {
     });
   });
 
+  const setRequestButtonLabel = (text) => {
+    requestButton?.querySelectorAll('.btn__line').forEach((line) => {
+      line.textContent = text;
+    });
+  };
+
+  const setRequestStatus = (message = '', state = '') => {
+    if (!requestStatus) return;
+    requestStatus.textContent = message;
+    requestStatus.classList.toggle('is-success', state === 'success');
+    requestStatus.classList.toggle('is-error', state === 'error');
+  };
+
   formClose?.addEventListener('click', () => closeFormModal());
-  requestForm?.addEventListener('submit', (event) => event.preventDefault());
+  requestForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (requestSubmitting) return;
+
+    const strings = UI_TRANSLATIONS[activeLanguage];
+    setRequestStatus();
+
+    if (!requestForm.checkValidity()) {
+      setRequestStatus(strings.formRequired, 'error');
+      requestForm.reportValidity();
+      return;
+    }
+
+    const submission = new FormData(requestForm);
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 15000);
+    requestSubmitting = true;
+    requestForm.setAttribute('aria-busy', 'true');
+    if (requestButton) requestButton.disabled = true;
+    setRequestButtonLabel(strings.formSending);
+
+    try {
+      const response = await fetch(requestForm.action, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+        },
+        body: submission,
+        signal: controller.signal,
+      });
+      const result = await response.json().catch(() => null);
+      const rejected = Array.isArray(result?.errors) && result.errors.length > 0;
+      if (!response.ok || rejected) throw new Error('Form submission failed');
+
+      requestForm.reset();
+      setRequestStatus(strings.formSuccess, 'success');
+    } catch {
+      setRequestStatus(strings.formError, 'error');
+    } finally {
+      window.clearTimeout(timeoutId);
+      requestSubmitting = false;
+      requestForm.removeAttribute('aria-busy');
+      if (requestButton) requestButton.disabled = false;
+      setRequestButtonLabel(strings.formRequest);
+    }
+  });
 
   document.addEventListener('keydown', (event) => {
     if (!modalOpen) return;

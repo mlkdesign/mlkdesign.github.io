@@ -2098,6 +2098,13 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #0a0a0a;
 }
 
+.request-form__submit {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  min-height: 4rem;
+}
+
 .request-btn.sp-box {
   position: relative;
   inset: auto;
@@ -2118,9 +2125,13 @@ input[type="reset"]::-moz-focus-inner {
   letter-spacing: 0.18em;
 }
 
-.request-btn.sp-box:hover,
-.request-btn.sp-box:focus-visible {
+.request-btn.sp-box:not(:disabled):hover,
+.request-btn.sp-box:not(:disabled):focus-visible {
   color: #0a0a0a;
+}
+
+.request-btn.sp-box:disabled {
+  opacity: 0.48;
 }
 
 .request-btn .btn__mask {
@@ -2131,9 +2142,27 @@ input[type="reset"]::-moz-focus-inner {
   transition: transform 0.35s var(--ease);
 }
 
-.request-btn:hover .btn__line,
-.request-btn:focus-visible .btn__line {
+.request-btn:not(:disabled):hover .btn__line,
+.request-btn:not(:disabled):focus-visible .btn__line {
   transform: translateY(calc(-100% - 5px));
+}
+
+.request-form__status {
+  max-width: 20rem;
+  margin: 0;
+  color: rgba(10, 10, 10, 0.58);
+  font-size: 0.76rem;
+  font-weight: 300;
+  line-height: 1.45;
+  letter-spacing: 0.06em;
+}
+
+.request-form__status:empty {
+  visibility: hidden;
+}
+
+.request-form__status.is-success {
+  color: #0a0a0a;
 }
 
 .form-modal__socials {
@@ -2146,7 +2175,26 @@ input[type="reset"]::-moz-focus-inner {
 }
 
 .form-modal__socials .social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   color: #0a0a0a;
+}
+
+.form-modal__socials .social-link:focus-visible {
+  outline: 2px solid #0a0a0a !important;
+  outline-offset: 3px;
+}
+
+.form-modal__socials .social-link:active {
+  opacity: 0.4;
+}
+
+.social-link__icon {
+  display: block;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
 }
 
 body.form-open {
@@ -2231,6 +2279,7 @@ a[data-fade].is-in:focus-visible {
   .form-modal__media .float {
     will-change: auto;
   }
+
 }
 
 @media (max-width: 800px) {
@@ -2858,9 +2907,20 @@ a[data-fade].is-in:focus-visible {
     color: rgba(10, 10, 10, 0.45);
   }
 
-  .request-btn.sp-box:hover,
-  .request-btn.sp-box:focus-within,
-  .request-btn.sp-box:focus-visible {
+  .request-form__submit {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .request-form__status {
+    max-width: none;
+    min-height: 2.2em;
+  }
+
+  .request-btn.sp-box:not(:disabled):hover,
+  .request-btn.sp-box:not(:disabled):focus-within,
+  .request-btn.sp-box:not(:disabled):focus-visible {
     color: rgba(10, 10, 10, 0.45);
   }
 
