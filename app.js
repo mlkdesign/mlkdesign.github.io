@@ -591,6 +591,9 @@ const UI_TRANSLATIONS = {
     "navExperience": "experience",
     "availability": "Available for freelance & collaborations",
     "experienceTitle": "Experience",
+    "experienceWebsite": "View website",
+    "experienceProfile": "View profile",
+    "experienceLinkedin": "View LinkedIn",
     "downloadCv": "download my CV",
     "cvUnavailable": "CV will be available after the original PDF is added.",
     "finalButton": "get in touch"
@@ -643,6 +646,9 @@ const UI_TRANSLATIONS = {
     "navExperience": "досвід",
     "availability": "Відкритий до фриланс-проєктів і співпраці",
     "experienceTitle": "Досвід роботи",
+    "experienceWebsite": "Переглянути сайт",
+    "experienceProfile": "Переглянути профіль",
+    "experienceLinkedin": "Переглянути LinkedIn",
     "downloadCv": "завантажити CV",
     "cvUnavailable": "CV буде доступне після додавання оригінального PDF.",
     "finalButton": "зв’язатися"
@@ -707,7 +713,7 @@ const SERVICE_TRANSLATIONS = {
   ],
   "uk": [
     {
-      "title": "UI/UX та продуктовий дизайн",
+      "title": "UI/UX & Product Design",
       "description": "Проєктування інтуїтивних інтерфейсів мобільних застосунків, вебсайтів і цифрових платформ — від перших концепцій до інтерактивних прототипів.",
       "tools": "Figma · FigJam · Adobe Photoshop",
       "tags": [
@@ -734,7 +740,7 @@ const SERVICE_TRANSLATIONS = {
       ]
     },
     {
-      "title": "Моушн та взаємодія",
+      "title": "Motion & Interaction",
       "description": "Оживлення інтерфейсів за допомогою продуманих переходів, мікровзаємодій та анімації, що покращує користувацький досвід.",
       "tools": "After Effects · Premiere Pro · Figma · GSAP",
       "tags": [
@@ -765,42 +771,82 @@ const SERVICE_TRANSLATIONS = {
 const EXPERIENCE_TRANSLATIONS = {
   "en": [
     {
-      "role": "Independent UI/UX & Digital Designer",
-      "description": "Designing mobile applications, websites, digital platforms and visual identities for clients across different industries. Working from initial concepts to polished, development-ready interfaces.",
-      "company": "Freelance / International Projects",
-      "period": "Present"
+      "role": "UI/UX Designer",
+      "description": "Designing user interfaces and digital experiences for iGaming products, with a focus on usability, visual consistency, interaction patterns and scalable UI solutions.",
+      "company": "Zexter",
+      "period": "Oct 2025 — Present",
+      "meta": "iGaming / Digital Products"
     },
     {
-      "role": "UI/UX Designer — iGaming Products",
-      "description": "Designing interfaces for gaming platforms, casino products and related digital experiences, with attention to usability, visual hierarchy and interaction patterns.",
-      "company": "Selected Client Projects",
-      "period": "[ 02 ]"
+      "role": "UI/UX Designer",
+      "description": "Designing web and mobile interfaces, developing UI concepts, user flows and interactive prototypes for digital products.",
+      "company": "X-IT",
+      "period": "Oct 2024 — Present"
     },
     {
-      "role": "Web & Visual Designer",
-      "description": "Creating landing pages, corporate websites, branding materials and digital campaigns, combining visual design with responsive web implementation.",
-      "company": "Selected Commercial Projects",
-      "period": "[ 03 ]"
+      "role": "Founder & UI/UX Designer",
+      "description": "Founded an independent design practice focused on UI/UX, websites, mobile applications and visual design. Working on digital products from initial concepts to production-ready interfaces.",
+      "company": "MLK.STUDIO",
+      "period": "Jan 2024 — Present"
+    },
+    {
+      "role": "UI/UX Designer — iGaming",
+      "description": "Designed UI/UX solutions for iGaming-related digital products, including web interfaces, landing pages and interactive elements.",
+      "company": "Storm Traffic",
+      "period": "2020 — 2023"
+    },
+    {
+      "role": "Graphic Designer",
+      "description": "Created digital and print design materials for marketing and brand communications, including advertising graphics, layouts and visual assets.",
+      "company": "Unique Media",
+      "period": "May 2020 — Oct 2024",
+      "meta": "Freelance / Remote · USA"
+    },
+    {
+      "role": "Freelance UI/UX & Graphic Designer",
+      "description": "Working independently with clients on website design, mobile interfaces, branding, marketing graphics and digital products.",
+      "company": "Freelancehunt",
+      "period": "2017 — Present"
     }
   ],
   "uk": [
     {
-      "role": "Незалежний UI/UX та digital-дизайнер",
-      "description": "Створення дизайну мобільних застосунків, вебсайтів, цифрових платформ і візуальної айдентики для клієнтів із різних галузей. Робота від початкової концепції до готових до розробки інтерфейсів.",
-      "company": "Фриланс / Міжнародні проєкти",
-      "period": "Зараз"
+      "role": "UI/UX Designer",
+      "description": "Проєктування інтерфейсів і цифрових продуктів у сфері iGaming з акцентом на зручність, візуальну послідовність, взаємодію та масштабовані UI-рішення.",
+      "company": "Zexter",
+      "period": "Жовтень 2025 — Дотепер",
+      "meta": "iGaming / Цифрові продукти"
     },
     {
-      "role": "UI/UX дизайнер — iGaming продукти",
-      "description": "Проєктування інтерфейсів ігрових платформ, казино-продуктів та пов'язаних цифрових сервісів з акцентом на зручність, візуальну ієрархію та взаємодію.",
-      "company": "Вибрані клієнтські проєкти",
-      "period": "[ 02 ]"
+      "role": "UI/UX Designer",
+      "description": "Проєктування веб- і мобільних інтерфейсів, розробка UI-концепцій, користувацьких сценаріїв та інтерактивних прототипів для цифрових продуктів.",
+      "company": "X-IT",
+      "period": "Жовтень 2024 — Дотепер"
     },
     {
-      "role": "Веб- та графічний дизайнер",
-      "description": "Створення лендингів, корпоративних вебсайтів, брендингу та цифрових рекламних матеріалів із поєднанням візуального дизайну й адаптивної веброзробки.",
-      "company": "Вибрані комерційні проєкти",
-      "period": "[ 03 ]"
+      "role": "Founder & UI/UX Designer",
+      "description": "Заснував незалежну дизайн-практику, що спеціалізується на UI/UX, вебсайтах, мобільних застосунках і візуальному дизайні. Робота над цифровими продуктами від концепції до готових до розробки інтерфейсів.",
+      "company": "MLK.STUDIO",
+      "period": "Січень 2024 — Дотепер"
+    },
+    {
+      "role": "UI/UX Designer — iGaming",
+      "description": "Розробка UI/UX рішень для цифрових продуктів у сфері iGaming, зокрема вебінтерфейсів, лендингів та інтерактивних елементів.",
+      "company": "Storm Traffic",
+      "period": "2020 — 2023"
+    },
+    {
+      "role": "Graphic Designer",
+      "description": "Створення цифрових і друкованих матеріалів для маркетингу та брендових комунікацій, зокрема рекламної графіки, макетів і візуальних матеріалів.",
+      "company": "Unique Media",
+      "period": "Травень 2020 — Жовтень 2024",
+      "meta": "Фриланс / Віддалено · США"
+    },
+    {
+      "role": "Freelance UI/UX & Graphic Designer",
+      "description": "Самостійна робота з клієнтами над дизайном вебсайтів, мобільних інтерфейсів, брендингом, рекламною графікою та цифровими продуктами.",
+      "company": "Freelancehunt",
+      "period": "2017 — Дотепер"
     }
   ]
 };
@@ -820,6 +866,9 @@ const I18N_TEXT_BINDINGS = {
   statsTitle: '.stats-title',
   statsIntro: '.stats-intro',
   experienceTitle: '.experience-title',
+  experienceWebsite: '[data-experience-link="website"] .social-link-line',
+  experienceProfile: '[data-experience-link="profile"] .social-link-line',
+  experienceLinkedin: '[data-experience-link="linkedin"] .social-link-line',
   availability: '.availability',
   downloadCv: '[data-cv-link] .btn__line',
   worksIntro: '.works-intro',

@@ -61,7 +61,7 @@
 
 - `main` remains the original studio website. No merge is performed. The personal branch publishes a combined GitHub Pages artifact after explicit owner authorization.
 - Experience uses native `details`/`summary`, hairline separators and the existing type scale. Measured 350 ms disclosure transitions respect reduced motion; native controls remain functional without JavaScript.
-- The supplied three experience entries describe practice areas, not invented employers or dated jobs.
+- Experience contains the six owner-supplied professional records in descending start-year order, preserving the supplied order for ties. Roles and company names stay in English; dates and descriptions are localized.
 - The 5+ years and 30+ projects totals are provisional and require the owner's confirmation.
 - Add the genuine `assets/Jack-Milka-CV.pdf`, then remove `hidden` from the prepared CV link. No placeholder PDF is shipped.
 - English is the first-visit default. The existing reload-based EN/UK mechanism remains, with a personal storage key shared by the home and case pages.
@@ -93,3 +93,12 @@
 - The hero CV link uses the genuine PDF path and download attribute. While the PDF is absent, `aria-disabled` and a click guard prevent a broken download; a localized title explains availability. Remove `aria-disabled` and `title` once the genuine PDF is added. The Experience CV link remains hidden until then.
 - Ukrainian About heading starts with `Євгеній Мілка —`; English copy is unchanged.
 - QA: existing DOM/localization/case/form checks pass. Native Chrome screenshots inspected at 375, 768, 1440 and 1920 px with an expanded Experience row; CV click stays on the page, EN/UK switches, focused Telegram text stays inside its mask. Console shows only the pre-existing Matter.js delta warning.
+
+## Skills and professional experience update
+
+- Ukrainian Skills 01 and 03 retain `UI/UX & Product Design` and `Motion & Interaction`; all descriptions and tags retain their existing translations.
+- The six experience records and exact periods come from the owner's updated brief. Zexter specialization and Unique Media remote/freelance/USA details appear inside their disclosures.
+- Verified Zexter LinkedIn: `https://www.linkedin.com/company/zexter-tech` (the company profile links to `www.zexter.com`). Studio and Freelancehunt links use owner-provided destinations.
+- X-IT links use the owner-confirmed `https://x-it.io` and `https://www.linkedin.com/company/x-it/`; the LinkedIn company profile points to that website. Unique Media links remain pending confirmation of the exact company identity; no guessed links are published.
+- Disclosure links reuse the existing rolling social-link text masks and a small decorative outbound arrow. Section columns, native details controls and 350 ms disclosure animation are unchanged.
+- QA: six bilingual rows and all six confirmed links pass DOM checks. Chrome verified matching role/description X-coordinates and no role overflow at 375, 768, 1440 and 1920 px. All six rows open and close; subsequent content moves by the disclosure height; browser console has no errors.
