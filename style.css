@@ -722,8 +722,7 @@ h1 {
   transition: none;
 }
 
-.hero h1 .char.is-scrambling,
-.experience-title .char.is-scrambling {
+[data-shuffle] .char.is-scrambling {
   inline-size: var(--scramble-char-width);
   text-align: center;
 }
@@ -2687,7 +2686,13 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   padding: 160px var(--page-inset) 0;
   background: var(--bg);
 }
+.experience-inner {
+  display: grid;
+  grid-template-columns: var(--col-split) minmax(0, 1fr);
+  column-gap: 15px;
+}
 .experience-title {
+  grid-column: 2;
   margin: 0 0 80px;
   font-size: clamp(2rem, 4.2vw, 4.6rem);
   font-weight: 300;
@@ -2695,6 +2700,7 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   letter-spacing: -0.03em;
 }
 .experience-row {
+  grid-column: 1 / -1;
   --experience-columns: var(--col-split) minmax(0, 2fr) minmax(0, 1fr) 1rem;
   --experience-gap: 15px;
   border-top: 1px solid rgba(244, 239, 227, 0.22);
@@ -2733,7 +2739,8 @@ a[href]:is(:hover, :focus-visible):not(:active) {
 .experience-row summary:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
 @media (max-width: 800px) {
   .experience { padding-top: 100px; }
-  .experience-title { margin-bottom: 40px; font-size: clamp(1.85rem, 8vw, 3.3rem); }
+  .experience-inner { grid-template-columns: minmax(0, 1fr); }
+  .experience-title { grid-column: 1; margin-bottom: 40px; font-size: clamp(1.85rem, 8vw, 3.3rem); }
   .experience-row { --experience-columns: minmax(0, 1fr) minmax(0, 2fr) 1rem; }
   .experience-row summary { row-gap: 12px; padding: 24px 0; }
   .experience-period { grid-column: 1; grid-row: 1; }

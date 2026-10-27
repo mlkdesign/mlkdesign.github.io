@@ -445,6 +445,8 @@ const stairRevealDone = new Promise((resolve) => {
 // Per-character reveal (blur + slide), capped to 2s total per element
 // ---------------------------------------------------------------------------
 const REVEAL_MAX_TOTAL_SECONDS = 2;
+const scrambleMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+const revealCleanups = new WeakMap();
 
 function getRevealCssSeconds(name, fallback) {
   const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -501,42 +503,85 @@ function splitReveal(el) {
 }
 
 function setupReveal(el) {
+  revealCleanups.get(el)?.();
   splitReveal(el);
 
+  let cancelled = false;
+  let frame = 0;
+  let finishTimer = 0;
+  let observer;
+  let onScroll;
+  const cleanup = () => {
+    cancelled = true;
+    observer?.disconnect();
+    if (onScroll) {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    }
+    cancelAnimationFrame(frame);
+    clearTimeout(finishTimer);
+    if (el.hasAttribute('data-shuffle')) cancelHeadingShuffle(el);
+    revealCleanups.delete(el);
+  };
+  revealCleanups.set(el, cleanup);
+
   const run = () => {
-    if (el.dataset.revealTriggered === 'true') return;
+    if (cancelled || el.dataset.revealTriggered === 'true') return;
     el.dataset.revealTriggered = 'true';
+    if (scrambleMotionQuery.matches) {
+      el.classList.add('is-visible', 'is-revealed');
+      if (el.hasAttribute('data-shuffle')) el.dataset.shuffleTriggered = 'true';
+      return;
+    }
     el.classList.add('is-revealing');
-    requestAnimationFrame(() => {
+    frame = requestAnimationFrame(() => {
+      if (cancelled) return;
       el.classList.add('is-visible');
-      window.setTimeout(
-        () => {
-          el.classList.remove('is-revealing');
-          el.classList.add('is-revealed');
-        },
-        REVEAL_MAX_TOTAL_SECONDS * 1000 + 100,
-      );
+      if (el.hasAttribute('data-shuffle')) startHeadingShuffle(el);
+      finishTimer = window.setTimeout(() => {
+        el.classList.remove('is-revealing');
+        el.classList.add('is-revealed');
+      }, REVEAL_MAX_TOTAL_SECONDS * 1000 + 100);
     });
   };
 
-  if (prefersReducedMotion) {
+  if (scrambleMotionQuery.matches) {
     run();
     return;
   }
 
-  if (el.dataset.revealOn === 'load') {
-    stairRevealDone.then(run);
-  } else {
-    const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          run();
-          obs.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.4 });
-    observer.observe(el);
+  // Both gates are required: the title is visible and the stair reveal is done.
+  // This also preserves the hero's post-preloader sequence on direct hash visits.
+  let inView = false;
+  let preloaderReady = false;
+  const footerCover = el.closest('.contact-cta')
+    ? document.querySelector('.page-surface')
+    : null;
+  const maybeRun = () => {
+    if (cancelled || !inView || !preloaderReady) return;
+    // The sticky footer intersects the viewport while still behind page-surface.
+    if (footerCover && footerCover.getBoundingClientRect().bottom > el.getBoundingClientRect().top) return;
+    run();
+    observer.disconnect();
+    if (onScroll) {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    }
+  };
+  if (footerCover) {
+    onScroll = maybeRun;
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
   }
+  observer = new IntersectionObserver(([entry]) => {
+    inView = entry.isIntersecting;
+    maybeRun();
+  }, { threshold: 0.4 });
+  observer.observe(el);
+  stairRevealDone.then(() => {
+    preloaderReady = true;
+    maybeRun();
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -779,15 +824,10 @@ const EXPERIENCE_TRANSLATIONS = {
     },
     {
       "role": "UI/UX Designer",
-      "description": "Designing web and mobile interfaces, developing UI concepts, user flows and interactive prototypes for digital products.",
+      "description": "Designing mobile application interfaces, user flows, wireframes and interactive prototypes with a focus on usability, visual consistency and intuitive user experiences.",
       "company": "X-IT",
-      "period": "Oct 2024 — Present"
-    },
-    {
-      "role": "Founder & UI/UX Designer",
-      "description": "Founded an independent design practice focused on UI/UX, websites, mobile applications and visual design. Working on digital products from initial concepts to production-ready interfaces.",
-      "company": "MLK.STUDIO",
-      "period": "Jan 2024 — Present"
+      "period": "Oct 2024 — Present",
+      "meta": "Mobile App Design"
     },
     {
       "role": "UI/UX Designer — iGaming",
@@ -819,15 +859,10 @@ const EXPERIENCE_TRANSLATIONS = {
     },
     {
       "role": "UI/UX Designer",
-      "description": "Проєктування веб- і мобільних інтерфейсів, розробка UI-концепцій, користувацьких сценаріїв та інтерактивних прототипів для цифрових продуктів.",
+      "description": "Проєктування інтерфейсів мобільних застосунків, користувацьких сценаріїв, вайрфреймів та інтерактивних прототипів з акцентом на зручність, візуальну послідовність та інтуїтивну взаємодію.",
       "company": "X-IT",
-      "period": "Жовтень 2024 — Дотепер"
-    },
-    {
-      "role": "Founder & UI/UX Designer",
-      "description": "Заснував незалежну дизайн-практику, що спеціалізується на UI/UX, вебсайтах, мобільних застосунках і візуальному дизайні. Робота над цифровими продуктами від концепції до готових до розробки інтерфейсів.",
-      "company": "MLK.STUDIO",
-      "period": "Січень 2024 — Дотепер"
+      "period": "Жовтень 2024 — Дотепер",
+      "meta": "Mobile App Design"
     },
     {
       "role": "UI/UX Designer — iGaming",
@@ -923,10 +958,11 @@ if (resetScrollAfterLanguageReload) {
 const setTranslatedContent = (element, value, useHtml = false) => {
   if (!element || typeof value !== 'string') return;
   const revealWasReady = element.dataset.revealReady === 'true';
-  const revealWasTriggered = element.dataset.revealTriggered === 'true';
 
   if (revealWasReady) {
-    element.classList.remove('is-visible');
+    revealCleanups.get(element)?.();
+    element.classList.remove('is-visible', 'is-revealed', 'is-revealing');
+    delete element.dataset.shuffleTriggered;
     delete element.dataset.revealReady;
     delete element.dataset.revealTriggered;
   }
@@ -935,11 +971,7 @@ const setTranslatedContent = (element, value, useHtml = false) => {
   else element.textContent = value;
 
   if (!revealWasReady) return;
-  splitReveal(element);
-  if (revealWasTriggered) {
-    element.dataset.revealTriggered = 'true';
-    element.classList.add('is-visible');
-  }
+  setupReveal(element);
 };
 
 const applyLanguage = (language) => {
@@ -1070,11 +1102,11 @@ document.querySelectorAll('[data-reveal]').forEach(setupReveal);
 setupFadeIn();
 
 // ---------------------------------------------------------------------------
-// Reusable scramble-on-hover for reveal titles
+// Reuse the original character shuffle on each title’s existing reveal stagger.
 // ---------------------------------------------------------------------------
 const scrambleCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&$@/\\<>*';
 const activeScrambles = new Map();
-const scrambleMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+const headingShuffleTimers = new Map();
 
 const stopScramble = (char) => {
   const timers = activeScrambles.get(char);
@@ -1115,25 +1147,38 @@ const startScramble = (char) => {
   activeScrambles.set(char, { intervalId, timeoutId });
 };
 
-const setupScramble = (title) => {
-  if (!title || !pointerFine) return;
+function cancelHeadingShuffle(title) {
+  headingShuffleTimers.get(title)?.forEach(clearTimeout);
+  headingShuffleTimers.delete(title);
+  title.querySelectorAll('.char').forEach(stopScramble);
+}
 
-  title.addEventListener('mouseover', (event) => {
-    if (!(event.target instanceof HTMLElement) || !event.target.classList.contains('char')) return;
-    startScramble(event.target);
+function startHeadingShuffle(title) {
+  if (scrambleMotionQuery.matches || title.dataset.shuffleTriggered === 'true') return;
+  title.dataset.shuffleTriggered = 'true';
+  const pending = new Set();
+  headingShuffleTimers.set(title, pending);
+  title.querySelectorAll('.char').forEach((char) => {
+    const delay = (parseFloat(char.style.transitionDelay) || 0) * 1000;
+    const timer = window.setTimeout(() => {
+      pending.delete(timer);
+      if (!scrambleMotionQuery.matches && char.isConnected) startScramble(char);
+      if (!pending.size) headingShuffleTimers.delete(title);
+    }, delay);
+    pending.add(timer);
   });
-
-  title.addEventListener('mouseout', (event) => {
-    if (!(event.target instanceof HTMLElement) || !event.target.classList.contains('char')) return;
-    stopScramble(event.target);
-  });
-};
-
-document.querySelectorAll('.hero h1[data-reveal], .experience-title[data-reveal]').forEach(setupScramble);
+}
 
 scrambleMotionQuery.addEventListener('change', (event) => {
   if (!event.matches) return;
-  [...activeScrambles.keys()].forEach(stopScramble);
+  document.querySelectorAll('[data-shuffle]').forEach((title) => {
+    revealCleanups.get(title)?.();
+    cancelHeadingShuffle(title);
+    title.dataset.revealTriggered = 'true';
+    title.dataset.shuffleTriggered = 'true';
+    title.classList.remove('is-revealing');
+    title.classList.add('is-visible', 'is-revealed');
+  });
 });
 
 // ---------------------------------------------------------------------------
