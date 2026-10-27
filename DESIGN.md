@@ -112,3 +112,10 @@
 - Character widths stay locked while shuffled. Translation resets cancel observers, reveal frames, active shuffles and pending timers before replacing text. Reduced motion shows final text and cancels active work.
 - X-IT specialization is `Mobile App Design` in both languages, with the owner-provided mobile-app description. Its dates and links remain unchanged.
 - QA: deterministic animation checks cover preloader gating, off-screen headings, covered sticky footer, original timings, no replay, mid-animation language reset and reduced-motion cancellation. Chrome verified all six headings, stable dimensions, no errors and equal heading X-coordinates at 375, 768, 1440 and 1920 px.
+
+## Responsive selected-work cards
+
+- Cards retain portrait 4:5 proportions. Desktop width uses `clamp(280px, 28vw, 480px)`, limiting the largest cards to 480 × 600 px. Mobile width uses `clamp(260px, 82vw, 350px)` for a visible next-card preview on phones.
+- Card height depends on card width, so tall browser windows no longer stretch the gallery covers. The existing images, order, hover effects and case transitions are retained.
+- Previous/next measure the rendered card width plus the actual CSS column gap on every click. Native smooth scrolling and boundary button states remain unchanged, including after resizing.
+- QA: Chrome checked 375, 768, 1024, 1280, 1440, 1920 and 3840 px; 1280 px cards remain identical at 800 and 1400 px viewport heights. Desktop/mobile next and previous traverse the full gallery, clamp at both ends and update disabled states. No browser console errors.

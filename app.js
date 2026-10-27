@@ -1870,9 +1870,12 @@ const workCards = Array.from(worksSection?.querySelectorAll('.work-card') || [])
 const worksPrev = worksSection?.querySelector('.works-arrow--prev');
 const worksNext = worksSection?.querySelector('.works-arrow--next');
 
-const WORK_CARD_WIDTH = 350;
-const WORK_CARD_GAP = 15;
-const WORK_SLIDE_STEP = WORK_CARD_WIDTH + WORK_CARD_GAP;
+const getWorkSlideStep = () => {
+  if (!workCards.length || !worksTrack) return 0;
+  const cardWidth = workCards[0].getBoundingClientRect().width;
+  const gap = Number.parseFloat(getComputedStyle(worksTrack).columnGap) || 0;
+  return cardWidth + gap;
+};
 
 const renderWorksControls = () => {
   if (!worksViewport) return;
@@ -1893,14 +1896,14 @@ const measureWorks = () => {
 
 worksPrev?.addEventListener('click', () => {
   worksViewport?.scrollBy({
-    left: -WORK_SLIDE_STEP,
+    left: -getWorkSlideStep(),
     behavior: prefersReducedMotion ? 'auto' : 'smooth',
   });
 });
 
 worksNext?.addEventListener('click', () => {
   worksViewport?.scrollBy({
-    left: WORK_SLIDE_STEP,
+    left: getWorkSlideStep(),
     behavior: prefersReducedMotion ? 'auto' : 'smooth',
   });
 });

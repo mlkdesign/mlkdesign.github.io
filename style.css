@@ -1131,6 +1131,7 @@ h1 {
 }
 
 .works {
+  --work-card-width: clamp(280px, 28vw, 480px);
   position: relative;
   z-index: 20;
   display: flex;
@@ -1201,10 +1202,9 @@ h1 {
 
 .work-card {
   position: relative;
-  flex: 0 0 350px;
-  width: 350px;
-  height: max(400px, calc(100vh - 430px));
-  height: max(400px, calc(100svh - 430px));
+  flex: 0 0 var(--work-card-width);
+  width: var(--work-card-width);
+  height: calc(var(--work-card-width) * 1.25);
   overflow: hidden;
   border: 0;
   outline: 0;
@@ -1422,7 +1422,7 @@ h1 {
 
 .works-bottom {
   display: grid;
-  grid-template-columns: var(--col-split) 350px minmax(0, 1fr);
+  grid-template-columns: var(--col-split) var(--work-card-width) minmax(0, 1fr);
   align-items: start;
   column-gap: 15px;
   margin-top: 4.5rem;
@@ -2445,9 +2445,8 @@ a[href]:is(:hover, :focus-visible):not(:active) {
     padding-top: 0;
   }
 
-  .work-card {
-    height: max(400px, calc(100vh - 360px));
-    height: max(400px, calc(100svh - 360px));
+  .works {
+    --work-card-width: clamp(260px, 82vw, 350px);
   }
 
   .works-bottom {
