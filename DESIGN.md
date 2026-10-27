@@ -59,13 +59,13 @@
 
 ## Personal branch contract
 
-- `main` remains the original studio website. No merge or hosting changes are part of this work.
+- `main` remains the original studio website. No merge is performed. The personal branch publishes a combined GitHub Pages artifact after explicit owner authorization.
 - Experience uses native `details`/`summary`, hairline separators and the existing type scale. Measured 350 ms disclosure transitions respect reduced motion; native controls remain functional without JavaScript.
 - The supplied three experience entries describe practice areas, not invented employers or dated jobs.
 - The 5+ years and 30+ projects totals are provisional and require the owner's confirmation.
 - Add the genuine `assets/Jack-Milka-CV.pdf`, then remove `hidden` from the prepared CV link. No placeholder PDF is shipped.
 - English is the first-visit default. The existing reload-based EN/UK mechanism remains, with a personal storage key shared by the home and case pages.
-- Metadata has no personal canonical URL or `og:url` until a real hosting destination is agreed. Relative social images must be made absolute for that destination when deploying.
+- Personal production URL: `https://mlkdesign.github.io/milka-cv/`. Canonical, Open Graph URLs and social images use this destination; case metadata preserves the project query parameter.
 - Case forms use the same endpoint, validation, loading, success and retry flow as the original home form. No test inquiry is sent to the owner during verification.
 
 ## Verification — 2026-10-27
@@ -77,3 +77,10 @@
 - Native Chrome smoke check: animated hero, Experience disclosure, mobile navigation, Ukrainian language persistence into a case, modal and empty-form validation.
 - Experience screenshots inspected at 375, 430, 768, 1024, 1440 and 1920 CSS px. Mobile Ukrainian hero and desktop English hero also inspected.
 - Existing Matter.js delta warning observed; physics timings preserved. Full Lighthouse/axe and cross-browser checks were not run.
+
+## GitHub Pages publication
+
+- `.github/workflows/pages.yml` on `milka-cv` publishes tracked `main` content at `/` and tracked personal content at `/milka-cv/`. No local untracked files are uploaded.
+- Pushes to `milka-cv` trigger this combined publication. The original `main` branch and its workflow remain untouched.
+- The deployment environment allows `milka-cv` in addition to its existing rules.
+- A future deployment from the unchanged workflow on `main` replaces the complete Pages artifact and removes `/milka-cv/`. Re-run this workflow with `milka-cv` selected to restore the personal path. A permanent unified deployment trigger requires a separately authorized workflow change on `main`.

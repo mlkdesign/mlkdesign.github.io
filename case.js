@@ -260,7 +260,10 @@ const applyCaseLanguage = () => {
   };
   document.documentElement.lang = activeLanguage;
   document.title = strings.pageTitle;
-  ['og:image', 'twitter:image'].forEach((name) => document.querySelector(`meta[property="${name}"], meta[name="${name}"]`)?.setAttribute('content', activeProject.image));
+  const publishedUrl = new URL('case.html?project=' + (CASE_PROJECTS[requestedProject] ? requestedProject : 5), 'https://mlkdesign.github.io/milka-cv/');
+  document.querySelector('link[rel="canonical"]')?.setAttribute('href', publishedUrl.href);
+  document.querySelector('meta[property="og:url"]')?.setAttribute('content', publishedUrl.href);
+  ['og:image', 'twitter:image'].forEach((name) => document.querySelector(`meta[property="${name}"], meta[name="${name}"]`)?.setAttribute('content', new URL(activeProject.image, publishedUrl).href));
   document.querySelector('meta[name="description"]')?.setAttribute('content', strings.caseDescription);
   ['og:title', 'twitter:title'].forEach((name) => document.querySelector(`meta[property="${name}"], meta[name="${name}"]`)?.setAttribute('content', strings.pageTitle));
   ['og:description', 'twitter:description'].forEach((name) => document.querySelector(`meta[property="${name}"], meta[name="${name}"]`)?.setAttribute('content', strings.caseDescription));

@@ -1,9 +1,9 @@
-name: Deploy to GitHub Pages
+name: Deploy both portfolio versions to GitHub Pages
 
 on:
   push:
     branches:
-      - main
+      - milka-cv
   workflow_dispatch:
 
 permissions:
@@ -17,23 +17,51 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.ref == 'refs/heads/milka-cv'
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+      url: ${{ steps.deployment.outputs.page_url }}milka-cv/
     steps:
-      - name: Checkout
+      - name: Check out original studio website
         uses: actions/checkout@v4
+        with:
+          ref: main
+          path: original
+          persist-credentials: false
+
+      - name: Check out personal portfolio
+        uses: actions/checkout@v4
+        with:
+          path: personal
+          persist-credentials: false
+
+      - name: Assemble both versions without changing either branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Reserve the personal path; never overwrite a path owned by main.
+          if git -C original cat-file -e HEAD:milka-cv 2>/dev/null; then
+            echo 'The original site already owns /milka-cv; refusing to overwrite it.' >&2
+            exit 1
+          fi
+          mkdir -p _site/milka-cv
+          git -C original archive HEAD | tar -x -C _site
+          git -C personal archive HEAD | tar -x -C _site/milka-cv
+          test -s _site/index.html
+          test -s _site/milka-cv/index.html
+          test -s _site/milka-cv/case.html
+          # Deployment metadata is not public site content.
+          rm -rf _site/.github _site/.claude _site/milka-cv/.github _site/milka-cv/.claude
+          touch _site/.nojekyll
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
-      - name: Upload site
+      - name: Upload both websites
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
 
       - name: Deploy
         id: deployment
