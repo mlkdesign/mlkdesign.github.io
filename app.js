@@ -110,8 +110,13 @@ if (pointerFine && cursorDot && cursorEllipse) {
 }
 
 // ---------------------------------------------------------------------------
-// "Start your project": DVD screensaver + follow-the-cursor inside .sp-box
+// Hero CV button: DVD screensaver + follow-the-cursor inside .sp-box
 // ---------------------------------------------------------------------------
+// Remove aria-disabled and this pending-file guard when the genuine CV is added.
+document.querySelector('[data-hero-cv]')?.addEventListener('click', (event) => {
+  if (event.currentTarget.getAttribute('aria-disabled') === 'true') event.preventDefault();
+});
+
 const spBox = document.querySelector('.sp-box');
 const projectBtn = spBox?.querySelector('.btn');
 
@@ -545,7 +550,7 @@ const UI_TRANSLATIONS = {
     "navAbout": "about me",
     "navContact": "contact me",
     "navMenu": "menu",
-    "heroButton": "let's work together",
+    "heroButton": "download CV",
     "heroTitle": "I turn complex ideas into intuitive digital experiences that feel effortless.",
     "aboutSub": "I design digital products, websites and visual experiences with a focus on usability, clarity and the details that make an interface feel right.",
     "aboutTitle": "Design is where creativity meets functionality.",
@@ -587,6 +592,7 @@ const UI_TRANSLATIONS = {
     "availability": "Available for freelance & collaborations",
     "experienceTitle": "Experience",
     "downloadCv": "download my CV",
+    "cvUnavailable": "CV will be available after the original PDF is added.",
     "finalButton": "get in touch"
   },
   "uk": {
@@ -596,11 +602,11 @@ const UI_TRANSLATIONS = {
     "navAbout": "про мене",
     "navContact": "зв’язатися",
     "navMenu": "меню",
-    "heroButton": "працюймо разом",
+    "heroButton": "завантажити CV",
     "heroTitle": "Я перетворюю складні ідеї на інтуїтивні цифрові продукти, якими легко користуватися.",
     "aboutSub": "Я створюю цифрові продукти, вебсайти та візуальні рішення, приділяючи увагу зручності, зрозумілості та деталям, які роблять інтерфейс довершеним.",
     "aboutTitle": "Дизайн — це місце, де креативність зустрічається з функціональністю.",
-    "statsTitle": "Я Jack Milka, UI/UX та digital-дизайнер, який створює продумані, візуально виразні інтерфейси для вебу та мобільних застосунків.",
+    "statsTitle": "Євгеній Мілка — UI/UX та digital-дизайнер, який створює продумані, візуально виразні інтерфейси для вебу та мобільних застосунків.",
     "statsIntro": "Я працюю з дизайном цифрових продуктів, вебінтерфейсами та візуальними комунікаціями. У своїй роботі поєдную чисту естетику, інтуїтивну взаємодію та практичні рішення для бізнесу.",
     "statYears": "Років<br>досвіду",
     "statProjects": "Реалізованих<br>проєктів",
@@ -638,6 +644,7 @@ const UI_TRANSLATIONS = {
     "availability": "Відкритий до фриланс-проєктів і співпраці",
     "experienceTitle": "Досвід роботи",
     "downloadCv": "завантажити CV",
+    "cvUnavailable": "CV буде доступне після додавання оригінального PDF.",
     "finalButton": "зв’язатися"
   }
 };
@@ -933,6 +940,7 @@ const applyLanguage = (language) => {
     ['.social-link--telegram', 'aria-label', 'telegramContact'],
     ['.social-link--whatsapp', 'aria-label', 'whatsappContact'],
     ['.social-links, .form-modal__socials', 'aria-label', 'socialMedia'],
+    ['[data-hero-cv][aria-disabled="true"]', 'title', 'cvUnavailable'],
     ['.cookie-banner', 'aria-label', 'cookieTitle'],
     ['.cookie-banner__close', 'aria-label', 'cookieClose'],
   ];
@@ -1889,11 +1897,14 @@ if (pixelsSection && pixelsCanvas) {
   const PIXEL_STEP = PIXEL_SIZE + PIXEL_GAP;
   const PIXEL_FADE_DURATION = 1000;
   const PIXEL_PATH_SAMPLE_STEP = 2;
-  const PIXEL_LOGO_DESKTOP = 'JACK MILKA';
-  const PIXEL_LOGO_MOBILE = 'JM';
+  const PIXEL_LOGO_DESKTOP = 'MLK.DESIGN';
+  const PIXEL_LOGO_MOBILE = 'MLK.DESIGN';
   const PIXEL_LOGO_HEIGHT = 7;
   const PIXEL_LOGO_INSET_CELLS = 1;
   const GLYPHS = {
+    E: ['11111', '10000', '10000', '11110', '10000', '10000', '11111'],
+    G: ['01110', '10001', '10000', '10111', '10001', '10001', '01110'],
+    N: ['10001', '11001', '11001', '10101', '10011', '10011', '10001'],
     J: ['00111', '00010', '00010', '00010', '10010', '10010', '01100'],
     A: ['01110', '10001', '10001', '11111', '10001', '10001', '10001'],
     C: ['01111', '10000', '10000', '10000', '10000', '10000', '01111'],

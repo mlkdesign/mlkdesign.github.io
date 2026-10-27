@@ -84,3 +84,12 @@
 - Pushes to `milka-cv` trigger this combined publication. The original `main` branch and its workflow remain untouched.
 - The deployment environment allows `milka-cv` in addition to its existing rules.
 - A future deployment from the unchanged workflow on `main` replaces the complete Pages artifact and removes `/milka-cv/`. Re-run this workflow with `milka-cv` selected to restore the personal path. A permanent unified deployment trigger requires a separately authorized workflow change on `main`.
+
+## Targeted personal-site corrections
+
+- Experience summary and disclosure use the same CSS grid: `--col-split` and the established 15 px gutter on desktop. Mobile keeps period/company metadata above full-width role and description, aligned to `--page-inset`.
+- All three rolling-text mask families clip their own paint and use equal 1em row boxes. Existing easing, transform direction and transition durations are retained.
+- Pixel canvases on home and cases render `MLK.DESIGN` at both viewport sizes; only text and required glyphs change.
+- The hero CV link uses the genuine PDF path and download attribute. While the PDF is absent, `aria-disabled` and a click guard prevent a broken download; a localized title explains availability. Remove `aria-disabled` and `title` once the genuine PDF is added. The Experience CV link remains hidden until then.
+- Ukrainian About heading starts with `Євгеній Мілка —`; English copy is unchanged.
+- QA: existing DOM/localization/case/form checks pass. Native Chrome screenshots inspected at 375, 768, 1440 and 1920 px with an expanded Experience row; CV click stays on the page, EN/UK switches, focused Telegram text stays inside its mask. Console shows only the pre-existing Matter.js delta warning.

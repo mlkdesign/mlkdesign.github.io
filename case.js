@@ -675,6 +675,9 @@ if (pixelsSection && pixelsCanvas) {
   const PIXEL_FADE_DURATION = 1000;
   const PIXEL_LOGO_HEIGHT = 7;
   const GLYPHS = {
+    E: ['11111', '10000', '10000', '11110', '10000', '10000', '11111'],
+    G: ['01110', '10001', '10000', '10111', '10001', '10001', '01110'],
+    N: ['10001', '11001', '11001', '10101', '10011', '10011', '10001'],
     J: ['00111', '00010', '00010', '00010', '10010', '10010', '01100'],
     A: ['01110', '10001', '10001', '11111', '10001', '10001', '10001'],
     C: ['01111', '10000', '10000', '10000', '10000', '10000', '01111'],
@@ -707,8 +710,8 @@ if (pixelsSection && pixelsCanvas) {
   };
 
   const logos = {
-    desktop: buildLogo('JACK MILKA'),
-    mobile: buildLogo('JM'),
+    desktop: buildLogo('MLK.DESIGN'),
+    mobile: buildLogo('MLK.DESIGN'),
   };
   const context = pixelsCanvas.getContext('2d', { alpha: true });
   const accentValue = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
