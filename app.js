@@ -398,7 +398,7 @@ const stairRevealDone = new Promise((resolve) => {
   const cookieBanner = document.querySelector('.cookie-banner');
   const cookieChoiceButtons = cookieBanner?.querySelectorAll('[data-cookie-choice]') || [];
   const cookieCloseButton = cookieBanner?.querySelector('[data-cookie-close]');
-  const cookiePreferenceKey = 'mlk-cookie-preference';
+  const cookiePreferenceKey = 'jack-milka-cookie-preference';
   let savedPreference = null;
 
   try {
@@ -538,234 +538,272 @@ function setupReveal(el) {
 // English / Ukrainian interface translation.
 // ---------------------------------------------------------------------------
 const UI_TRANSLATIONS = {
-  en: {
-    pageTitle: 'MLK.STUDIO — Digital experiences',
-    preloader: 'Creating digital experiences.',
-    navServices: 'services',
-    navWorks: 'our works',
-    navAbout: 'about us',
-    navTeam: 'team',
-    navContact: 'contact us',
-    navMenu: 'menu',
-    heroButton: 'start your project',
-    heroTitle: 'We are evolving the way bold ideas become powerful digital products.',
-    aboutSub: 'From first concept to final launch, we design, build, animate and refine every detail to create experiences that perform beautifully and scale effortlessly.',
-    aboutTitle: 'We combine design and technology to turn ideas into digital products.',
-    statsTitle: 'We build digital experiences that look exceptional and perform flawlessly. Every detail matters. Every decision has purpose. Strategy, design, and technology moving in the same direction.',
-    statsIntro: 'A small team with years of experience turning ambitious ideas into digital products.',
-    statYears: 'Years of<br>experience',
-    statProjects: 'Projects<br>delivered',
-    statTeam: 'Team<br>members',
-    teamTitle: 'Different disciplines. One shared vision for exceptional digital products.',
-    teamMembers: 'Team members',
-    worksIntro: 'A selection of projects crafted for ambitious brands and companies around the world.',
-    worksTitle: 'Selected works',
-    worksCta: 'your project could be here',
-    worksProcess: 'Behind every project is a process built around strategy, clarity and attention to detail.',
-    finalTitle: 'Still thinking?<br>Write to us right now!',
-    cookieTitle: 'Cookie settings',
-    cookieClose: 'Close cookie settings',
-    cookieDescription: 'We use cookies to improve your experience, analyze traffic, and optimize site performance. By continuing to browse, you agree to our use of cookies.',
-    accept: 'accept',
-    decline: 'decline',
-    formName: 'name',
-    formEmail: 'email',
-    formDetails: 'project details',
-    formRequest: 'request',
-    formSending: 'sending…',
-    formSuccess: "Request sent. We'll get back to you soon.",
-    formError: 'We could not send your request. Please try again or contact us via Telegram or WhatsApp.',
-    formRequired: 'Please complete all three fields and enter a valid email address.',
-    telegramContact: 'Contact us on Telegram, @EugeneMilka',
-    whatsappContact: 'Contact us on WhatsApp, +380 73 826 53 54',
-    primaryNavigation: 'Primary navigation',
-    modalNavigation: 'Modal navigation',
-    language: 'Language',
-    previousProject: 'Previous project',
-    nextProject: 'Next project',
-    projectRequest: 'Project request',
-    close: 'Close',
-    socialMedia: 'Social media',
+  "en": {
+    "pageTitle": "Jack Milka — UI/UX & Digital Product Designer",
+    "preloader": "Creating digital experiences.",
+    "navWorks": "selected works",
+    "navAbout": "about me",
+    "navContact": "contact me",
+    "navMenu": "menu",
+    "heroButton": "let's work together",
+    "heroTitle": "I turn complex ideas into intuitive digital experiences that feel effortless.",
+    "aboutSub": "I design digital products, websites and visual experiences with a focus on usability, clarity and the details that make an interface feel right.",
+    "aboutTitle": "Design is where creativity meets functionality.",
+    "statsTitle": "I'm Jack Milka, a UI/UX and digital designer focused on creating thoughtful, visually distinctive experiences for web and mobile.",
+    "statsIntro": "I work across product design, web experiences and visual communication. My approach combines clean aesthetics, intuitive interactions and practical solutions that support real business goals.",
+    "statYears": "Years of<br>experience",
+    "statProjects": "Projects<br>delivered",
+    "worksIntro": "A selection of digital products, websites and visual experiences I've designed for different brands and businesses.",
+    "worksTitle": "Selected works",
+    "worksCta": "your project could be next",
+    "worksProcess": "My process brings together thoughtful design, clarity and attention to detail.",
+    "finalTitle": "Have a project in mind? Let's make it happen.",
+    "cookieTitle": "Cookie settings",
+    "cookieClose": "Close cookie settings",
+    "cookieDescription": "I use cookies to improve your experience, analyze traffic, and optimize site performance. By continuing to browse, you agree to the use of cookies.",
+    "accept": "accept",
+    "decline": "decline",
+    "formName": "name",
+    "formEmail": "email",
+    "formDetails": "project details",
+    "formRequest": "request",
+    "formSending": "sending…",
+    "formSuccess": "Request sent. I'll get back to you soon.",
+    "formError": "I could not send your request. Please try again or contact me via Telegram or WhatsApp.",
+    "formRequired": "Please complete all three fields and enter a valid email address.",
+    "telegramContact": "Contact Jack Milka on Telegram, @EugeneMilka",
+    "whatsappContact": "Contact Jack Milka on WhatsApp, +380 73 826 53 54",
+    "primaryNavigation": "Primary navigation",
+    "modalNavigation": "Modal navigation",
+    "language": "Language",
+    "previousProject": "Previous project",
+    "nextProject": "Next project",
+    "projectRequest": "Project request",
+    "close": "Close",
+    "socialMedia": "Social media",
+    "pageDescription": "Jack Milka is a UI/UX and digital product designer creating mobile apps, websites, interactive experiences and visual identities.",
+    "navSkills": "skills",
+    "navExperience": "experience",
+    "availability": "Available for freelance & collaborations",
+    "experienceTitle": "Experience",
+    "downloadCv": "download my CV",
+    "finalButton": "get in touch"
   },
-  uk: {
-    pageTitle: 'MLK.STUDIO — Цифрові продукти',
-    preloader: 'Створюємо цифрові продукти.',
-    navServices: 'послуги',
-    navWorks: 'наші роботи',
-    navAbout: 'про нас',
-    navTeam: 'команда',
-    navContact: 'зв’язатися',
-    navMenu: 'меню',
-    heroButton: 'розпочати проєкт',
-    heroTitle: 'Ми змінюємо підхід, перетворюючи сміливі ідеї на потужні цифрові продукти.',
-    aboutSub: 'Від першої концепції до фінального запуску ми проєктуємо, розробляємо, анімуємо й удосконалюємо кожну деталь, створюючи рішення, що бездоганно працюють і легко масштабуються.',
-    aboutTitle: 'Ми поєднуємо дизайн і технології, щоб перетворювати ідеї на цифрові продукти.',
-    statsTitle: 'Ми створюємо цифрові продукти, які мають винятковий вигляд і працюють бездоганно. Кожна деталь має значення. Кожне рішення має мету. Стратегія, дизайн і технології рухаються в одному напрямку.',
-    statsIntro: 'Невелика команда з багаторічним досвідом перетворення амбітних ідей на цифрові продукти.',
-    statYears: 'Років<br>досвіду',
-    statProjects: 'Реалізованих<br>проєктів',
-    statTeam: 'Учасників<br>команди',
-    teamTitle: 'Різні дисципліни. Єдине бачення виняткових цифрових продуктів.',
-    teamMembers: 'Учасники команди',
-    worksIntro: 'Добірка проєктів, створених для амбітних брендів і компаній з усього світу.',
-    worksTitle: 'Кращі проєкти',
-    worksCta: 'тут може бути ваш проєкт',
-    worksProcess: 'За кожним проєктом стоїть процес, побудований на стратегії, ясності та увазі до деталей.',
-    finalTitle: 'Ще думаєте?<br>Напишіть нам просто зараз!',
-    cookieTitle: 'Налаштування cookie',
-    cookieClose: 'Закрити налаштування cookie',
-    cookieDescription: 'Ми використовуємо cookie, щоб покращувати ваш досвід, аналізувати трафік та оптимізувати роботу сайту. Продовжуючи перегляд, ви погоджуєтеся на використання cookie.',
-    accept: 'прийняти',
-    decline: 'відхилити',
-    formName: 'ім’я',
-    formEmail: 'електронна пошта',
-    formDetails: 'деталі проєкту',
-    formRequest: 'надіслати',
-    formSending: 'надсилаємо…',
-    formSuccess: 'Заявку надіслано. Ми зв’яжемося з вами найближчим часом.',
-    formError: 'Не вдалося надіслати заявку. Спробуйте ще раз або напишіть нам у Telegram чи WhatsApp.',
-    formRequired: 'Заповніть усі три поля та вкажіть коректну електронну адресу.',
-    telegramContact: 'Написати нам у Telegram, @EugeneMilka',
-    whatsappContact: 'Написати нам у WhatsApp, +380 73 826 53 54',
-    primaryNavigation: 'Основна навігація',
-    modalNavigation: 'Навігація форми',
-    language: 'Мова',
-    previousProject: 'Попередній проєкт',
-    nextProject: 'Наступний проєкт',
-    projectRequest: 'Заявка на проєкт',
-    close: 'Закрити',
-    socialMedia: 'Соціальні мережі',
-  },
+  "uk": {
+    "pageTitle": "Jack Milka — UI/UX та digital-дизайнер",
+    "preloader": "Створюю цифрові продукти.",
+    "navWorks": "роботи",
+    "navAbout": "про мене",
+    "navContact": "зв’язатися",
+    "navMenu": "меню",
+    "heroButton": "працюймо разом",
+    "heroTitle": "Я перетворюю складні ідеї на інтуїтивні цифрові продукти, якими легко користуватися.",
+    "aboutSub": "Я створюю цифрові продукти, вебсайти та візуальні рішення, приділяючи увагу зручності, зрозумілості та деталям, які роблять інтерфейс довершеним.",
+    "aboutTitle": "Дизайн — це місце, де креативність зустрічається з функціональністю.",
+    "statsTitle": "Я Jack Milka, UI/UX та digital-дизайнер, який створює продумані, візуально виразні інтерфейси для вебу та мобільних застосунків.",
+    "statsIntro": "Я працюю з дизайном цифрових продуктів, вебінтерфейсами та візуальними комунікаціями. У своїй роботі поєдную чисту естетику, інтуїтивну взаємодію та практичні рішення для бізнесу.",
+    "statYears": "Років<br>досвіду",
+    "statProjects": "Реалізованих<br>проєктів",
+    "worksIntro": "Добірка цифрових продуктів, вебсайтів і візуальних рішень, які я створив для різних брендів і компаній.",
+    "worksTitle": "Обрані роботи",
+    "worksCta": "наступним може бути ваш проєкт",
+    "worksProcess": "Мій підхід поєднує продуманий дизайн, зрозумілість та увагу до деталей.",
+    "finalTitle": "Маєте ідею проєкту? Нумо втілимо її разом.",
+    "cookieTitle": "Налаштування cookie",
+    "cookieClose": "Закрити налаштування cookie",
+    "cookieDescription": "Я використовую cookie, щоб покращувати ваш досвід, аналізувати трафік та оптимізувати роботу сайту. Продовжуючи перегляд, ви погоджуєтеся на використання cookie.",
+    "accept": "прийняти",
+    "decline": "відхилити",
+    "formName": "ім’я",
+    "formEmail": "електронна пошта",
+    "formDetails": "деталі проєкту",
+    "formRequest": "надіслати",
+    "formSending": "надсилаю…",
+    "formSuccess": "Заявку надіслано. Я зв’яжуся з вами найближчим часом.",
+    "formError": "Не вдалося надіслати заявку. Спробуйте ще раз або напишіть мені в Telegram чи WhatsApp.",
+    "formRequired": "Заповніть усі три поля та вкажіть коректну електронну адресу.",
+    "telegramContact": "Написати Jack Milka в Telegram, @EugeneMilka",
+    "whatsappContact": "Написати Jack Milka у WhatsApp, +380 73 826 53 54",
+    "primaryNavigation": "Основна навігація",
+    "modalNavigation": "Навігація форми",
+    "language": "Мова",
+    "previousProject": "Попередній проєкт",
+    "nextProject": "Наступний проєкт",
+    "projectRequest": "Заявка на проєкт",
+    "close": "Закрити",
+    "socialMedia": "Соціальні мережі",
+    "pageDescription": "Jack Milka — UI/UX та digital-дизайнер, який створює мобільні застосунки, вебсайти, інтерактивні рішення та візуальну айдентику.",
+    "navSkills": "навички",
+    "navExperience": "досвід",
+    "availability": "Відкритий до фриланс-проєктів і співпраці",
+    "experienceTitle": "Досвід роботи",
+    "downloadCv": "завантажити CV",
+    "finalButton": "зв’язатися"
+  }
 };
 
 const SERVICE_TRANSLATIONS = {
-  en: [
+  "en": [
     {
-      title: 'UI/UX Design',
-      description: 'We design intuitive digital experiences that balance aesthetics, usability, and business goals.',
-      tools: 'Figma · Adobe Photoshop',
-      tags: ['web design', 'mobile app design', 'design systems', 'product prototyping', 'user flows & wireframes', 'interactive prototypes'],
+      "title": "UI/UX & Product Design",
+      "description": "Designing intuitive interfaces for mobile apps, websites and digital platforms, from early concepts to interactive prototypes.",
+      "tools": "Figma · FigJam · Adobe Photoshop",
+      "tags": [
+        "Mobile App Design",
+        "Web UI/UX",
+        "SaaS Platforms",
+        "iGaming Interfaces",
+        "Wireframes & User Flows",
+        "Interactive Prototypes",
+        "Design Systems"
+      ]
     },
     {
-      title: 'Web Development',
-      description: 'We build fast, scalable digital products and websites engineered for performance and growth.',
-      tools: 'Webflow · Framer · HTML5 · CSS3 · JavaScript · TypeScript · React · Node.js · REST APIs',
-      tags: ['landing pages', 'corporate websites', 'cms development', 'frontend development', 'backend integration', 'custom features'],
+      "title": "Web Design & Development",
+      "description": "Creating modern landing pages and responsive websites, combining thoughtful design with no-code development and AI-assisted workflows.",
+      "tools": "Figma · Webflow · HTML · CSS · JavaScript · AI Coding Tools",
+      "tags": [
+        "Landing Pages",
+        "Responsive Websites",
+        "Webflow",
+        "Frontend Implementation",
+        "Website Animations",
+        "AI-Assisted Development"
+      ]
     },
     {
-      title: 'Motion & Animation',
-      description: 'We create motion that improves interactions, guides attention, and brings products to life.',
-      tools: 'Adobe After Effects · Figma Motion',
-      tags: ['interface animations', 'micro interactions', 'scroll animations', 'lottie animations', 'product presentations', 'explainer videos'],
+      "title": "Motion & Interaction",
+      "description": "Bringing interfaces to life through meaningful transitions, micro-interactions and motion that improves the user experience.",
+      "tools": "After Effects · Premiere Pro · Figma · GSAP",
+      "tags": [
+        "UI Animations",
+        "Micro-interactions",
+        "Motion Design",
+        "Scroll Effects",
+        "Interactive Experiences"
+      ]
     },
     {
-      title: 'Illustration & Visual Assets',
-      description: 'We create custom visuals that strengthen brand identity and improve communication.',
-      tools: 'Adobe Illustrator · Procreate · Affinity Designer',
-      tags: ['custom illustrations', 'icon systems', 'brand visual assets', 'marketing graphics', 'presentation design', 'social media visuals'],
-    },
+      "title": "Graphic & Visual Design",
+      "description": "Creating visual identities, marketing graphics and digital assets that give products a distinctive and consistent look.",
+      "tools": "Adobe Photoshop · Illustrator · Figma",
+      "tags": [
+        "Brand Identity",
+        "Logo Design",
+        "Marketing Banners",
+        "Game Graphics",
+        "Image Editing",
+        "Presentation Design",
+        "Visual Assets"
+      ]
+    }
   ],
-  uk: [
+  "uk": [
     {
-      title: 'UI/UX Дизайн',
-      description: 'Ми створюємо інтуїтивні цифрові продукти, що поєднують естетику, зручність і бізнес-цілі.',
-      tools: 'Figma · Adobe Photoshop',
-      tags: ['вебдизайн', 'дизайн мобільних застосунків', 'дизайн-системи', 'прототипування продуктів', 'user flow та варфрейми', 'інтерактивні прототипи'],
+      "title": "UI/UX та продуктовий дизайн",
+      "description": "Проєктування інтуїтивних інтерфейсів мобільних застосунків, вебсайтів і цифрових платформ — від перших концепцій до інтерактивних прототипів.",
+      "tools": "Figma · FigJam · Adobe Photoshop",
+      "tags": [
+        "Дизайн мобільних застосунків",
+        "Веб UI/UX",
+        "SaaS-платформи",
+        "iGaming-інтерфейси",
+        "Вайрфрейми та користувацькі сценарії",
+        "Інтерактивні прототипи",
+        "Дизайн-системи"
+      ]
     },
     {
-      title: 'Веброзробка',
-      description: 'Ми створюємо швидкі й масштабовані цифрові продукти та сайти, розраховані на продуктивність і зростання.',
-      tools: 'Webflow · Framer · HTML5 · CSS3 · JavaScript · TypeScript · React · Node.js · REST APIs',
-      tags: ['лендінги', 'корпоративні сайти', 'розробка CMS', 'фронтенд-розробка', 'інтеграція бекенду', 'індивідуальні функції'],
+      "title": "Вебдизайн та розробка",
+      "description": "Створення сучасних лендингів та адаптивних вебсайтів із поєднанням продуманого дизайну, no-code розробки та AI-інструментів.",
+      "tools": "Figma · Webflow · HTML · CSS · JavaScript · AI Coding Tools",
+      "tags": [
+        "Лендинги",
+        "Адаптивні вебсайти",
+        "Webflow",
+        "Реалізація інтерфейсів",
+        "Анімації вебсайтів",
+        "Розробка з AI-інструментами"
+      ]
     },
     {
-      title: 'Моушн і анімація',
-      description: 'Ми створюємо анімацію, що покращує взаємодію, спрямовує увагу та оживляє продукти.',
-      tools: 'Adobe After Effects · Figma Motion',
-      tags: ['анімації інтерфейсу', 'мікровзаємодії', 'scroll-анімації', 'Lottie-анімації', 'презентації продуктів', 'пояснювальні відео'],
+      "title": "Моушн та взаємодія",
+      "description": "Оживлення інтерфейсів за допомогою продуманих переходів, мікровзаємодій та анімації, що покращує користувацький досвід.",
+      "tools": "After Effects · Premiere Pro · Figma · GSAP",
+      "tags": [
+        "Анімації інтерфейсу",
+        "Мікровзаємодії",
+        "Моушн-дизайн",
+        "Ефекти прокручування",
+        "Інтерактивні рішення"
+      ]
     },
     {
-      title: 'Ілюстрації та візуальні матеріали',
-      description: 'Ми створюємо унікальні візуальні матеріали, що посилюють ідентичність бренду та покращують комунікацію.',
-      tools: 'Adobe Illustrator · Procreate · Affinity Designer',
-      tags: ['авторські ілюстрації', 'системи іконок', 'візуальні матеріали бренду', 'маркетингова графіка', 'дизайн презентацій', 'візуали для соцмереж'],
-    },
-  ],
+      "title": "Графічний та візуальний дизайн",
+      "description": "Створення візуальної айдентики, рекламної графіки та цифрових матеріалів, які формують впізнаваний і цілісний образ продукту.",
+      "tools": "Adobe Photoshop · Illustrator · Figma",
+      "tags": [
+        "Айдентика бренду",
+        "Дизайн логотипів",
+        "Рекламні банери",
+        "Ігрова графіка",
+        "Редагування зображень",
+        "Дизайн презентацій",
+        "Візуальні матеріали"
+      ]
+    }
+  ]
 };
 
-const TEAM_TRANSLATIONS = {
-  en: [
+const EXPERIENCE_TRANSLATIONS = {
+  "en": [
     {
-      name: 'Anastasiia Tuhai',
-      role: 'HR Manager',
-      description: 'Builds a thoughtful team culture and brings together people who thrive on ambitious, collaborative work.',
+      "role": "Independent UI/UX & Digital Designer",
+      "description": "Designing mobile applications, websites, digital platforms and visual identities for clients across different industries. Working from initial concepts to polished, development-ready interfaces.",
+      "company": "Freelance / International Projects",
+      "period": "Present"
     },
     {
-      name: 'Kate Grigorova',
-      role: 'Project Manager',
-      description: 'Keeps strategy, communication, and delivery aligned from the first workshop through the final launch.',
+      "role": "UI/UX Designer — iGaming Products",
+      "description": "Designing interfaces for gaming platforms, casino products and related digital experiences, with attention to usability, visual hierarchy and interaction patterns.",
+      "company": "Selected Client Projects",
+      "period": "[ 02 ]"
     },
     {
-      name: 'Andrii Vasiukov',
-      role: 'Full-Stack Developer',
-      description: 'Turns product ideas into fast, reliable systems designed to perform smoothly and scale with confidence.',
-    },
-    {
-      name: 'Milka Lisa',
-      role: 'Illustrator',
-      description: 'Creates distinctive illustrations, visual assets, and brand graphics that give every product its own character.',
-    },
-    {
-      name: 'Milka Jack',
-      role: 'UI/UX Designer',
-      description: 'Shapes clear interfaces and intuitive user journeys where visual character and usability work together.',
-    },
-    {
-      name: 'Yevhen Vodolaskyi',
-      role: 'QA Engineer',
-      description: 'Tests every interaction and edge case to make sure each release feels polished, stable, and dependable.',
-    },
+      "role": "Web & Visual Designer",
+      "description": "Creating landing pages, corporate websites, branding materials and digital campaigns, combining visual design with responsive web implementation.",
+      "company": "Selected Commercial Projects",
+      "period": "[ 03 ]"
+    }
   ],
-  uk: [
+  "uk": [
     {
-      name: 'Анастасія Тугай',
-      role: 'HR-менеджер',
-      description: 'Розвиває продуману командну культуру та об’єднує людей, яким близька амбітна спільна робота.',
+      "role": "Незалежний UI/UX та digital-дизайнер",
+      "description": "Створення дизайну мобільних застосунків, вебсайтів, цифрових платформ і візуальної айдентики для клієнтів із різних галузей. Робота від початкової концепції до готових до розробки інтерфейсів.",
+      "company": "Фриланс / Міжнародні проєкти",
+      "period": "Зараз"
     },
     {
-      name: 'Катерина Григорова',
-      role: 'Менеджер проєктів',
-      description: 'Узгоджує стратегію, комунікацію та реалізацію від першого воркшопу до фінального запуску.',
+      "role": "UI/UX дизайнер — iGaming продукти",
+      "description": "Проєктування інтерфейсів ігрових платформ, казино-продуктів та пов'язаних цифрових сервісів з акцентом на зручність, візуальну ієрархію та взаємодію.",
+      "company": "Вибрані клієнтські проєкти",
+      "period": "[ 02 ]"
     },
     {
-      name: 'Андрій Валюков',
-      role: 'Full-Stack розробник',
-      description: 'Перетворює продуктові ідеї на швидкі й надійні системи, готові до стабільної роботи та масштабування.',
-    },
-    {
-      name: 'Мілка Єлизавета',
-      role: 'Ілюстратор',
-      description: 'Створює виразні ілюстрації, візуальні матеріали та бренд-графіку, що надають кожному продукту власного характеру.',
-    },
-    {
-      name: 'Мілка Євгеній',
-      role: 'UI/UX дизайнер',
-      description: 'Проєктує зрозумілі інтерфейси та інтуїтивні сценарії, у яких візуальний характер поєднується зі зручністю.',
-    },
-    {
-      name: 'Євгеній Водоласький',
-      role: 'QA інженер',
-      description: 'Перевіряє кожну взаємодію та крайній сценарій, щоб кожен реліз був якісним, стабільним і надійним.',
-    },
-  ],
+      "role": "Веб- та графічний дизайнер",
+      "description": "Створення лендингів, корпоративних вебсайтів, брендингу та цифрових рекламних матеріалів із поєднанням візуального дизайну й адаптивної веброзробки.",
+      "company": "Вибрані комерційні проєкти",
+      "period": "[ 03 ]"
+    }
+  ]
 };
 
 const I18N_TEXT_BINDINGS = {
   preloader: '.stair-reveal__text',
-  navServices: '.nav-menu a[href="#services"] .nav-link-line, .mobile-menu-modal__links a[href="#services"] .mobile-menu-modal__label',
+  navSkills: '.nav-menu a[href="#skills"] .nav-link-line, .mobile-menu-modal__links a[href="#skills"] .mobile-menu-modal__label',
   navWorks: '.nav-menu a[href="#works"] .nav-link-line, .mobile-menu-modal__links a[href="#works"] .mobile-menu-modal__label',
-  navAbout: '.nav-menu a[href="#about-us"] .nav-link-line, .mobile-menu-modal__links a[href="#about-us"] .mobile-menu-modal__label',
-  navTeam: '.nav-menu a[href="#team"] .nav-link-line, .mobile-menu-modal__links a[href="#team"] .mobile-menu-modal__label',
+  navAbout: '.nav-menu a[href="#about-me"] .nav-link-line, .mobile-menu-modal__links a[href="#about-me"] .mobile-menu-modal__label',
+  navExperience: '.nav-menu a[href="#experience"] .nav-link-line, .mobile-menu-modal__links a[href="#experience"] .mobile-menu-modal__label',
   navContact: '.nav-menu .book .nav-link-line, .form-modal__contact-spacer, .mobile-menu-modal__links a[data-open-form] .mobile-menu-modal__label',
   navMenu: '.nav-toggle .nav-link-line',
   heroButton: '.hero .btn__line',
@@ -774,7 +812,9 @@ const I18N_TEXT_BINDINGS = {
   aboutTitle: '.about-title',
   statsTitle: '.stats-title',
   statsIntro: '.stats-intro',
-  teamTitle: '.team-title',
+  experienceTitle: '.experience-title',
+  availability: '.availability',
+  downloadCv: '[data-cv-link] .btn__line',
   worksIntro: '.works-intro',
   worksTitle: '.works-title',
   worksCta: '.work-card__cta span',
@@ -791,10 +831,10 @@ const I18N_TEXT_BINDINGS = {
   formRequest: '.request-btn .btn__line',
 };
 
-const I18N_HTML_KEYS = new Set(['statYears', 'statProjects', 'statTeam', 'finalTitle']);
+const I18N_HTML_KEYS = new Set(['statYears', 'statProjects']);
 const languageButtons = Array.from(document.querySelectorAll('[data-language]'));
-const languagePreferenceKey = 'mlk-language';
-const languageScrollResetKey = 'mlk-language-scroll-reset';
+const languagePreferenceKey = 'jack-milka-language';
+const languageScrollResetKey = 'jack-milka-language-scroll-reset';
 let activeLanguage = 'en';
 
 const forcePageScrollTop = () => {
@@ -854,13 +894,13 @@ const applyLanguage = (language) => {
   document.title = strings.pageTitle;
 
   Object.entries(I18N_TEXT_BINDINGS).forEach(([key, selector]) => {
-    const translationKey = key === 'navContactFinal' ? 'navContact' : key;
+    const translationKey = key === 'navContactFinal' ? 'finalButton' : key;
     document.querySelectorAll(selector).forEach((element) => {
       setTranslatedContent(element, strings[translationKey], I18N_HTML_KEYS.has(translationKey));
     });
   });
 
-  const statLabelKeys = ['statYears', 'statProjects', 'statTeam'];
+  const statLabelKeys = ['statYears', 'statProjects'];
   document.querySelectorAll('.stat-label').forEach((element, index) => {
     const key = statLabelKeys[index];
     if (key) setTranslatedContent(element, strings[key], true);
@@ -888,7 +928,6 @@ const applyLanguage = (language) => {
     ['.language-switcher', 'aria-label', 'language'],
     ['.works-nav .works-arrow--prev', 'aria-label', 'previousProject'],
     ['.works-nav .works-arrow--next', 'aria-label', 'nextProject'],
-    ['.team-roles', 'aria-label', 'teamMembers'],
     ['.form-modal', 'aria-label', 'projectRequest'],
     ['.form-modal__close', 'aria-label', 'close'],
     ['.social-link--telegram', 'aria-label', 'telegramContact'],
@@ -907,24 +946,15 @@ const applyLanguage = (language) => {
     button.setAttribute('aria-pressed', String(selected));
   });
 
-  const teamMembers = TEAM_TRANSLATIONS[nextLanguage];
-  document.querySelectorAll('.team-role').forEach((role, index) => {
-    const member = teamMembers[index];
-    if (!member) return;
-    setTranslatedContent(role.querySelector('.team-role__label'), member.role);
-    role.setAttribute('aria-label', member.role);
+  document.querySelectorAll('.experience-row').forEach((row, index) => {
+    const entry = EXPERIENCE_TRANSLATIONS[nextLanguage][index];
+    Object.entries(entry).forEach(([key, value]) => {
+      row.querySelector(`[data-experience="${key}"]`).textContent = value;
+    });
   });
-  const initialTeamMember = teamMembers[3];
-  if (initialTeamMember) {
-    setTranslatedContent(
-      document.querySelector('.team-caption__name'),
-      `${initialTeamMember.name}, ${initialTeamMember.role}`,
-    );
-    setTranslatedContent(
-      document.querySelector('.team-caption__desc'),
-      initialTeamMember.description,
-    );
-  }
+  document.querySelector('meta[name="description"]')?.setAttribute('content', strings.pageDescription);
+  ['og:title', 'twitter:title'].forEach((name) => document.querySelector(`meta[property="${name}"], meta[name="${name}"]`)?.setAttribute('content', strings.pageTitle));
+  ['og:description', 'twitter:description'].forEach((name) => document.querySelector(`meta[property="${name}"], meta[name="${name}"]`)?.setAttribute('content', strings.pageDescription));
 };
 
 try {
@@ -932,11 +962,10 @@ try {
   if (storedLanguage === 'uk' || storedLanguage === 'en') {
     activeLanguage = storedLanguage;
   } else {
-    const browserLanguage = navigator.languages?.[0] || navigator.language || 'en';
-    activeLanguage = browserLanguage.toLowerCase().startsWith('uk') ? 'uk' : 'en';
+    activeLanguage = 'en';
   }
 } catch {
-  activeLanguage = (navigator.language || 'en').toLowerCase().startsWith('uk') ? 'uk' : 'en';
+  activeLanguage = 'en';
 }
 
 applyLanguage(activeLanguage);
@@ -1043,7 +1072,7 @@ const setupScramble = (title) => {
   });
 };
 
-document.querySelectorAll('.hero h1[data-reveal], .team-title[data-reveal]').forEach(setupScramble);
+document.querySelectorAll('.hero h1[data-reveal], .experience-title[data-reveal]').forEach(setupScramble);
 
 scrambleMotionQuery.addEventListener('change', (event) => {
   if (!event.matches) return;
@@ -1702,288 +1731,30 @@ if (statsSection && statNums.length) {
 }
 
 // ---------------------------------------------------------------------------
-// Team: responsive cell grid, photo selection, captions and idle rotation.
-// ---------------------------------------------------------------------------
-let resizeTeam = () => {};
-
-const teamSection = document.querySelector('.team');
-const teamStage = teamSection?.querySelector('.team-stage');
-const teamGrid = teamSection?.querySelector('.team-grid');
-const teamRolesLayer = teamSection?.querySelector('.team-roles');
-const teamRoles = Array.from(teamSection?.querySelectorAll('.team-role') || []);
-const teamImages = Array.from(teamSection?.querySelectorAll('.team-media__image') || []);
-const teamCaptionName = teamSection?.querySelector('.team-caption__name');
-const teamCaptionDescription = teamSection?.querySelector('.team-caption__desc');
-
-if (
-  teamSection
-  && teamStage
-  && teamGrid
-  && teamRolesLayer
-  && teamRoles.length
-  && teamImages.length
-  && teamCaptionName
-  && teamCaptionDescription
-) {
-  const TEAM_CELL_SIZE = 125;
-  const TEAM_PARALLAX_STRENGTH = 24;
-  const TEAM_ROTATION_DELAY = 4000;
-  const ROLE_LAYOUT = [
-    { role: 'HR Manager', colFromRight: 1, row: 0 },
-    { role: 'Project Manager', colFromRight: 3, row: 1 },
-    { role: 'Full-Stack Developer', colFromRight: 0, row: 2 },
-    { role: 'Illustrator', colFromRight: 2, row: 3 },
-    { role: 'UI/UX Designer', colFromRight: 3, row: 4 },
-    { role: 'QA Engineer', colFromRight: 1, row: 5 },
-  ];
-  const teamPointer = {
-    currentX: 0,
-    currentY: 0,
-    targetX: 0,
-    targetY: 0,
-  };
-  let activeTeamIndex = 3;
-  let teamGridColumns = 0;
-  let teamGridRows = 0;
-  let teamVisible = false;
-  let teamHoverPaused = false;
-  let teamRotationTimer = 0;
-  let teamParallaxFrame = 0;
-  let captionTimers = [];
-
-  const currentTeamMembers = () => TEAM_TRANSLATIONS[activeLanguage] || TEAM_TRANSLATIONS.en;
-
-  const clearCaptionMotion = () => {
-    captionTimers.forEach(clearTimeout);
-    captionTimers = [];
-    [teamCaptionName, teamCaptionDescription].forEach((element) => {
-      element.getAnimations().forEach((animation) => animation.cancel());
+// Experience: native keyboard-accessible disclosures with measured height transitions.
+document.querySelectorAll('.experience-row').forEach((row) => {
+  let animation;
+  row.querySelector('summary').addEventListener('click', (event) => {
+    if (prefersReducedMotion) return;
+    event.preventDefault();
+    const startHeight = row.getBoundingClientRect().height;
+    const opening = !row.open || row.dataset.closing === 'true';
+    animation?.cancel();
+    row.open = true;
+    row.dataset.closing = String(!opening);
+    const endHeight = opening ? row.scrollHeight : row.querySelector('summary').offsetHeight;
+    row.style.overflow = 'hidden';
+    animation = row.animate({ height: [startHeight + 'px', endHeight + 'px'] }, {
+      duration: 350, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
     });
-  };
-
-  const swapCaption = (index, direction = 1, immediate = false) => {
-    const member = currentTeamMembers()[index];
-    if (!member) return;
-    const name = `${member.name}, ${member.role}`;
-
-    clearCaptionMotion();
-    if (immediate || prefersReducedMotion) {
-      teamCaptionName.textContent = name;
-      teamCaptionDescription.textContent = member.description;
-      return;
-    }
-
-    const outgoingX = direction >= 0 ? -28 : 28;
-    const incomingX = -outgoingX;
-    const swapElement = (element, text, delay) => {
-      const exitAnimation = element.animate(
-        [
-          { opacity: 1, transform: 'translate3d(0, 0, 0)' },
-          { opacity: 0, transform: `translate3d(${outgoingX}px, 0, 0)` },
-        ],
-        { duration: 180, delay, easing: 'ease-in', fill: 'forwards' },
-      );
-
-      const timer = window.setTimeout(() => {
-        exitAnimation.cancel();
-        element.textContent = text;
-        const enterAnimation = element.animate(
-          [
-            { opacity: 0, transform: `translate3d(${incomingX}px, 0, 0)` },
-            { opacity: 1, transform: 'translate3d(0, 0, 0)' },
-          ],
-          { duration: 450, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
-        );
-        enterAnimation.onfinish = () => enterAnimation.cancel();
-      }, 180 + delay);
-      captionTimers.push(timer);
+    animation.onfinish = () => {
+      row.open = opening;
+      row.style.overflow = '';
+      delete row.dataset.closing;
+      lenis?.resize();
     };
-
-    swapElement(teamCaptionName, name, 0);
-    swapElement(teamCaptionDescription, member.description, 300);
-  };
-
-  const applyActivePhotoTransform = () => {
-    const activeImage = teamImages[activeTeamIndex];
-    if (!activeImage) return;
-    activeImage.style.transform = `translate3d(${teamPointer.currentX.toFixed(2)}px, ${teamPointer.currentY.toFixed(2)}px, 0)`;
-  };
-
-  const selectTeamMember = (index, direction = 1, immediate = false) => {
-    const nextIndex = (index + teamRoles.length) % teamRoles.length;
-    if (nextIndex === activeTeamIndex && !immediate) return;
-
-    activeTeamIndex = nextIndex;
-    teamRoles.forEach((role, roleIndex) => {
-      const selected = roleIndex === activeTeamIndex;
-      role.classList.toggle('is-active', selected);
-      role.setAttribute('aria-pressed', String(selected));
-    });
-    teamImages.forEach((image, imageIndex) => {
-      image.classList.toggle('is-active', imageIndex === activeTeamIndex);
-    });
-    applyActivePhotoTransform();
-    swapCaption(activeTeamIndex, direction, immediate);
-  };
-
-  const stopTeamRotation = () => {
-    clearTimeout(teamRotationTimer);
-    teamRotationTimer = 0;
-  };
-
-  const startTeamRotation = () => {
-    stopTeamRotation();
-    if (prefersReducedMotion || !teamVisible || teamHoverPaused || teamRoles.length < 2) return;
-
-    teamRotationTimer = window.setTimeout(() => {
-      const offset = 1 + Math.floor(Math.random() * (teamRoles.length - 1));
-      selectTeamMember(activeTeamIndex + offset, 1);
-      startTeamRotation();
-    }, TEAM_ROTATION_DELAY);
-  };
-
-  const renderTeamParallax = () => {
-    teamParallaxFrame = 0;
-    if (!teamVisible || !pointerFine || prefersReducedMotion || mqMobile.matches) return;
-
-    teamPointer.currentX += (teamPointer.targetX - teamPointer.currentX) * 0.12;
-    teamPointer.currentY += (teamPointer.targetY - teamPointer.currentY) * 0.12;
-    applyActivePhotoTransform();
-
-    const moving = Math.abs(teamPointer.targetX - teamPointer.currentX) > 0.03
-      || Math.abs(teamPointer.targetY - teamPointer.currentY) > 0.03;
-    if (moving) teamParallaxFrame = requestAnimationFrame(renderTeamParallax);
-  };
-
-  const startTeamParallax = () => {
-    if (!teamParallaxFrame && teamVisible && pointerFine && !prefersReducedMotion && !mqMobile.matches) {
-      teamParallaxFrame = requestAnimationFrame(renderTeamParallax);
-    }
-  };
-
-  resizeTeam = () => {
-    const width = teamStage.clientWidth;
-
-    if (mqMobile.matches) {
-      cancelAnimationFrame(teamParallaxFrame);
-      teamParallaxFrame = 0;
-      teamPointer.currentX = 0;
-      teamPointer.currentY = 0;
-      teamPointer.targetX = 0;
-      teamPointer.targetY = 0;
-      teamImages.forEach((image) => {
-        image.style.transform = '';
-      });
-      teamGrid.replaceChildren();
-      teamGridColumns = 0;
-      teamGridRows = 0;
-      teamRoles.forEach((role) => {
-        role.style.removeProperty('grid-column');
-        role.style.removeProperty('grid-row');
-      });
-      return;
-    }
-
-    const height = teamStage.clientHeight;
-    const columns = Math.max(1, Math.round(width / TEAM_CELL_SIZE));
-    const cellSize = width / columns;
-    const rows = Math.max(1, Math.floor(height / cellSize));
-    const gridWidth = width;
-    const gridHeight = rows * cellSize;
-
-    teamStage.style.setProperty('--team-cell-size', `${cellSize}px`);
-    teamGrid.style.width = '100%';
-    teamGrid.style.height = '100%';
-    teamGrid.style.gridTemplateColumns = `repeat(${columns}, ${cellSize}px)`;
-    teamGrid.style.gridAutoRows = `${cellSize}px`;
-    teamGrid.style.setProperty('--team-grid-offset-y', `${(height - gridHeight) / 2}px`);
-    teamRolesLayer.style.width = `${gridWidth}px`;
-    teamRolesLayer.style.height = `${gridHeight}px`;
-    teamRolesLayer.style.gridTemplateColumns = `repeat(${columns}, ${cellSize}px)`;
-    teamRolesLayer.style.gridAutoRows = `${cellSize}px`;
-
-    if (columns !== teamGridColumns || rows !== teamGridRows) {
-      teamGridColumns = columns;
-      teamGridRows = rows;
-      const fragment = document.createDocumentFragment();
-      for (let index = 0; index < columns * rows; index += 1) {
-        const cell = document.createElement('span');
-        cell.className = 'team-cell';
-        fragment.appendChild(cell);
-      }
-      teamGrid.replaceChildren(fragment);
-    }
-
-    const rowStart = Math.max(0, Math.floor((rows - ROLE_LAYOUT.length) / 2));
-    teamRoles.forEach((role, index) => {
-      const layout = ROLE_LAYOUT.find((item) => item.role === role.dataset.role)
-        || ROLE_LAYOUT[index];
-      const column = Math.max(1, columns - layout.colFromRight);
-      const row = Math.max(1, Math.min(rows, rowStart + layout.row + 1));
-      role.style.gridColumn = String(column);
-      role.style.gridRow = String(row);
-    });
-  };
-
-  teamImages.forEach((image) => {
-    const markMissing = () => image.classList.add('is-missing');
-    if (image.complete && image.naturalWidth === 0) markMissing();
-    else image.addEventListener('error', markMissing, { once: true });
   });
-
-  teamRoles.forEach((role, index) => {
-    if (pointerFine) {
-      role.addEventListener('pointerenter', () => {
-        teamHoverPaused = true;
-        stopTeamRotation();
-        selectTeamMember(index, index < activeTeamIndex ? -1 : 1);
-      });
-      role.addEventListener('pointerleave', () => {
-        teamHoverPaused = false;
-        startTeamRotation();
-      });
-    }
-
-    role.addEventListener('click', () => {
-      selectTeamMember(index, index < activeTeamIndex ? -1 : 1);
-      startTeamRotation();
-    });
-  });
-
-  if (pointerFine && !prefersReducedMotion) {
-    teamStage.addEventListener('pointermove', (event) => {
-      if (mqMobile.matches) return;
-      const rect = teamStage.getBoundingClientRect();
-      const mouseX = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-      const mouseY = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
-      teamPointer.targetX = (0.5 - mouseX) * TEAM_PARALLAX_STRENGTH;
-      teamPointer.targetY = (0.5 - mouseY) * TEAM_PARALLAX_STRENGTH;
-      startTeamParallax();
-    }, { passive: true });
-
-    teamStage.addEventListener('pointerleave', () => {
-      teamPointer.targetX = 0;
-      teamPointer.targetY = 0;
-      startTeamParallax();
-    }, { passive: true });
-  }
-
-  new IntersectionObserver(([entry]) => {
-    teamVisible = entry.isIntersecting;
-    if (teamVisible) {
-      startTeamRotation();
-      startTeamParallax();
-    } else {
-      stopTeamRotation();
-      cancelAnimationFrame(teamParallaxFrame);
-      teamParallaxFrame = 0;
-      swapCaption(activeTeamIndex, 1, true);
-    }
-  }, { threshold: 0.1 }).observe(teamSection);
-
-  resizeTeam();
-  selectTeamMember(activeTeamIndex, 1, true);
-}
+});
 
 // ---------------------------------------------------------------------------
 // Selected work: native horizontal scrolling with arrow controls.
@@ -2106,7 +1877,7 @@ document.querySelectorAll('[data-case-link]').forEach((link) => {
 });
 
 // ---------------------------------------------------------------------------
-// MLK / MLK.STUDIO pixel grid: one responsive Canvas 2D surface. The static grid is
+// Jack Milka pixel grid: one responsive Canvas 2D surface. The static grid is
 // redrawn only on resize; rAF runs while hovered or while residual heat fades.
 // ---------------------------------------------------------------------------
 const pixelsSection = document.querySelector('.pixels');
@@ -2118,11 +1889,15 @@ if (pixelsSection && pixelsCanvas) {
   const PIXEL_STEP = PIXEL_SIZE + PIXEL_GAP;
   const PIXEL_FADE_DURATION = 1000;
   const PIXEL_PATH_SAMPLE_STEP = 2;
-  const PIXEL_LOGO_DESKTOP = 'MLK.STUDIO';
-  const PIXEL_LOGO_MOBILE = 'MLK';
+  const PIXEL_LOGO_DESKTOP = 'JACK MILKA';
+  const PIXEL_LOGO_MOBILE = 'JM';
   const PIXEL_LOGO_HEIGHT = 7;
   const PIXEL_LOGO_INSET_CELLS = 1;
   const GLYPHS = {
+    J: ['00111', '00010', '00010', '00010', '10010', '10010', '01100'],
+    A: ['01110', '10001', '10001', '11111', '10001', '10001', '10001'],
+    C: ['01111', '10000', '10000', '10000', '10000', '10000', '01111'],
+    ' ': ['000', '000', '000', '000', '000', '000', '000'],
     M: ['10001', '11011', '10101', '10001', '10001', '10001', '10001'],
     L: ['10000', '10000', '10000', '10000', '10000', '10000', '11111'],
     K: ['10001', '10010', '10100', '11000', '10100', '10010', '10001'],
@@ -2925,7 +2700,6 @@ const applyViewport = () => {
   uniforms.uResolution.value.set(viewportWidth, canvasHeight);
   uniforms.uCoverAlignY.value = mqMobile.matches ? 0.5 : 0.0;
   setScrollMode();
-  resizeTeam();
   measureWorks();
   lenis?.resize();
 };

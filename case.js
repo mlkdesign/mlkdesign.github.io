@@ -62,7 +62,7 @@ const CASE_PROJECTS = {
     visitUrl: 'https://www.behance.net/gallery/218243837/NFT-Collection-Landing-Page-MRBONE',
     copy: {
       en: {
-        pageTitle: 'MR.BONE — MLK.STUDIO',
+        pageTitle: 'MR.BONE — Jack Milka',
         caseTitle: 'MR.BONE',
         caseKicker: 'NFT collection website design & development',
         caseDescription: 'An immersive digital home for a character-led NFT collection, combining cinematic storytelling, collectible art and a bold interactive experience.',
@@ -70,7 +70,7 @@ const CASE_PROJECTS = {
         imageAlt: 'Full website design for MR.BONE',
       },
       uk: {
-        pageTitle: 'MR.BONE — MLK.STUDIO',
+        pageTitle: 'MR.BONE — Jack Milka',
         caseTitle: 'MR.BONE',
         caseKicker: 'Дизайн і розробка сайту NFT-колекції',
         caseDescription: 'Імерсивна цифрова платформа для персонажної NFT-колекції, що поєднує кінематографічний сторітелінг, колекційне мистецтво та сміливий інтерактивний досвід.',
@@ -84,7 +84,7 @@ const CASE_PROJECTS = {
     visitUrl: 'https://www.behance.net/gallery/213949479/LANDING-PAGE-Storm-traffic',
     copy: {
       en: {
-        pageTitle: 'Storm Traffic — MLK.STUDIO',
+        pageTitle: 'Storm Traffic — Jack Milka',
         caseTitle: 'Storm Traffic',
         caseKicker: 'Affiliate platform design & development',
         caseDescription: 'A high-energy recruitment and brand platform for an international affiliate marketing team, built to communicate scale, ambition and performance.',
@@ -92,7 +92,7 @@ const CASE_PROJECTS = {
         imageAlt: 'Full website design for Storm Traffic',
       },
       uk: {
-        pageTitle: 'Storm Traffic — MLK.STUDIO',
+        pageTitle: 'Storm Traffic — Jack Milka',
         caseTitle: 'Storm Traffic',
         caseKicker: 'Дизайн і розробка affiliate-платформи',
         caseDescription: 'Динамічна рекрутингова та бренд-платформа для міжнародної affiliate-команди, створена для передачі масштабу, амбіцій і результативності.',
@@ -106,7 +106,7 @@ const CASE_PROJECTS = {
     visitUrl: 'https://blackring.partners',
     copy: {
       en: {
-        pageTitle: 'Black Ring — MLK.STUDIO',
+        pageTitle: 'Black Ring — Jack Milka',
         caseTitle: 'Black Ring',
         caseKicker: 'Brand website design & development',
         caseDescription: 'A dark, high-impact corporate website for an entertainment marketing company, translating its competitive focus into a confident digital identity.',
@@ -114,7 +114,7 @@ const CASE_PROJECTS = {
         imageAlt: 'Full website design for Black Ring',
       },
       uk: {
-        pageTitle: 'Black Ring — MLK.STUDIO',
+        pageTitle: 'Black Ring — Jack Milka',
         caseTitle: 'Black Ring',
         caseKicker: 'Дизайн і розробка брендового вебсайту',
         caseDescription: 'Темний виразний корпоративний сайт для маркетингової компанії у сфері розваг, що перетворює її конкурентний фокус на впевнену цифрову айдентику.',
@@ -127,7 +127,7 @@ const CASE_PROJECTS = {
     image: 'assets/case-4.avif',
     copy: {
       en: {
-        pageTitle: 'Serenity — MLK.STUDIO',
+        pageTitle: 'Serenity — Jack Milka',
         caseTitle: 'Serenity',
         caseKicker: 'Consultancy website design & development',
         caseDescription: 'A clear, structured digital platform for an international consultancy, making complex registration and legal services easier to understand and access.',
@@ -135,7 +135,7 @@ const CASE_PROJECTS = {
         imageAlt: 'Full website design for Serenity',
       },
       uk: {
-        pageTitle: 'Serenity — MLK.STUDIO',
+        pageTitle: 'Serenity — Jack Milka',
         caseTitle: 'Serenity',
         caseKicker: 'Дизайн і розробка сайту консалтингової компанії',
         caseDescription: 'Зрозуміла структурована цифрова платформа для міжнародної консалтингової компанії, що спрощує сприйняття та доступ до реєстраційних і юридичних послуг.',
@@ -149,7 +149,7 @@ const CASE_PROJECTS = {
     visitUrl: 'Kowalski%20%26%20Partners/',
     copy: {
       en: {
-        pageTitle: 'Kowalski & Partners — MLK.STUDIO',
+        pageTitle: 'Kowalski & Partners — Jack Milka',
         caseTitle: 'Kowalski & Partners',
         caseKicker: 'Website design & development',
         caseDescription: 'A digital platform for a full-service law firm, translating authority, clarity and trust into a modern high-performance website.',
@@ -157,7 +157,7 @@ const CASE_PROJECTS = {
         imageAlt: 'Full website design for Kowalski & Partners',
       },
       uk: {
-        pageTitle: 'Kowalski & Partners — MLK.STUDIO',
+        pageTitle: 'Kowalski & Partners — Jack Milka',
         caseTitle: 'Kowalski & Partners',
         caseKicker: 'Дизайн і розробка вебсайту',
         caseDescription: 'Цифрова платформа для юридичної компанії повного циклу, що перетворює авторитет, ясність і довіру на сучасний високопродуктивний вебсайт.',
@@ -175,47 +175,71 @@ const requestedProject = Number.parseInt(
 const activeProject = CASE_PROJECTS[requestedProject] || CASE_PROJECTS[5];
 
 const CASE_TRANSLATIONS = {
-  en: {
-    navServices: 'services',
-    navAbout: 'about us',
-    navTeam: 'team',
-    navWorks: 'our works',
-    navContact: 'contact us',
-    navMenu: 'menu',
-    back: 'back',
-    toolsSkillsLabel: 'tools & skills',
-    footerTitle: 'Still thinking?<br>Write to us right now!',
-    offerTitle: 'Like this project?',
-    offerDescription: 'Let’s build something just as strong for you.',
-    startProject: 'start your project',
-    visitSite: 'visit this site',
-    formName: 'name',
-    formEmail: 'email',
-    formDetails: 'project details',
-    formRequest: 'request',
+  "en": {
+    "navAbout": "about me",
+    "navWorks": "selected works",
+    "navContact": "contact me",
+    "navMenu": "menu",
+    "back": "back",
+    "toolsSkillsLabel": "tools & skills",
+    "footerTitle": "Have a project in mind? Let's make it happen.",
+    "offerTitle": "Like this project?",
+    "offerDescription": "Let’s build something just as strong for you.",
+    "startProject": "let's work together",
+    "visitSite": "visit this site",
+    "formName": "name",
+    "formEmail": "email",
+    "formDetails": "project details",
+    "formRequest": "request",
+    "navSkills": "skills",
+    "navExperience": "experience",
+    "formSuccess": "Request sent. I'll get back to you soon.",
+    "formError": "I could not send your request. Please try again or contact me via Telegram or WhatsApp.",
+    "formRequired": "Please complete all three fields and enter a valid email address.",
+    "formSending": "sending…",
+    "telegramContact": "Contact Jack Milka on Telegram, @EugeneMilka",
+    "whatsappContact": "Contact Jack Milka on WhatsApp, +380 73 826 53 54",
+    "language": "Language",
+    "primaryNavigation": "Primary navigation",
+    "projectRequest": "Project request",
+    "close": "Close",
+    "socialMedia": "Social media",
+    "finalButton": "get in touch"
   },
-  uk: {
-    navServices: 'послуги',
-    navAbout: 'про нас',
-    navTeam: 'команда',
-    navWorks: 'наші роботи',
-    navContact: 'зв’язатися',
-    navMenu: 'меню',
-    back: 'назад',
-    toolsSkillsLabel: 'інструменти та навички',
-    footerTitle: 'Ще думаєте?<br>Напишіть нам просто зараз!',
-    offerTitle: 'Сподобався проєкт?',
-    offerDescription: 'Давайте створимо для вас такий самий сильний продукт.',
-    startProject: 'розпочати проєкт',
-    visitSite: 'переглянути сайт',
-    formName: 'ім’я',
-    formEmail: 'електронна пошта',
-    formDetails: 'деталі проєкту',
-    formRequest: 'надіслати',
-  },
+  "uk": {
+    "navAbout": "про мене",
+    "navWorks": "роботи",
+    "navContact": "зв’язатися",
+    "navMenu": "меню",
+    "back": "назад",
+    "toolsSkillsLabel": "інструменти та навички",
+    "footerTitle": "Маєте ідею проєкту? Нумо втілимо її разом.",
+    "offerTitle": "Сподобався проєкт?",
+    "offerDescription": "Давайте створимо для вас такий самий сильний продукт.",
+    "startProject": "працюймо разом",
+    "visitSite": "переглянути сайт",
+    "formName": "ім’я",
+    "formEmail": "електронна пошта",
+    "formDetails": "деталі проєкту",
+    "formRequest": "надіслати",
+    "navSkills": "навички",
+    "navExperience": "досвід",
+    "formSuccess": "Заявку надіслано. Я зв’яжуся з вами найближчим часом.",
+    "formError": "Не вдалося надіслати заявку. Спробуйте ще раз або напишіть мені в Telegram чи WhatsApp.",
+    "formRequired": "Заповніть усі три поля та вкажіть коректну електронну адресу.",
+    "formSending": "надсилаю…",
+    "telegramContact": "Написати Jack Milka в Telegram, @EugeneMilka",
+    "whatsappContact": "Написати Jack Milka у WhatsApp, +380 73 826 53 54",
+    "language": "Мова",
+    "primaryNavigation": "Основна навігація",
+    "projectRequest": "Заявка на проєкт",
+    "close": "Закрити",
+    "socialMedia": "Соціальні мережі",
+    "finalButton": "зв’язатися"
+  }
 };
 
-const languagePreferenceKey = 'mlk-language';
+const languagePreferenceKey = 'jack-milka-language';
 let activeLanguage = 'en';
 
 try {
@@ -223,10 +247,10 @@ try {
   if (storedLanguage === 'uk' || storedLanguage === 'en') {
     activeLanguage = storedLanguage;
   } else {
-    activeLanguage = (navigator.language || 'en').toLowerCase().startsWith('uk') ? 'uk' : 'en';
+    activeLanguage = 'en';
   }
 } catch {
-  activeLanguage = (navigator.language || 'en').toLowerCase().startsWith('uk') ? 'uk' : 'en';
+  activeLanguage = 'en';
 }
 
 const applyCaseLanguage = () => {
@@ -236,6 +260,13 @@ const applyCaseLanguage = () => {
   };
   document.documentElement.lang = activeLanguage;
   document.title = strings.pageTitle;
+  ['og:image', 'twitter:image'].forEach((name) => document.querySelector(`meta[property="${name}"], meta[name="${name}"]`)?.setAttribute('content', activeProject.image));
+  document.querySelector('meta[name="description"]')?.setAttribute('content', strings.caseDescription);
+  ['og:title', 'twitter:title'].forEach((name) => document.querySelector(`meta[property="${name}"], meta[name="${name}"]`)?.setAttribute('content', strings.pageTitle));
+  ['og:description', 'twitter:description'].forEach((name) => document.querySelector(`meta[property="${name}"], meta[name="${name}"]`)?.setAttribute('content', strings.caseDescription));
+  [['.nav, .mobile-menu-modal, .mobile-menu-modal__links', 'primaryNavigation'], ['.language-switcher', 'language'], ['.form-modal', 'projectRequest'], ['.form-modal__close, .mobile-menu-modal__close, .case-offer__close', 'close'], ['.form-modal__socials', 'socialMedia'], ['.social-link--telegram', 'telegramContact'], ['.social-link--whatsapp', 'whatsappContact']].forEach(([selector, key]) => {
+    document.querySelectorAll(selector).forEach((el) => el.setAttribute('aria-label', strings[key]));
+  });
 
   document.querySelectorAll('[data-case-i18n]').forEach((element) => {
     const value = strings[element.dataset.caseI18n];
@@ -641,6 +672,10 @@ if (pixelsSection && pixelsCanvas) {
   const PIXEL_FADE_DURATION = 1000;
   const PIXEL_LOGO_HEIGHT = 7;
   const GLYPHS = {
+    J: ['00111', '00010', '00010', '00010', '10010', '10010', '01100'],
+    A: ['01110', '10001', '10001', '11111', '10001', '10001', '10001'],
+    C: ['01111', '10000', '10000', '10000', '10000', '10000', '01111'],
+    ' ': ['000', '000', '000', '000', '000', '000', '000'],
     M: ['10001', '11011', '10101', '10001', '10001', '10001', '10001'],
     L: ['10000', '10000', '10000', '10000', '10000', '10000', '11111'],
     K: ['10001', '10010', '10100', '11000', '10100', '10010', '10001'],
@@ -669,8 +704,8 @@ if (pixelsSection && pixelsCanvas) {
   };
 
   const logos = {
-    desktop: buildLogo('MLK.STUDIO'),
-    mobile: buildLogo('MLK'),
+    desktop: buildLogo('JACK MILKA'),
+    mobile: buildLogo('JM'),
   };
   const context = pixelsCanvas.getContext('2d', { alpha: true });
   const accentValue = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
@@ -925,8 +960,86 @@ if (formModal) {
     });
   });
   closeButton?.addEventListener('click', closeModal);
-  requestForm?.addEventListener('submit', (event) => event.preventDefault());
+  const requestButton = requestForm?.querySelector('.request-btn');
+  const requestStatus = requestForm?.querySelector('#request-status');
+  let requestSubmitting = false;
+  const setRequestButtonLabel = (text) => {
+    requestButton?.querySelectorAll('.btn__line').forEach((line) => {
+      line.textContent = text;
+    });
+  };
+
+  const setRequestStatus = (message = '', state = '') => {
+    if (!requestStatus) return;
+    requestStatus.textContent = message;
+    requestStatus.classList.toggle('is-success', state === 'success');
+    requestStatus.classList.toggle('is-error', state === 'error');
+  };
+
+  requestForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (requestSubmitting) return;
+
+    const strings = CASE_TRANSLATIONS[activeLanguage];
+    setRequestStatus();
+
+    if (!requestForm.checkValidity()) {
+      setRequestStatus(strings.formRequired, 'error');
+      requestForm.reportValidity();
+      return;
+    }
+
+    const submission = new FormData(requestForm);
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 15000);
+    requestSubmitting = true;
+    requestForm.setAttribute('aria-busy', 'true');
+    if (requestButton) requestButton.disabled = true;
+    setRequestButtonLabel(strings.formSending);
+
+    try {
+      const response = await fetch(requestForm.action, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+        },
+        body: submission,
+        signal: controller.signal,
+      });
+      const result = await response.json().catch(() => null);
+      const rejected = Array.isArray(result?.errors) && result.errors.length > 0;
+      if (!response.ok || rejected) throw new Error('Form submission failed');
+
+      requestForm.reset();
+      setRequestStatus(strings.formSuccess, 'success');
+    } catch {
+      setRequestStatus(strings.formError, 'error');
+    } finally {
+      window.clearTimeout(timeoutId);
+      requestSubmitting = false;
+      requestForm.removeAttribute('aria-busy');
+      if (requestButton) requestButton.disabled = false;
+      setRequestButtonLabel(strings.formRequest);
+    }
+  });
+
+
   document.addEventListener('keydown', (event) => {
-    if (open && event.key === 'Escape') closeModal();
+    if (!open) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeModal();
+      return;
+    }
+    if (event.key !== 'Tab') return;
+    const focusable = Array.from(formModal.querySelectorAll('a[href], button:not([disabled]), input:not([type="hidden"]), textarea')).filter((el) => el.getClientRects().length);
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && (document.activeElement === first || !formModal.contains(document.activeElement))) {
+      event.preventDefault(); last?.focus();
+    } else if (!event.shiftKey && (document.activeElement === last || !formModal.contains(document.activeElement))) {
+      event.preventDefault(); first?.focus();
+    }
   });
 }

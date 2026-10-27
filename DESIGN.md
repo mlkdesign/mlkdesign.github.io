@@ -1,11 +1,11 @@
-# MLK.STUDIO interface contract
+# Jack Milka personal portfolio interface contract
 
 ## Direction
 
 - Mode: production, preserve.
-- Register: personal portfolio / creative studio.
+- Register: personal portfolio.
 - Anchor: the existing MLK.STUDIO Swiss-minimal visual language: monochrome surfaces, Noto Sans 300, wide tracking, hairline rules, square corner markers and restrained motion.
-- Scope: targeted evolution of social links and the project-request modal. Keep the existing information architecture, copy voice, field names and layout system intact.
+- Scope: personalize the original site exclusively on `milka-cv`. Preserve typography, animations, portfolio images, case content and the original layout system. Services becomes Skills, About becomes About me, and Experience replaces Team.
 
 ## Existing tokens
 
@@ -56,3 +56,24 @@
 - Failure: preserve all entered values and show a localized retry message that also points to the existing Telegram and WhatsApp links.
 - Accessibility: expose status changes through a pre-rendered `role="status"` live region, keep native form semantics, and never rely on color alone to communicate state.
 - Security: rely on Formspree's submission filtering and keep credentials or private keys out of the repository; the public form endpoint is the only service identifier stored in the page.
+
+## Personal branch contract
+
+- `main` remains the original studio website. No merge or hosting changes are part of this work.
+- Experience uses native `details`/`summary`, hairline separators and the existing type scale. Measured 350 ms disclosure transitions respect reduced motion; native controls remain functional without JavaScript.
+- The supplied three experience entries describe practice areas, not invented employers or dated jobs.
+- The 5+ years and 30+ projects totals are provisional and require the owner's confirmation.
+- Add the genuine `assets/Jack-Milka-CV.pdf`, then remove `hidden` from the prepared CV link. No placeholder PDF is shipped.
+- English is the first-visit default. The existing reload-based EN/UK mechanism remains, with a personal storage key shared by the home and case pages.
+- Metadata has no personal canonical URL or `og:url` until a real hosting destination is agreed. Relative social images must be made absolute for that destination when deploying.
+- Case forms use the same endpoint, validation, loading, success and retry flow as the original home form. No test inquiry is sent to the owner during verification.
+
+## Verification — 2026-10-27
+
+- JavaScript syntax checks and `git diff --check` pass.
+- DOM checks pass for both languages, all five case routes, local asset references, section anchors, form labels, metadata and the hidden CV link.
+- Selected-work image markup, card order and case routes match `main`; existing image files and `case.css` are unchanged.
+- Both form handlers pass mocked validation, loading, duplicate-submit prevention, failure/retry and success checks. No live inquiry was submitted; delivery to the mailbox is not verified. The existing Formspree URL responds with HTTP 405 to GET, consistent with a POST-only endpoint.
+- Native Chrome smoke check: animated hero, Experience disclosure, mobile navigation, Ukrainian language persistence into a case, modal and empty-form validation.
+- Experience screenshots inspected at 375, 430, 768, 1024, 1440 and 1920 CSS px. Mobile Ukrainian hero and desktop English hero also inspected.
+- Existing Matter.js delta warning observed; physics timings preserved. Full Lighthouse/axe and cross-browser checks were not run.
