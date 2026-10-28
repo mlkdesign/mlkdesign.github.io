@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!-- Old /cv/ address: forwards to the CV PDF in the visitor's site language (EN or UA). -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Jack Milka — CV</title>
+    <link rel="canonical" href="https://mlkdesign.github.io/milka-cv/assets/cv/Jack-Milka-CV-EN.pdf" />
+    <noscript><meta http-equiv="refresh" content="0; url=../assets/cv/Jack-Milka-CV-EN.pdf" /></noscript>
+    <script>
+      let language = 'en';
+      try {
+        language = localStorage.getItem('jack-milka-language') || 'en';
+      } catch {
+        // Storage unavailable: fall back to English.
+      }
+      location.replace(language === 'uk' ? '../assets/cv/Jack-Milka-CV-UA.pdf' : '../assets/cv/Jack-Milka-CV-EN.pdf');
+    </script>
+    <style>
+      body { margin: 0; padding: 30px; background: #0b0b0b; color: #f4efe3; font: 300 15px/1.5 "Helvetica Neue", Arial, sans-serif; }
+      a { color: inherit; }
+    </style>
+  </head>
+  <body>
+    <p>Opening the CV… <a href="../assets/cv/Jack-Milka-CV-EN.pdf">English PDF</a> · <a href="../assets/cv/Jack-Milka-CV-UA.pdf">Українською (PDF)</a></p>
+  </body>
+</html>

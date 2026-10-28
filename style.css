@@ -787,37 +787,6 @@ h1 {
   will-change: transform;
 }
 
-.btn[aria-expanded="true"] {
-  visibility: hidden;
-}
-
-/* EN / RU chooser that replaces the hero "view CV" button in place. */
-.cv-choice {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
-  font-size: 0.82rem;
-  letter-spacing: 0.18em;
-  white-space: nowrap;
-}
-
-.cv-choice[hidden] {
-  display: none;
-}
-
-.cv-choice__link {
-  padding: 0.75rem 0.9rem;
-  color: var(--text);
-  text-decoration: none;
-}
-
-.cv-choice__sep {
-  color: rgba(244, 239, 227, 0.35);
-}
-
 .btn__mask {
   display: block;
   overflow: hidden;

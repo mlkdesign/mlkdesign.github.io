@@ -1,4 +1,4 @@
-// Builds assets/cv/Jack-Milka-CV-{EN,RU}.pdf from tools/cv/cv.html.
+// Builds assets/cv/Jack-Milka-CV-{EN,UA,RU}.pdf from tools/cv/cv.html.
 // Set CV_PREVIEW_DIR to also render JPEG page previews there for review.
 // Usage: see tools/cv/README.md.
 import { createRequire } from 'node:module';
@@ -22,6 +22,7 @@ if (PREVIEW) mkdirSync(PREVIEW, { recursive: true });
 const META = {
   en: { file: 'Jack-Milka-CV-EN.pdf', lang: 'en-US', title: 'Jack Milka — CV — UI/UX & Digital Product Designer', subject: 'Curriculum vitae of Jack Milka, UI/UX & Digital Product Designer' },
   ru: { file: 'Jack-Milka-CV-RU.pdf', lang: 'ru-RU', title: 'Jack Milka — Резюме — UI/UX и продуктовый дизайнер', subject: 'Резюме Jack Milka, UI/UX и продуктовый дизайнер' },
+  uk: { file: 'Jack-Milka-CV-UA.pdf', lang: 'uk-UA', title: 'Jack Milka — Резюме — UI/UX та продуктовий дизайнер', subject: 'Резюме Jack Milka, UI/UX та продуктовий дизайнер' },
 };
 
 const footer = `
