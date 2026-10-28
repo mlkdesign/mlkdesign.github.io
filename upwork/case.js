@@ -59,7 +59,7 @@ forceThemeColor();
 
 const CASE_PROJECTS = {
   pandawin: {
-    image: '../assets/pandawin/hero.jpg',
+    image: '../milka-cv/assets/pandawin/hero.jpg',
     pageUrl: 'pandawin.html',
     copy: {
       en: {
@@ -149,7 +149,7 @@ const CASE_PROJECTS = {
     },
   },
   1: {
-    image: '../assets/case-1.avif',
+    image: '../milka-cv/assets/case-1.avif',
     copy: {
       en: {
         pageTitle: 'MR.BONE — Jack Milka',
@@ -170,7 +170,7 @@ const CASE_PROJECTS = {
     },
   },
   2: {
-    image: '../assets/case-2.avif',
+    image: '../milka-cv/assets/case-2.avif',
     copy: {
       en: {
         pageTitle: 'Storm Traffic — Jack Milka',
@@ -191,7 +191,7 @@ const CASE_PROJECTS = {
     },
   },
   3: {
-    image: '../assets/case-3.avif',
+    image: '../milka-cv/assets/case-3.avif',
     visitUrl: 'https://blackring.partners',
     copy: {
       en: {
@@ -213,7 +213,7 @@ const CASE_PROJECTS = {
     },
   },
   4: {
-    image: '../assets/case-4.avif',
+    image: '../milka-cv/assets/case-4.avif',
     copy: {
       en: {
         pageTitle: 'Serenity — Jack Milka',
@@ -234,8 +234,8 @@ const CASE_PROJECTS = {
     },
   },
   5: {
-    image: '../assets/case-5.avif',
-    visitUrl: '../Kowalski%20%26%20Partners/',
+    image: '../milka-cv/assets/case-5.avif',
+    visitUrl: '../milka-cv/Kowalski%20%26%20Partners/',
     copy: {
       en: {
         pageTitle: 'Kowalski & Partners — Jack Milka',
@@ -345,7 +345,7 @@ const applyCaseLanguage = () => {
   };
   document.documentElement.lang = activeLanguage;
   document.title = strings.pageTitle;
-  const publishedUrl = new URL(activeProject.pageUrl || `case.html?project=${activeProjectKey}`, 'https://mlkdesign.github.io/milka-cv/upwork/');
+  const publishedUrl = new URL(activeProject.pageUrl || `case.html?project=${activeProjectKey}`, 'https://mlkdesign.github.io/upwork/');
   document.querySelector('link[rel="canonical"]')?.setAttribute('href', publishedUrl.href);
   document.querySelector('meta[property="og:url"]')?.setAttribute('content', publishedUrl.href);
   ['og:image', 'twitter:image'].forEach((name) => document.querySelector(`meta[property="${name}"], meta[name="${name}"]`)?.setAttribute('content', new URL(activeProject.image, publishedUrl).href));

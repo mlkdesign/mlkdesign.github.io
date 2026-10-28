@@ -5,7 +5,11 @@ The edition is a copy of index.html, case.html, pandawin.html, app.js and case.j
 - no personal contact details (email, messengers, social profiles, Freelancehunt profile, project form);
 - every "contact me" / project-form action turned into a link to upwork/Jack-Milka-CV.pdf;
 - no language switcher (English only);
-- shared CSS, images and analytics loaded from the parent folder.
+- shared CSS, images and analytics loaded from the personal site at /milka-cv/.
+
+The deploy workflow publishes this folder at https://mlkdesign.github.io/upwork/ (site root, next to /milka-cv/),
+so shared files are referenced as ../milka-cv/… To preview locally, serve a folder where upwork/ and milka-cv/
+(this repository) sit side by side.
 
 Run from the repository root after changing the main pages:  python3 tools/upwork/build.py
 The CV PDF itself comes from tools/cv/build.mjs (the "upwork" edition).
@@ -16,7 +20,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'upwork'
-BASE_URL = 'https://mlkdesign.github.io/milka-cv/upwork/'
+BASE_URL = 'https://mlkdesign.github.io/upwork/'
+SHARED = '../milka-cv/'  # personal site, relative to /upwork/
 CV = 'Jack-Milka-CV.pdf'
 CV_LINK = f'href="{CV}" target="_blank" rel="noopener"'
 
@@ -79,13 +84,13 @@ def retag_as_cv_link(text, opening_regex, label):
 
 def common_html(text, page, label):
     # Shared files live one level up.
-    text = re.sub(r'(href|src)="assets/', r'\1="../assets/', text)
-    text = re.sub(r'href="(style|case)\.css', r'href="../\1.css', text)
-    text = text.replace('src="analytics.js', 'src="../analytics.js')
+    text = re.sub(r'(href|src)="assets/', rf'\1="{SHARED}assets/', text)
+    text = re.sub(r'href="(style|case)\.css', rf'href="{SHARED}\1.css', text)
+    text = text.replace('src="analytics.js', f'src="{SHARED}analytics.js')
 
     # Address, indexing and social metadata of this edition.
     text = re.sub(r'https://mlkdesign\.github\.io/milka-cv/(?!assets/)([^"]*)', lambda m: BASE_URL + m.group(1), text)
-    text = text.replace(BASE_URL + 'case.html', BASE_URL + 'case.html').replace(f'{BASE_URL}index.html', BASE_URL)
+    text = text.replace(f'{BASE_URL}index.html', BASE_URL)
     text = replace_once(text, '<meta name="viewport"', '<meta name="robots" content="noindex" />\n    <meta name="viewport"', label)
     # The language switcher used to push "contact me" to the right edge; the CV link takes over that role.
     # The case-page CTA becomes a link, so it must not pick up link underlining.
@@ -140,7 +145,7 @@ def build_app_js():
     text = (ROOT / 'app.js').read_text()
     label = 'app.js'
     text = replace_once(text, '"cvFile": "assets/cv/Jack-Milka-CV-EN.pdf"', f'"cvFile": "{CV}"', label)
-    text = re.sub(r"(['\"])assets/", r"\1../assets/", text)
+    text = re.sub(r"(['\"])assets/", rf"\1{SHARED}assets/", text)
     text = replace_once(text, '"navContact": "contact me"', '"navContact": "view CV"', label)
     text = replace_once(text, '"worksCta": "your project could be next"', '"worksCta": "view my CV"', label)
     text = replace_once(text, '"finalButton": "get in touch"', '"finalButton": "view CV"', label)
@@ -154,11 +159,11 @@ def build_app_js():
 def build_case_js():
     text = (ROOT / 'case.js').read_text()
     label = 'case.js'
-    text = re.sub(r"(['\"])assets/", r"\1../assets/", text)
+    text = re.sub(r"(['\"])assets/", rf"\1{SHARED}assets/", text)
     # Behance galleries belong to the personal profile; Kowalski demo lives one level up.
     text, removed = re.subn(r"\n    visitUrl: 'https://www\.behance\.net/[^']*',", '', text)
     assert removed == 2, f'{label}: Behance visit links {removed}'
-    text = replace_once(text, "visitUrl: 'Kowalski%20%26%20Partners/'", "visitUrl: '../Kowalski%20%26%20Partners/'", label)
+    text = replace_once(text, "visitUrl: 'Kowalski%20%26%20Partners/'", f"visitUrl: '{SHARED}Kowalski%20%26%20Partners/'", label)
     text = replace_once(text, "'https://mlkdesign.github.io/milka-cv/');", f"'{BASE_URL}');", label)
     text = replace_once(text, '"navContact": "contact me"', '"navContact": "view CV"', label)
     text = replace_once(text, '"startProject": "let\'s work together"', '"startProject": "view my CV"', label)

@@ -41,18 +41,25 @@ jobs:
         run: |
           set -euo pipefail
           # Reserve the personal path; never overwrite a path owned by main.
-          if git -C original cat-file -e HEAD:milka-cv 2>/dev/null; then
-            echo 'The original site already owns /milka-cv; refusing to overwrite it.' >&2
-            exit 1
-          fi
+          for reserved in milka-cv upwork; do
+            if git -C original cat-file -e "HEAD:$reserved" 2>/dev/null; then
+              echo "The original site already owns /$reserved; refusing to overwrite it." >&2
+              exit 1
+            fi
+          done
           mkdir -p _site/milka-cv
           git -C original archive HEAD | tar -x -C _site
           git -C personal archive HEAD | tar -x -C _site/milka-cv
           test -s _site/index.html
           test -s _site/milka-cv/index.html
           test -s _site/milka-cv/case.html
-          test -s _site/milka-cv/upwork/index.html
-          test -s _site/milka-cv/upwork/Jack-Milka-CV.pdf
+          # Contact-free Upwork edition lives at the site root (/upwork/) and loads shared files from /milka-cv/.
+          mv _site/milka-cv/upwork _site/upwork
+          test -s _site/upwork/index.html
+          test -s _site/upwork/Jack-Milka-CV.pdf
+          # Forward the earlier /milka-cv/upwork/ address to the new location.
+          mkdir -p _site/milka-cv/upwork
+          printf '%s\n' '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>Jack Milka</title><link rel="canonical" href="https://mlkdesign.github.io/upwork/"><meta http-equiv="refresh" content="0; url=/upwork/"></head><body><a href="/upwork/">mlkdesign.github.io/upwork</a></body></html>' > _site/milka-cv/upwork/index.html
           # Deployment metadata is not public site content.
           rm -rf _site/.github _site/.claude _site/milka-cv/.github _site/milka-cv/.claude
           touch _site/.nojekyll

@@ -335,8 +335,8 @@ const preloadImageSource = (source) => new Promise((resolve) => {
 });
 
 const cssImageSources = [
-  '../assets/noise.png',
-  '../assets/caret-right.svg',
+  '../milka-cv/assets/noise.png',
+  '../milka-cv/assets/caret-right.svg',
 ];
 
 Promise.all([
@@ -618,7 +618,7 @@ const UI_TRANSLATIONS = {
     "experienceLinkedin": "Переглянути LinkedIn",
     "experienceDou": "Переглянути на DOU",
     "downloadCv": "переглянути CV",
-    "cvFile": "../assets/cv/Jack-Milka-CV-UA.pdf",
+    "cvFile": "../milka-cv/assets/cv/Jack-Milka-CV-UA.pdf",
     "finalButton": "зв’язатися"
   }
 };
@@ -1125,7 +1125,7 @@ const createHeroRenderer = () => {
     console.warn('WebGL is unavailable; using the static hero fallback.', error);
     const canvas = document.createElement('canvas');
     canvas.className = 'is-webgl-fallback';
-    canvas.style.backgroundImage = 'url("../assets/header-1.png?v=20260716-1")';
+    canvas.style.backgroundImage = 'url("../milka-cv/assets/header-1.png?v=20260716-1")';
     canvas.style.backgroundPosition = 'center bottom';
     canvas.style.backgroundRepeat = 'no-repeat';
     canvas.style.backgroundSize = 'cover';
@@ -1229,7 +1229,7 @@ const material = new THREE.ShaderMaterial({
 scene.add(new THREE.Mesh(geometry, material));
 
 const textureLoader = new THREE.TextureLoader();
-const texturePaths = ['../assets/header-1.png?v=20260716-1', '../assets/heightMap.png', '../assets/map-9.jpg'];
+const texturePaths = ['../milka-cv/assets/header-1.png?v=20260716-1', '../milka-cv/assets/heightMap.png', '../milka-cv/assets/map-9.jpg'];
 
 const loadTexture = (path) =>
   new Promise((resolve, reject) => {
