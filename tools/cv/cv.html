@@ -211,6 +211,11 @@
         letter-spacing: 0.04em;
       }
 
+      .job__meta a {
+        color: var(--ink);
+        border-bottom: 0.6pt solid var(--mute);
+      }
+
       .job ul,
       .project p {
         margin-top: 1.2mm;
@@ -359,6 +364,14 @@
         whatsapp: 'https://wa.me/380738265354',
       };
 
+      // Company links shown in Experience, same as on the site.
+      const COMPANY_LINKS = {
+        Zexter: [['site', 'https://zexter.com'], ['LinkedIn', 'https://www.linkedin.com/company/zexter-tech/']],
+        'X-IT': [['site', 'https://x-it.io'], ['LinkedIn', 'https://www.linkedin.com/company/x-it/']],
+        'Storm Traffic': [['DOU', 'https://jobs.dou.ua/companies/storm-traffic/']],
+        'Unique Media': [['site', 'https://uniquemedia.com'], ['LinkedIn', 'https://www.linkedin.com/company/uniquemediaus/']],
+      };
+
       const TOOLS = ['Figma', 'FigJam', 'Adobe Photoshop', 'Adobe Illustrator', 'After Effects', 'Premiere Pro', 'Webflow', 'WordPress', 'HTML / CSS', 'JavaScript', 'GSAP', 'AI coding tools'];
 
       const CONTENT = {
@@ -424,6 +437,7 @@
             ['PandaWin', 'Online Casino Platform', 'UI/UX for a casino platform on desktop and mobile: games, payments, bonuses, VIP features and wallet flows in one interface system — 110+ layouts and 50+ modal states. Visual assets created together with a collaborating artist.', 'UI/UX Design — Jack Milka · Custom illustrations — collaborating artist', 'pandawin.html'],
           ],
           viewCase: 'View case →',
+          siteLabel: 'Website',
           languages: [['Ukrainian', 'Native'], ['Russian', 'Native'], ['English', 'Intermediate (B1)']],
           additional: [['Availability', 'Open to freelance projects and long-term collaborations, remote or in Warsaw.']],
         },
@@ -489,6 +503,7 @@
             ['PandaWin', 'платформа онлайн-казино', 'UI/UX игровой платформы для десктопа и мобильных: игры, платежи, бонусы, VIP-функции и кошелёк в единой интерфейсной системе — 110+ макетов и 50+ модальных состояний. Визуальные материалы созданы вместе с художницей.', 'UI/UX дизайн — Jack Milka · Авторские иллюстрации — художница-партнёр', 'pandawin.html'],
           ],
           viewCase: 'Смотреть кейс →',
+          siteLabel: 'Сайт',
           languages: [['Украинский', 'родной'], ['Русский', 'родной'], ['Английский', 'средний (B1)']],
           additional: [['Формат работы', 'Открыт к фриланс-проектам и долгосрочному сотрудничеству — удалённо или в Варшаве.']],
         },
@@ -554,6 +569,7 @@
             ['PandaWin', 'платформа онлайн-казино', 'UI/UX ігрової платформи для десктопа й мобільних: ігри, платежі, бонуси, VIP-функції та гаманець в єдиній інтерфейсній системі — 110+ макетів і 50+ модальних станів. Візуальні матеріали створено разом із художницею.', 'UI/UX дизайн — Jack Milka · Авторські ілюстрації — художниця-партнерка', 'pandawin.html'],
           ],
           viewCase: 'Переглянути кейс →',
+          siteLabel: 'Сайт',
           languages: [['Українська', 'рідна'], ['Російська', 'рідна'], ['Англійська', 'середній рівень (B1)']],
           additional: [['Формат роботи', 'Відкритий до фриланс-проєктів і довгострокової співпраці — віддалено або у Варшаві.']],
         },
@@ -591,7 +607,7 @@
         section(c.sections.experience, `<div class="jobs">${c.jobs.map(([company, role, period, meta, bullets]) => `
           <article class="job">
             <div class="job__top"><h3 class="job__title">${esc(company)} <span>— ${esc(role)}</span></h3><span class="job__period">${esc(period)}</span></div>
-            <p class="job__meta">${esc(meta)}</p>
+            <p class="job__meta">${esc(meta)}${(COMPANY_LINKS[company] || []).map(([label, href]) => ` · <a href="${href}">${esc(label === 'site' ? c.siteLabel : label)}</a>`).join('')}</p>
             <ul>${bullets.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>
           </article>`).join('')}</div>`),
         section(c.sections.projects, `<div class="projects">${c.projects.map(([name, type, text, credits, path], index) => `

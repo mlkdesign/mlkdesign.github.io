@@ -563,6 +563,7 @@ const UI_TRANSLATIONS = {
     "experienceWebsite": "View website",
     "experienceProfile": "View profile",
     "experienceLinkedin": "View LinkedIn",
+    "experienceDou": "View on DOU",
     "downloadCv": "view my CV",
     "cvFile": "assets/cv/Jack-Milka-CV-EN.pdf",
     "finalButton": "get in touch"
@@ -618,6 +619,7 @@ const UI_TRANSLATIONS = {
     "experienceWebsite": "Переглянути сайт",
     "experienceProfile": "Переглянути профіль",
     "experienceLinkedin": "Переглянути LinkedIn",
+    "experienceDou": "Переглянути на DOU",
     "downloadCv": "переглянути CV",
     "cvFile": "assets/cv/Jack-Milka-CV-UA.pdf",
     "finalButton": "зв’язатися"
@@ -828,6 +830,7 @@ const I18N_TEXT_BINDINGS = {
   experienceWebsite: '[data-experience-link="website"] .social-link-line',
   experienceProfile: '[data-experience-link="profile"] .social-link-line',
   experienceLinkedin: '[data-experience-link="linkedin"] .social-link-line',
+  experienceDou: '[data-experience-link="dou"] .social-link-line',
   availability: '.availability',
   downloadCv: '[data-cv-link] .btn__line',
   worksIntro: '.works-intro',
