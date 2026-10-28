@@ -28,7 +28,7 @@ CV_LINK = f'href="{CV}" target="_blank" rel="noopener"'
 # Anything matching these must not survive in the generated edition.
 FORBIDDEN = [
     r'mailto:', r'milka19051995', r't\.me/', r'wa\.me/', r'EugeneMilka', r'380\s?73', r'instagram\.com',
-    r'linkedin\.com/in/', r'behance\.net', r'upwork\.com/freelancers', r'freelancehunt\.com',
+    r'linkedin\.com/in/', r'behance\.net', r'upwork\.com/freelancers', r'freelancehunt\.com/freelancer',
     r'formspree',
 ]
 # Markup that must be gone from the generated pages (JS may still mention these selectors).
@@ -119,7 +119,12 @@ def build_index():
     text = common_html((ROOT / 'index.html').read_text(), 'index', label)
     text = re.sub(r', "sameAs": \[[^\]]*\]', '', text, count=1)
     text = remove_elements(text, r'<div class="social-links"', 'div', 'hero social links', 1)
-    text = remove_elements(text, r'<div class="experience-links">(?=\s*<a[^>]*freelancehunt)', 'div', 'Freelancehunt profile link', 1)
+    # Freelancehunt links to the platform itself, not to the personal profile.
+    text, swapped = re.subn(r'href="https://freelancehunt\.com/freelancer/[^"]*" data-experience-link="profile"',
+                            'href="https://freelancehunt.com" data-experience-link="website"', text)
+    assert swapped == 1, f'Freelancehunt link: {swapped}'
+    text = re.sub(r'(data-experience-link="website"[^>]*>\s*<span class="social-link-mask"><span class="social-link-line">)View profile(</span><span class="social-link-line">)View profile',
+                  r'\1View website\2View website', text)
     text = re.sub(r'(<a class="btn interactive" )href="[^"]*"( target="_blank" rel="noopener" data-fade data-hero-cv)', rf'\1href="{CV}"\2', text, count=1)
     text = re.sub(r'(<a class="btn interactive experience-cv" )href="[^"]*"', rf'\1href="{CV}"', text, count=1)
     text = replace_once(text, '<span>your project could be next</span>', '<span>view my CV</span>', label)
