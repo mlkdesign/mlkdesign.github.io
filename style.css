@@ -1499,6 +1499,7 @@ h1 {
 }
 
 .contact-cta__cookies {
+  order: -1;
   appearance: none;
   flex: 0 0 auto;
   padding: 12px 0;
@@ -2585,6 +2586,10 @@ a[href]:is(:hover, :focus-visible):not(:active) {
     flex-direction: column;
     width: 100%;
     gap: 8px;
+  }
+
+  .contact-cta__cookies {
+    order: 0;
   }
 
   .contact-cta__actions .contact-cta__button {
