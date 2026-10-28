@@ -57,6 +57,96 @@ const forceThemeColor = () => {
 forceThemeColor();
 
 const CASE_PROJECTS = {
+  pandawin: {
+    image: 'assets/pandawin/hero.jpg',
+    pageUrl: 'pandawin.html',
+    copy: {
+      en: {
+        pageTitle: 'PandaWin — Online Casino Platform — Jack Milka',
+        caseTitle: 'PandaWin',
+        caseKicker: 'UI/UX Design · iGaming · Web & Mobile',
+        caseDescription: 'PandaWin is a modern online casino platform designed to combine an engaging gaming experience with clear navigation and a distinctive visual identity.',
+        skills: 'UX/UI design · Design system · User flows · Responsive layouts',
+        imageAlt: 'PandaWin online casino platform — hero visual',
+        projectLabel: 'project',
+        projectValue: 'Online Casino Platform',
+        challengeIndex: '02 — the challenge',
+        challengeTitle: 'The Challenge',
+        challengeText: 'Casino platforms combine games, payments, rewards, and complex user flows. The challenge was to organize these features into a clear, consistent, and easy-to-use experience across desktop and mobile.',
+        solutionIndex: '03 — the solution',
+        solutionTitle: 'The Solution',
+        solutionText: 'We developed a unified interface system with intuitive navigation, responsive layouts, streamlined user flows, and a recognizable visual language. Special attention was given to bonuses, VIP features, wallet interactions, and user engagement.',
+        identityIndex: '04 — visual identity & illustrations',
+        identityTitle: 'Visual Identity & Illustrations',
+        identityText: 'The project was created in collaboration with an illustrator who developed custom characters, promotional artwork, and visual assets exclusively for PandaWin.',
+        roleDesignLabel: 'UI/UX design',
+        roleIllustrationLabel: 'illustrations',
+        roleIllustrationValue: 'Custom artwork by a collaborating artist',
+        scopeIndex: '05 — project scope & results',
+        scopeTitle: 'Project Scope & Results',
+        scopeLayouts: 'Desktop & mobile layouts',
+        scopeModals: 'Modal & overlay states',
+        scopeResponsiveValue: 'Responsive',
+        scopeResponsive: 'Desktop & mobile experience',
+        scopeCustomValue: 'Custom',
+        scopeCustom: 'Illustrations & visual assets',
+        finalIndex: '06 — final overview',
+        finalTitle: 'Final Overview',
+        finalText: 'The result is a complete, responsive design system that brings together complex casino functionality, a consistent user experience, and a unique visual identity.',
+        backToWorks: 'back to selected works',
+        altDesktop: 'PandaWin desktop interface',
+        altMobile1: 'PandaWin mobile interface, screen one',
+        altMobile2: 'PandaWin mobile interface, screen two',
+        altGames: 'PandaWin game lobby and gaming features',
+        altIllustration1: 'Custom PandaWin character illustration',
+        altIllustration2: 'PandaWin promotional artwork',
+        altModals: 'PandaWin modal windows and overlay states',
+        altFinal: 'PandaWin final design overview',
+      },
+      uk: {
+        pageTitle: 'PandaWin — Online Casino Platform — Jack Milka',
+        caseTitle: 'PandaWin',
+        caseKicker: 'UI/UX дизайн · iGaming · Web & Mobile',
+        caseDescription: 'PandaWin — сучасна платформа онлайн-казино, що поєднує захопливий ігровий досвід, зрозумілу навігацію та виразну візуальну айдентику.',
+        skills: 'UX/UI дизайн · Дизайн-система · Користувацькі сценарії · Адаптивні макети',
+        imageAlt: 'Платформа онлайн-казино PandaWin — головний візуал',
+        projectLabel: 'проєкт',
+        projectValue: 'Online Casino Platform',
+        challengeIndex: '02 — завдання',
+        challengeTitle: 'Завдання',
+        challengeText: 'Платформи онлайн-казино поєднують ігри, платежі, винагороди та складні користувацькі сценарії. Завдання полягало в тому, щоб організувати ці функції у зрозумілий, послідовний і зручний досвід на десктопі та мобільних пристроях.',
+        solutionIndex: '03 — рішення',
+        solutionTitle: 'Рішення',
+        solutionText: 'Ми створили єдину інтерфейсну систему з інтуїтивною навігацією, адаптивними макетами, спрощеними користувацькими сценаріями та впізнаваною візуальною мовою. Особливу увагу приділили бонусам, VIP-функціям, роботі з гаманцем і залученню користувачів.',
+        identityIndex: '04 — айдентика та ілюстрації',
+        identityTitle: 'Айдентика та ілюстрації',
+        identityText: 'Проєкт створено у співпраці з ілюстратором, який розробив власних персонажів, промо-арт і візуальні матеріали спеціально для PandaWin.',
+        roleDesignLabel: 'UI/UX дизайн',
+        roleIllustrationLabel: 'ілюстрації',
+        roleIllustrationValue: 'Авторські ілюстрації художника-партнера',
+        scopeIndex: '05 — обсяг і результати',
+        scopeTitle: 'Обсяг і результати',
+        scopeLayouts: 'Макетів для десктопу та мобільних',
+        scopeModals: 'Станів модальних вікон і оверлеїв',
+        scopeResponsiveValue: 'Адаптивність',
+        scopeResponsive: 'Досвід для десктопу та мобільних',
+        scopeCustomValue: 'Авторські',
+        scopeCustom: 'Ілюстрації та візуальні матеріали',
+        finalIndex: '06 — підсумок',
+        finalTitle: 'Підсумок',
+        finalText: 'Результат — цілісна адаптивна дизайн-система, що поєднує складний функціонал казино, послідовний користувацький досвід і унікальну візуальну айдентику.',
+        backToWorks: 'назад до робіт',
+        altDesktop: 'Десктопний інтерфейс PandaWin',
+        altMobile1: 'Мобільний інтерфейс PandaWin, екран перший',
+        altMobile2: 'Мобільний інтерфейс PandaWin, екран другий',
+        altGames: 'Ігрове лобі та ігрові функції PandaWin',
+        altIllustration1: 'Авторська ілюстрація персонажа PandaWin',
+        altIllustration2: 'Промо-арт PandaWin',
+        altModals: 'Модальні вікна та оверлеї PandaWin',
+        altFinal: 'Фінальний огляд дизайну PandaWin',
+      },
+    },
+  },
   1: {
     image: 'assets/case-1.avif',
     visitUrl: 'https://www.behance.net/gallery/218243837/NFT-Collection-Landing-Page-MRBONE',
@@ -168,11 +258,11 @@ const CASE_PROJECTS = {
   },
 };
 
-const requestedProject = Number.parseInt(
-  new URLSearchParams(window.location.search).get('project') || '',
-  10,
-);
-const activeProject = CASE_PROJECTS[requestedProject] || CASE_PROJECTS[5];
+// Standalone case pages declare their project on <body>; case.html reads ?project=.
+const requestedProject = document.body.dataset.caseProject
+  || String(Number.parseInt(new URLSearchParams(window.location.search).get('project') || '', 10));
+const activeProjectKey = Object.hasOwn(CASE_PROJECTS, requestedProject) ? requestedProject : '5';
+const activeProject = CASE_PROJECTS[activeProjectKey];
 
 const CASE_TRANSLATIONS = {
   "en": {
@@ -260,7 +350,7 @@ const applyCaseLanguage = () => {
   };
   document.documentElement.lang = activeLanguage;
   document.title = strings.pageTitle;
-  const publishedUrl = new URL('case.html?project=' + (CASE_PROJECTS[requestedProject] ? requestedProject : 5), 'https://mlkdesign.github.io/milka-cv/');
+  const publishedUrl = new URL(activeProject.pageUrl || `case.html?project=${activeProjectKey}`, 'https://mlkdesign.github.io/milka-cv/');
   document.querySelector('link[rel="canonical"]')?.setAttribute('href', publishedUrl.href);
   document.querySelector('meta[property="og:url"]')?.setAttribute('content', publishedUrl.href);
   ['og:image', 'twitter:image'].forEach((name) => document.querySelector(`meta[property="${name}"], meta[name="${name}"]`)?.setAttribute('content', new URL(activeProject.image, publishedUrl).href));
@@ -290,6 +380,10 @@ const applyCaseLanguage = () => {
     caseImage.src = activeProject.image;
     caseImage.alt = strings.imageAlt;
   }
+  document.querySelectorAll('[data-case-i18n-alt]').forEach((image) => {
+    const value = strings[image.dataset.caseI18nAlt];
+    if (value) image.alt = value;
+  });
   const visitLink = document.querySelector('[data-case-visit]');
   if (visitLink) visitLink.href = activeProject.visitUrl || activeProject.image;
 };
@@ -507,6 +601,17 @@ document.querySelectorAll('[data-reveal]').forEach((element) => {
     }, { threshold: 0.35 });
     observer.observe(element);
   }
+});
+
+document.querySelectorAll('[data-case-fade]').forEach((element) => {
+  if (prefersReducedMotion) return;
+  element.classList.add('is-fade-pending');
+  const observer = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    element.classList.add('is-fade-visible');
+    observer.disconnect();
+  }, { threshold: 0.15 });
+  observer.observe(element);
 });
 
 const createPageTransition = () => {
