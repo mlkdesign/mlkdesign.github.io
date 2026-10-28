@@ -2582,8 +2582,9 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   .contact-cta__actions {
     grid-column: 1;
     grid-row: auto;
+    flex-direction: column;
     width: 100%;
-    gap: 16px;
+    gap: 8px;
   }
 
   .contact-cta__actions .contact-cta__button {
