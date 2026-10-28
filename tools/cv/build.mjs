@@ -1,9 +1,9 @@
-// Builds assets/cv/Jack-Milka-CV-{EN,RU}.pdf from tools/cv/cv.html and
-// renders page previews (assets/cv/preview/*.jpg) for the mobile viewer.
+// Builds assets/cv/Jack-Milka-CV-{EN,RU}.pdf from tools/cv/cv.html.
+// Set CV_PREVIEW_DIR to also render JPEG page previews there for review.
 // Usage: see tools/cv/README.md.
 import { createRequire } from 'node:module';
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, readFileSync, writeFileSync, readdirSync, rmSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -15,8 +15,9 @@ const { PDFDocument, PDFName, PDFString } = deps('pdf-lib');
 
 const CHROME = process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const OUT = join(root, 'assets/cv');
-const PREVIEW = join(OUT, 'preview');
-mkdirSync(PREVIEW, { recursive: true });
+const PREVIEW = process.env.CV_PREVIEW_DIR;
+mkdirSync(OUT, { recursive: true });
+if (PREVIEW) mkdirSync(PREVIEW, { recursive: true });
 
 const META = {
   en: { file: 'Jack-Milka-CV-EN.pdf', lang: 'en-US', title: 'Jack Milka — CV — UI/UX & Digital Product Designer', subject: 'Curriculum vitae of Jack Milka, UI/UX & Digital Product Designer' },
@@ -29,7 +30,6 @@ const footer = `
     <span><span class="pageNumber"></span> / <span class="totalPages"></span></span>
   </div>`;
 
-const pageCounts = {};
 const browser = await puppeteer.launch({ executablePath: CHROME, headless: true });
 try {
   for (const [lang, meta] of Object.entries(META)) {
@@ -60,15 +60,10 @@ try {
     doc.catalog.set(PDFName.of('Lang'), PDFString.of(meta.lang));
     const target = join(OUT, meta.file);
     writeFileSync(target, await doc.save());
-    pageCounts[lang] = doc.getPageCount();
     console.log(`${meta.file}: ${doc.getPageCount()} pages, ${(readFileSync(target).length / 1024).toFixed(0)} KB`);
 
-    // Page previews for browsers that cannot show every page of an embedded PDF (iOS).
-    readdirSync(PREVIEW).filter((f) => f.startsWith(`${lang}-`)).forEach((f) => rmSync(join(PREVIEW, f)));
-    execFileSync('swift', [join(here, 'render-pages.swift'), target, PREVIEW, lang], { stdio: 'inherit' });
+    if (PREVIEW) execFileSync('swift', [join(here, 'render-pages.swift'), target, PREVIEW, lang], { stdio: 'inherit' });
   }
 } finally {
   await browser.close();
 }
-// The /cv/ viewer reads this to know how many preview pages to show.
-writeFileSync(join(OUT, 'pages.json'), `${JSON.stringify(pageCounts)}\n`);

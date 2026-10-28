@@ -114,8 +114,10 @@ if (pointerFine && cursorDot && cursorEllipse) {
 // ---------------------------------------------------------------------------
 const spBox = document.querySelector('.sp-box');
 const projectBtn = spBox?.querySelector('.btn');
+const cvChoice = spBox?.querySelector('.cv-choice');
 
 if (spBox && projectBtn) {
+  let cvChoiceOpen = false;
   const dvdMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   // On mobile the button is static, centered, with no pointer interaction
   const dvdStatic = () => dvdMotionQuery.matches || mqMobile.matches;
@@ -186,7 +188,7 @@ if (spBox && projectBtn) {
   };
 
   const dvdTick = () => {
-    if (!dvdInView || dvdStatic()) {
+    if (!dvdInView || dvdStatic() || cvChoiceOpen) {
       dvdFrameId = 0;
       return;
     }
@@ -202,7 +204,7 @@ if (spBox && projectBtn) {
   };
 
   const startDvdAnimation = () => {
-    if (dvdStatic() || !dvdInView || dvdFrameId) return;
+    if (dvdStatic() || !dvdInView || dvdFrameId || cvChoiceOpen) return;
     dvdFrameId = requestAnimationFrame(dvdTick);
   };
 
@@ -211,10 +213,54 @@ if (spBox && projectBtn) {
     dvdFrameId = 0;
   };
 
+  // "view CV" freezes in place and turns into EN / RU links to the PDFs.
+  const closeCvChoice = ({ restoreFocus = false } = {}) => {
+    if (!cvChoiceOpen) return;
+    cvChoiceOpen = false;
+    cvChoice.hidden = true;
+    projectBtn.setAttribute('aria-expanded', 'false');
+    if (!mqMobile.matches && spBox.matches(':hover')) document.body.classList.add('cursor-hide');
+    if (restoreFocus) projectBtn.focus();
+    if (Math.hypot(velocity.x, velocity.y) < 0.1) seedDvdVelocity();
+    startDvdAnimation();
+  };
+
+  const openCvChoice = (fromKeyboard) => {
+    cvChoiceOpen = true;
+    isFollowing = false;
+    stopDvdAnimation();
+    projectBtn.setAttribute('aria-expanded', 'true');
+    document.body.classList.remove('cursor-hide');
+    cvChoice.hidden = false;
+    const boxRect = spBox.getBoundingClientRect();
+    const choiceRect = cvChoice.getBoundingClientRect();
+    const x = clamp(position.x + (bounds.buttonWidth - choiceRect.width) / 2, 0, Math.max(0, boxRect.width - choiceRect.width));
+    const y = clamp(position.y + (bounds.buttonHeight - choiceRect.height) / 2, 0, Math.max(0, boxRect.height - choiceRect.height));
+    cvChoice.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
+    if (fromKeyboard) cvChoice.querySelector('a')?.focus();
+  };
+
+  if (cvChoice) {
+    projectBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      if (cvChoiceOpen) closeCvChoice();
+      else openCvChoice(event.detail === 0);
+    });
+    cvChoice.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => window.setTimeout(closeCvChoice, 0));
+    });
+    document.addEventListener('pointerdown', (event) => {
+      if (cvChoiceOpen && !spBox.contains(event.target)) closeCvChoice();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (cvChoiceOpen && event.key === 'Escape') closeCvChoice({ restoreFocus: true });
+    });
+  }
+
   spBox.addEventListener('pointerenter', (event) => {
     if (mqMobile.matches) return;
     document.body.classList.add('cursor-hide');
-    if (dvdMotionQuery.matches) return;
+    if (dvdMotionQuery.matches || cvChoiceOpen) return;
     isFollowing = true;
     updateFollowTarget(event);
   });
@@ -228,12 +274,14 @@ if (spBox && projectBtn) {
     if (mqMobile.matches) return;
     document.body.classList.remove('cursor-hide');
     isFollowing = false;
+    closeCvChoice();
     if (Math.hypot(velocity.x, velocity.y) < 0.1) {
       seedDvdVelocity();
     }
   });
 
   const syncDvdMode = () => {
+    closeCvChoice();
     isFollowing = false;
     document.body.classList.remove('cursor-hide');
     measureDvdBounds();
@@ -564,6 +612,9 @@ const UI_TRANSLATIONS = {
     "experienceProfile": "View profile",
     "experienceLinkedin": "View LinkedIn",
     "downloadCv": "view my CV",
+    "cvLanguage": "CV language",
+    "cvEnglish": "Open the English CV (PDF) in a new tab",
+    "cvRussian": "Open the Russian CV (PDF) in a new tab",
     "finalButton": "get in touch"
   },
   "uk": {
@@ -618,6 +669,9 @@ const UI_TRANSLATIONS = {
     "experienceProfile": "Переглянути профіль",
     "experienceLinkedin": "Переглянути LinkedIn",
     "downloadCv": "переглянути CV",
+    "cvLanguage": "Мова CV",
+    "cvEnglish": "Відкрити англійське CV (PDF) у новій вкладці",
+    "cvRussian": "Відкрити російське CV (PDF) у новій вкладці",
     "finalButton": "зв’язатися"
   }
 };
@@ -945,6 +999,9 @@ const applyLanguage = (language) => {
     ['.social-link--telegram', 'aria-label', 'telegramContact'],
     ['.social-link--whatsapp', 'aria-label', 'whatsappContact'],
     ['.social-links, .form-modal__socials', 'aria-label', 'socialMedia'],
+    ['.cv-choice', 'aria-label', 'cvLanguage'],
+    ['.cv-choice__link[href$="-EN.pdf"]', 'aria-label', 'cvEnglish'],
+    ['.cv-choice__link[href$="-RU.pdf"]', 'aria-label', 'cvRussian'],
     ['.cookie-banner', 'aria-label', 'cookieTitle'],
     ['.cookie-banner__close', 'aria-label', 'cookieClose'],
   ];

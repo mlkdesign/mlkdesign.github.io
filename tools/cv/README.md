@@ -10,6 +10,6 @@ mkdir -p /tmp/cv-deps && (cd /tmp/cv-deps && npm init -y >/dev/null && npm i pup
 CV_DEPS=/tmp/cv-deps node tools/cv/build.mjs
 ```
 
-Outputs: `assets/cv/Jack-Milka-CV-EN.pdf`, `assets/cv/Jack-Milka-CV-RU.pdf`, page previews in `assets/cv/preview/`
-(used by the `/cv/` viewer on phones and browsers without a built-in PDF viewer) and `assets/cv/pages.json`.
-Keep each CV at two pages; the build prints the page count.
+Outputs: `assets/cv/Jack-Milka-CV-EN.pdf` and `assets/cv/Jack-Milka-CV-RU.pdf`. The site links to them directly,
+so the browser's own PDF viewer shows them. Keep each CV at two pages; the build prints the page count.
+Add `CV_PREVIEW_DIR=/some/folder` to also render JPEG page previews for a visual check.

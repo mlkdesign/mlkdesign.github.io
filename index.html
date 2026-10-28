@@ -28,7 +28,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300&amp;display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=20261028-cv" />
+    <link rel="stylesheet" href="style.css?v=20261028-cv-direct" />
   </head>
   <body>
     <div class="stair-reveal" aria-hidden="true">
@@ -161,13 +161,18 @@
         <div class="hero-content">
           <div class="hero-top">
             <div class="sp-box">
-              <!-- Opens the CV viewer (EN/RU PDFs live in assets/cv/). -->
-              <a class="btn interactive" href="cv/" target="_blank" rel="noopener" data-fade data-hero-cv>
+              <!-- "view CV" reveals EN / RU; each opens its PDF directly in the browser's viewer. Without JS it opens the EN PDF. -->
+              <a class="btn interactive" href="assets/cv/Jack-Milka-CV-EN.pdf" target="_blank" rel="noopener" data-fade data-hero-cv aria-haspopup="true" aria-expanded="false" aria-controls="cv-choice">
                 <span class="btn__mask">
                   <span class="btn__line">view CV</span>
                   <span class="btn__line">view CV</span>
                 </span>
               </a>
+              <div class="cv-choice" id="cv-choice" role="group" aria-label="CV language" hidden>
+                <a class="cv-choice__link" href="assets/cv/Jack-Milka-CV-EN.pdf" target="_blank" rel="noopener" aria-label="Open the English CV (PDF) in a new tab">EN</a>
+                <span class="cv-choice__sep" aria-hidden="true">/</span>
+                <a class="cv-choice__link" href="assets/cv/Jack-Milka-CV-RU.pdf" target="_blank" rel="noopener" aria-label="Open the Russian CV (PDF) in a new tab">RU</a>
+              </div>
             </div>
             <h1 data-shuffle data-reveal data-reveal-on="load">I turn complex ideas into intuitive digital experiences that feel effortless.</h1>
           </div>
@@ -446,7 +451,7 @@
           </div>
         </details>
         <!-- Kept hidden so the hero "view CV" button stays the single CV entry point. -->
-        <a class="btn interactive experience-cv" href="cv/" target="_blank" rel="noopener" data-cv-link hidden>
+        <a class="btn interactive experience-cv" href="assets/cv/Jack-Milka-CV-EN.pdf" target="_blank" rel="noopener" data-cv-link hidden>
           <span class="btn__mask"><span class="btn__line">download my CV</span><span class="btn__line">download my CV</span></span>
         </a>
       </div>
@@ -726,6 +731,6 @@
     </div>
 
     <script src="analytics.js?v=20261028-ga4"></script>
-    <script type="module" src="app.js?v=20261028-cv"></script>
+    <script type="module" src="app.js?v=20261028-cv-direct"></script>
   </body>
 </html>
