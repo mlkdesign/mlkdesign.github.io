@@ -1490,6 +1490,37 @@ h1 {
   letter-spacing: -0.03em;
 }
 
+.contact-cta__actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.contact-cta__cookies {
+  appearance: none;
+  flex: 0 0 auto;
+  padding: 12px 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-family: var(--font);
+  font-size: 0.75rem;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.contact-cta__cookies:hover,
+.contact-cta__cookies:focus-visible {
+  text-decoration-thickness: 2px;
+}
+
 .contact-cta__button.sp-box {
   position: relative;
   inset: auto;
@@ -2546,6 +2577,18 @@ a[href]:is(:hover, :focus-visible):not(:active) {
 
   .contact-cta__title {
     font-size: 32px;
+  }
+
+  .contact-cta__actions {
+    grid-column: 1;
+    grid-row: auto;
+    width: 100%;
+    gap: 16px;
+  }
+
+  .contact-cta__actions .contact-cta__button {
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   .contact-cta__button.sp-box {
