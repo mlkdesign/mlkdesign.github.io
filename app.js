@@ -112,11 +112,6 @@ if (pointerFine && cursorDot && cursorEllipse) {
 // ---------------------------------------------------------------------------
 // Hero CV button: DVD screensaver + follow-the-cursor inside .sp-box
 // ---------------------------------------------------------------------------
-// Remove aria-disabled and this pending-file guard when the genuine CV is added.
-document.querySelector('[data-hero-cv]')?.addEventListener('click', (event) => {
-  if (event.currentTarget.getAttribute('aria-disabled') === 'true') event.preventDefault();
-});
-
 const spBox = document.querySelector('.sp-box');
 const projectBtn = spBox?.querySelector('.btn');
 
@@ -524,7 +519,7 @@ const UI_TRANSLATIONS = {
     "navAbout": "about me",
     "navContact": "contact me",
     "navMenu": "menu",
-    "heroButton": "download CV",
+    "heroButton": "view CV",
     "heroTitle": "I turn complex ideas into intuitive digital experiences that feel effortless.",
     "aboutSub": "I design digital products, websites and visual experiences with a focus on usability, clarity and the details that make an interface feel right.",
     "aboutTitle": "Design is where creativity meets functionality.",
@@ -568,8 +563,7 @@ const UI_TRANSLATIONS = {
     "experienceWebsite": "View website",
     "experienceProfile": "View profile",
     "experienceLinkedin": "View LinkedIn",
-    "downloadCv": "download my CV",
-    "cvUnavailable": "CV will be available after the original PDF is added.",
+    "downloadCv": "view my CV",
     "finalButton": "get in touch"
   },
   "uk": {
@@ -579,7 +573,7 @@ const UI_TRANSLATIONS = {
     "navAbout": "про мене",
     "navContact": "зв’язатися",
     "navMenu": "меню",
-    "heroButton": "завантажити CV",
+    "heroButton": "переглянути CV",
     "heroTitle": "Я перетворюю складні ідеї на інтуїтивні цифрові продукти, якими легко користуватися.",
     "aboutSub": "Я створюю цифрові продукти, вебсайти та візуальні рішення, приділяючи увагу зручності, зрозумілості та деталям, які роблять інтерфейс довершеним.",
     "aboutTitle": "Дизайн — це місце, де креативність зустрічається з функціональністю.",
@@ -623,8 +617,7 @@ const UI_TRANSLATIONS = {
     "experienceWebsite": "Переглянути сайт",
     "experienceProfile": "Переглянути профіль",
     "experienceLinkedin": "Переглянути LinkedIn",
-    "downloadCv": "завантажити CV",
-    "cvUnavailable": "CV буде доступне після додавання оригінального PDF.",
+    "downloadCv": "переглянути CV",
     "finalButton": "зв’язатися"
   }
 };
@@ -952,7 +945,6 @@ const applyLanguage = (language) => {
     ['.social-link--telegram', 'aria-label', 'telegramContact'],
     ['.social-link--whatsapp', 'aria-label', 'whatsappContact'],
     ['.social-links, .form-modal__socials', 'aria-label', 'socialMedia'],
-    ['[data-hero-cv][aria-disabled="true"]', 'title', 'cvUnavailable'],
     ['.cookie-banner', 'aria-label', 'cookieTitle'],
     ['.cookie-banner__close', 'aria-label', 'cookieClose'],
   ];

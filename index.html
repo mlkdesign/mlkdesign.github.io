@@ -28,7 +28,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300&amp;display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=20261028-pandawin" />
+    <link rel="stylesheet" href="style.css?v=20261028-cv" />
   </head>
   <body>
     <div class="stair-reveal" aria-hidden="true">
@@ -161,11 +161,11 @@
         <div class="hero-content">
           <div class="hero-top">
             <div class="sp-box">
-              <!-- Add the genuine assets/Jack-Milka-CV.pdf, then remove aria-disabled and title. -->
-              <a class="btn interactive" href="assets/Jack-Milka-CV.pdf" download data-fade data-hero-cv aria-disabled="true" title="CV will be available after the original PDF is added.">
+              <!-- Opens the CV viewer (EN/RU PDFs live in assets/cv/). -->
+              <a class="btn interactive" href="cv/" target="_blank" rel="noopener" data-fade data-hero-cv>
                 <span class="btn__mask">
-                  <span class="btn__line">download CV</span>
-                  <span class="btn__line">download CV</span>
+                  <span class="btn__line">view CV</span>
+                  <span class="btn__line">view CV</span>
                 </span>
               </a>
             </div>
@@ -445,8 +445,8 @@
             </div>
           </div>
         </details>
-        <!-- Add the genuine assets/Jack-Milka-CV.pdf before enabling this link (remove hidden). Never substitute a fictional CV. -->
-        <a class="btn interactive experience-cv" href="assets/Jack-Milka-CV.pdf" download data-cv-link hidden>
+        <!-- Kept hidden so the hero "view CV" button stays the single CV entry point. -->
+        <a class="btn interactive experience-cv" href="cv/" target="_blank" rel="noopener" data-cv-link hidden>
           <span class="btn__mask"><span class="btn__line">download my CV</span><span class="btn__line">download my CV</span></span>
         </a>
       </div>
@@ -726,6 +726,6 @@
     </div>
 
     <script src="analytics.js?v=20261028-ga4"></script>
-    <script type="module" src="app.js?v=20261028-ga4"></script>
+    <script type="module" src="app.js?v=20261028-cv"></script>
   </body>
 </html>

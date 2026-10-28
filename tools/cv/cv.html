@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<!--
+  Source for assets/cv/Jack-Milka-CV-EN.pdf and assets/cv/Jack-Milka-CV-RU.pdf.
+  Edit the CONTENT object below, then rebuild with tools/cv/build.mjs (see README.md).
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Jack Milka — CV</title>
+    <style>
+      /* Static TrueType instances (Latin + Cyrillic) so the PDF embeds real fonts, not Type3 outlines. */
+      @font-face { font-family: "Noto Sans"; font-weight: 300; src: url("fonts/NotoSans-300.woff") format("woff"); }
+      @font-face { font-family: "Noto Sans"; font-weight: 400; src: url("fonts/NotoSans-400.woff") format("woff"); }
+      @font-face { font-family: "Noto Sans"; font-weight: 500; src: url("fonts/NotoSans-500.woff") format("woff"); }
+
+      @page {
+        size: A4;
+        margin: 14mm 16mm 17mm;
+      }
+
+      :root {
+        --ink: #0b0b0b;
+        --soft: #4f4f4f;
+        --mute: #8a8a8a;
+        --rule: #d9d9d9;
+        --label-col: 34mm;
+        --gap: 8mm;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      body {
+        margin: 0;
+        background: #fff;
+        color: var(--ink);
+        font: 400 8.6pt/1.45 "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      p,
+      ul,
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+      }
+
+      /* Header */
+      .topline {
+        display: flex;
+        justify-content: space-between;
+        color: var(--mute);
+        font-size: 6.8pt;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .name {
+        margin-top: 7mm;
+        font-size: 50pt;
+        font-weight: 300;
+        line-height: 0.92;
+        letter-spacing: -0.035em;
+      }
+
+      .role {
+        margin-top: 4mm;
+        color: var(--soft);
+        font-size: 13pt;
+        font-weight: 300;
+        letter-spacing: -0.01em;
+      }
+
+      .contacts {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 2.6mm var(--gap);
+        margin-top: 6.5mm;
+        padding-top: 3.5mm;
+        border-top: 0.6pt solid var(--ink);
+      }
+
+      .contacts div {
+        display: grid;
+        gap: 0.6mm;
+        min-width: 0;
+      }
+
+      .label {
+        color: var(--mute);
+        font-size: 6.6pt;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .contacts a,
+      .contacts span:not(.label) {
+        overflow-wrap: anywhere;
+      }
+
+      /* Sections */
+      .section {
+        display: grid;
+        grid-template-columns: var(--label-col) minmax(0, 1fr);
+        column-gap: var(--gap);
+        margin-top: 5.5mm;
+        padding-top: 3mm;
+        border-top: 0.6pt solid var(--rule);
+      }
+
+      .section__head {
+        display: grid;
+        align-content: start;
+        gap: 0.8mm;
+      }
+
+      .section__index {
+        color: var(--mute);
+        font-size: 6.6pt;
+        letter-spacing: 0.14em;
+      }
+
+      .section__title {
+        font-size: 7.2pt;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .summary {
+        font-size: 9.6pt;
+        font-weight: 300;
+        line-height: 1.48;
+      }
+
+      .groups {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 3.5mm var(--gap);
+      }
+
+      .group h3 {
+        margin-bottom: 0.8mm;
+        font-size: 8.6pt;
+        font-weight: 500;
+      }
+
+      .group p {
+        color: var(--soft);
+      }
+
+      .tools {
+        color: var(--soft);
+      }
+
+      .tools span + span::before {
+        content: " · ";
+        color: var(--mute);
+      }
+
+      /* Experience */
+      .jobs {
+        display: grid;
+        gap: 3.4mm;
+      }
+
+      .job {
+        break-inside: avoid;
+      }
+
+      .job__top {
+        display: flex;
+        justify-content: space-between;
+        gap: 4mm;
+        align-items: baseline;
+      }
+
+      .job__title {
+        font-size: 9.6pt;
+        font-weight: 500;
+      }
+
+      .job__title span {
+        font-weight: 300;
+      }
+
+      .job__period {
+        flex: none;
+        color: var(--soft);
+        font-size: 7.6pt;
+        letter-spacing: 0.04em;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .job__meta {
+        margin-top: 0.4mm;
+        color: var(--mute);
+        font-size: 7.4pt;
+        letter-spacing: 0.04em;
+      }
+
+      .job ul,
+      .project p {
+        margin-top: 1.2mm;
+      }
+
+      ul {
+        padding: 0;
+        list-style: none;
+      }
+
+      li {
+        position: relative;
+        padding-left: 4mm;
+        color: var(--soft);
+      }
+
+      li + li {
+        margin-top: 0.6mm;
+      }
+
+      li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.72em;
+        width: 2.2mm;
+        border-top: 0.6pt solid var(--mute);
+      }
+
+      /* Projects */
+      .projects {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4.5mm var(--gap);
+      }
+
+      .project {
+        break-inside: avoid;
+      }
+
+      .project h3 {
+        font-size: 9.2pt;
+        font-weight: 500;
+      }
+
+      .project h3 span {
+        color: var(--soft);
+        font-weight: 300;
+      }
+
+      .project p {
+        color: var(--soft);
+      }
+
+      .project .credits {
+        margin-top: 1mm;
+        color: var(--ink);
+        font-size: 7.6pt;
+      }
+
+      .project a.case {
+        display: inline-block;
+        margin-top: 1.2mm;
+        padding-bottom: 0.3mm;
+        border-bottom: 0.6pt solid var(--ink);
+        font-size: 7.4pt;
+        letter-spacing: 0.06em;
+      }
+
+      .rows {
+        display: grid;
+        gap: 1.2mm;
+      }
+
+      .rows div {
+        display: grid;
+        grid-template-columns: 34mm minmax(0, 1fr);
+        gap: var(--gap);
+      }
+
+      .rows dt {
+        font-weight: 500;
+      }
+
+      .rows dd {
+        margin: 0;
+        color: var(--soft);
+      }
+
+      dl {
+        margin: 0;
+      }
+
+      .langs {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: var(--gap);
+      }
+
+      .langs dt {
+        font-weight: 500;
+      }
+
+      .langs dd {
+        margin: 0.4mm 0 0;
+        color: var(--soft);
+      }
+
+      .keep {
+        break-inside: avoid;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="topline">
+        <span>MLK.DESIGN</span>
+        <span data-t="docLabel"></span>
+        <span>2026</span>
+      </div>
+      <h1 class="name">JACK MILKA</h1>
+      <p class="role" data-t="role"></p>
+      <div class="contacts" id="contacts"></div>
+    </header>
+
+    <main id="sections"></main>
+
+    <script>
+      const LINKS = {
+        site: 'https://mlkdesign.github.io/milka-cv/',
+        email: 'mailto:milka19051995@gmail.com',
+        linkedin: 'https://www.linkedin.com/in/jack-milka-742434173',
+        behance: 'https://www.behance.net/eugenemilka',
+        upwork: 'https://www.upwork.com/freelancers/~0120f121be81dd6bfc',
+        freelancehunt: 'https://freelancehunt.com/freelancer/milka_jak.html',
+        telegram: 'https://t.me/EugeneMilka',
+        whatsapp: 'https://wa.me/380738265354',
+      };
+
+      const TOOLS = ['Figma', 'FigJam', 'Adobe Photoshop', 'Adobe Illustrator', 'After Effects', 'Premiere Pro', 'Webflow', 'WordPress', 'HTML / CSS', 'JavaScript', 'GSAP', 'AI coding tools'];
+
+      const CONTENT = {
+        en: {
+          title: 'Jack Milka — CV — UI/UX & Digital Product Designer',
+          docLabel: 'Curriculum Vitae',
+          role: 'UI/UX & Digital Product Designer',
+          contacts: [
+            ['Location', 'Warsaw, Poland'],
+            ['Portfolio', 'mlkdesign.github.io/milka-cv', LINKS.site],
+            ['Email', 'milka19051995@gmail.com', LINKS.email],
+            ['LinkedIn', 'linkedin.com/in/jack-milka-742434173', LINKS.linkedin],
+            ['Behance', 'behance.net/eugenemilka', LINKS.behance],
+            ['Telegram / WhatsApp', '@EugeneMilka · +380 73 826 53 54', LINKS.telegram],
+            ['Upwork / Freelancehunt', 'platforms'],
+          ],
+          sections: {
+            summary: 'Professional Summary',
+            skills: 'Core Skills',
+            tools: 'Tools & Technologies',
+            experience: 'Professional Experience',
+            projects: 'Selected Projects',
+            languages: 'Languages',
+            additional: 'Additional Information',
+          },
+          summary: 'UI/UX and digital product designer working on mobile apps, web platforms and websites since 2017. In recent years my focus has been iGaming and digital products — interfaces with dense functionality such as game lobbies, wallets, bonuses and VIP features. I take products from user flows and wireframes to interactive prototypes, design systems and responsive layouts ready for development. I can also take part in implementation: building landing pages in Webflow or with HTML, CSS and JavaScript, using AI-assisted development to move from design to a working product faster.',
+          skills: [
+            ['UI/UX & Product Design', 'Mobile app design, web applications, user flows, wireframing, interactive prototypes, design systems, responsive design, iGaming UI/UX.'],
+            ['Web Design & Development', 'Landing pages, Webflow, HTML, CSS, JavaScript, front-end implementation, AI-assisted development.'],
+            ['Visual & Graphic Design', 'Brand identity, logo design, marketing graphics, game graphics, digital and print design.'],
+            ['Motion & Interaction', 'Micro-interactions, UI animation, scroll animations, interactive experiences.'],
+          ],
+          jobs: [
+            ['Zexter', 'UI/UX Designer', 'Oct 2025 — Present', 'iGaming / Digital Products', [
+              'Design interfaces and user flows for iGaming products on desktop and mobile.',
+              'Shape reusable UI components and interaction patterns to keep the product consistent as it scales.',
+              'Prepare layouts and prototypes that product and development teams build from.',
+            ]],
+            ['X-IT', 'UI/UX Designer', 'Oct 2024 — Present', 'Web & Mobile Applications', [
+              'Design mobile application interfaces from user flows and wireframes to final screens.',
+              'Build interactive prototypes to test navigation and key user scenarios.',
+              'Keep screens, states and components visually consistent across the product.',
+            ]],
+            ['MLK.STUDIO', 'Founder & UI/UX Designer', 'Jan 2024 — Present', 'Digital Design & Development', [
+              'Lead website and digital product projects from UX structure and visual direction to launch.',
+              'Design and build responsive websites with motion, using Webflow, HTML/CSS/JavaScript and AI-assisted development.',
+              'Work directly with clients on scope, design reviews and delivery.',
+            ]],
+            ['Storm Traffic', 'UI/UX Designer', '2020 — 2023', 'iGaming Products', [
+              'Designed UI/UX for iGaming-related digital products, including web interfaces and landing pages.',
+              'Created interactive elements, illustrations and motion for the company’s brand and recruitment website.',
+            ]],
+            ['Unique Media', 'Graphic Designer', 'May 2020 — Oct 2024', 'Marketing & Visual Communication · Freelance / Remote, USA', [
+              'Created advertising graphics and visual assets for marketing campaigns.',
+              'Designed digital and print layouts for brand communication.',
+            ]],
+            ['Freelance', 'UI/UX & Graphic Designer', '2017 — Present', 'Independent Client Projects · Freelancehunt, Upwork', [
+              'Design websites, mobile interfaces and digital products for independent clients.',
+              'Create brand identities, logos and marketing graphics.',
+            ]],
+          ],
+          projects: [
+            ['PandaWin', 'Online Casino Platform', 'Responsive casino platform bringing games, payments, bonuses, VIP features and wallet flows into one consistent interface system: 110+ desktop and mobile layouts and 50+ modal and overlay states.', 'UI/UX Design — Jack Milka · Custom illustrations — collaborating artist', 'pandawin.html'],
+            ['Storm Traffic', 'iGaming Website & Referral Experience', 'Recruitment and brand website for an international affiliate marketing team in iGaming, built to communicate scale and ambition. Strategy, UX/UI, illustration and motion.', '', 'case.html?project=2'],
+            ['Black Ring', 'Brand Website', 'Dark, high-impact corporate website for an entertainment marketing company. Brand direction, UX/UI, 3D integration and motion.', '', 'case.html?project=3'],
+            ['Kowalski & Partners', 'Law Firm Website', 'Digital platform for a full-service law firm, translating authority and clarity into a modern website. Research, UX/UI, design system and motion.', '', 'case.html?project=5'],
+          ],
+          viewCase: 'View case →',
+          languages: [['Ukrainian', 'Native'], ['Russian', 'Native'], ['English', 'Intermediate (B1)']],
+          additional: [['Availability', 'Open to freelance projects and long-term collaborations, remote or in Warsaw.']],
+        },
+        ru: {
+          title: 'Jack Milka — Резюме — UI/UX и продуктовый дизайнер',
+          docLabel: 'Резюме',
+          role: 'UI/UX и продуктовый дизайнер',
+          contacts: [
+            ['Город', 'Варшава, Польша'],
+            ['Портфолио', 'mlkdesign.github.io/milka-cv', LINKS.site],
+            ['Email', 'milka19051995@gmail.com', LINKS.email],
+            ['LinkedIn', 'linkedin.com/in/jack-milka-742434173', LINKS.linkedin],
+            ['Behance', 'behance.net/eugenemilka', LINKS.behance],
+            ['Telegram / WhatsApp', '@EugeneMilka · +380 73 826 53 54', LINKS.telegram],
+            ['Upwork / Freelancehunt', 'platforms'],
+          ],
+          sections: {
+            summary: 'О себе',
+            skills: 'Навыки',
+            tools: 'Инструменты',
+            experience: 'Опыт работы',
+            projects: 'Избранные проекты',
+            languages: 'Языки',
+            additional: 'Дополнительно',
+          },
+          summary: 'UI/UX и продуктовый дизайнер: с 2017 года проектирую мобильные приложения, веб-платформы и сайты. Последние годы работаю в основном с iGaming и цифровыми продуктами — интерфейсами со сложной функциональностью: игровыми лобби, кошельками, бонусами и VIP-механиками. Веду продукт от пользовательских сценариев и вайрфреймов до интерактивных прототипов, дизайн-систем и адаптивных макетов, готовых к разработке. Могу участвовать и в реализации: собираю лендинги на Webflow или на HTML, CSS и JavaScript, использую AI-assisted разработку, чтобы быстрее переходить от дизайна к работающему продукту.',
+          skills: [
+            ['UI/UX и продуктовый дизайн', 'Дизайн мобильных приложений, веб-приложения, пользовательские сценарии, вайрфреймы, интерактивные прототипы, дизайн-системы, адаптивный дизайн, UI/UX для iGaming.'],
+            ['Веб-дизайн и разработка', 'Лендинги, Webflow, HTML, CSS, JavaScript, фронтенд-реализация, AI-assisted разработка.'],
+            ['Визуальный и графический дизайн', 'Фирменный стиль, логотипы, маркетинговая графика, игровая графика, digital- и печатный дизайн.'],
+            ['Моушн и интерактив', 'Микровзаимодействия, UI-анимация, анимации при скролле, интерактивные проекты.'],
+          ],
+          jobs: [
+            ['Zexter', 'UI/UX Designer', 'Окт 2025 — н. в.', 'iGaming / цифровые продукты', [
+              'Проектирую интерфейсы и пользовательские сценарии iGaming-продуктов для десктопа и мобильных.',
+              'Формирую UI-компоненты и паттерны взаимодействия, чтобы продукт оставался целостным при росте.',
+              'Готовлю макеты и прототипы, по которым работают продуктовая команда и разработчики.',
+            ]],
+            ['X-IT', 'UI/UX Designer', 'Окт 2024 — н. в.', 'Веб- и мобильные приложения', [
+              'Проектирую интерфейсы мобильных приложений: от сценариев и вайрфреймов до экранов.',
+              'Собираю интерактивные прототипы для проверки навигации и ключевых сценариев.',
+              'Слежу за визуальной целостностью экранов, состояний и компонентов.',
+            ]],
+            ['MLK.STUDIO', 'Основатель и UI/UX Designer', 'Янв 2024 — н. в.', 'Цифровой дизайн и разработка', [
+              'Веду проекты сайтов и цифровых продуктов — от UX-структуры до запуска.',
+              'Собираю адаптивные сайты с анимацией: Webflow, HTML/CSS/JS, AI-assisted разработка.',
+              'Работаю напрямую с клиентами: объём работ, дизайн-ревью, сдача проекта.',
+            ]],
+            ['Storm Traffic', 'UI/UX Designer', '2020 — 2023', 'iGaming-продукты', [
+              'Проектировал UI/UX iGaming-продуктов: веб-интерфейсы и лендинги.',
+              'Создавал интерактивные элементы, иллюстрации и анимацию для сайта компании.',
+            ]],
+            ['Unique Media', 'Graphic Designer', 'Май 2020 — Окт 2024', 'Маркетинг и визуальные коммуникации · фриланс / удалённо, США', [
+              'Создавал рекламную графику и визуальные материалы для маркетинговых кампаний.',
+              'Верстал digital- и печатные макеты для коммуникаций бренда.',
+            ]],
+            ['Фриланс', 'UI/UX и графический дизайнер', '2017 — н. в.', 'Собственные клиентские проекты · Freelancehunt, Upwork', [
+              'Проектирую сайты, мобильные интерфейсы и цифровые продукты для клиентов.',
+              'Разрабатываю фирменный стиль, логотипы и маркетинговую графику.',
+            ]],
+          ],
+          projects: [
+            ['PandaWin', 'платформа онлайн-казино', 'Адаптивная платформа, объединяющая игры, платежи, бонусы, VIP-функции и работу с кошельком в единую интерфейсную систему: 110+ макетов для десктопа и мобильных и 50+ состояний модальных окон и оверлеев.', 'UI/UX дизайн — Jack Milka · Авторские иллюстрации — художница-партнёр', 'pandawin.html'],
+            ['Storm Traffic', 'iGaming-сайт и реферальный опыт', 'Рекрутинговый и бренд-сайт международной affiliate-команды в iGaming, передающий масштаб и амбиции компании. Стратегия, UX/UI, иллюстрации и моушн.', '', 'case.html?project=2'],
+            ['Black Ring', 'брендовый сайт', 'Тёмный выразительный корпоративный сайт для маркетинговой компании в сфере развлечений. Бренд-дирекшн, UX/UI, 3D-интеграция и моушн.', '', 'case.html?project=3'],
+            ['Kowalski & Partners', 'сайт юридической компании', 'Цифровая платформа для юридической компании полного цикла, передающая авторитет и ясность через современный сайт. Исследование, UX/UI, дизайн-система и моушн.', '', 'case.html?project=5'],
+          ],
+          viewCase: 'Смотреть кейс →',
+          languages: [['Украинский', 'родной'], ['Русский', 'родной'], ['Английский', 'средний (B1)']],
+          additional: [['Формат работы', 'Открыт к фриланс-проектам и долгосрочному сотрудничеству — удалённо или в Варшаве.']],
+        },
+      };
+
+      const lang = new URLSearchParams(location.search).get('lang') === 'ru' ? 'ru' : 'en';
+      const c = CONTENT[lang];
+      const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+      const link = (text, href) => (href ? `<a href="${href}">${esc(text)}</a>` : `<span>${esc(text)}</span>`);
+
+      document.documentElement.lang = lang;
+      document.title = c.title;
+      document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = c[el.dataset.t]; });
+
+      document.getElementById('contacts').innerHTML = c.contacts.map(([label, value, href]) => {
+        // Telegram / WhatsApp share one cell; each handle links to its own app.
+        const body = value.includes('@EugeneMilka')
+          ? `<span><a href="${LINKS.telegram}">@EugeneMilka</a> · <a href="${LINKS.whatsapp}">+380 73 826 53 54</a></span>`
+          : value === 'platforms'
+            ? `<span><a href="${LINKS.upwork}">Upwork</a> · <a href="${LINKS.freelancehunt}">Freelancehunt</a></span>`
+            : link(value, href);
+        return `<div><span class="label">${esc(label)}</span>${body}</div>`;
+      }).join('');
+
+      let n = 1;
+      const section = (title, body, cls = '') => {
+        n += 1;
+        return `<section class="section ${cls}"><div class="section__head"><span class="section__index">${String(n).padStart(2, '0')}</span><h2 class="section__title">${esc(title)}</h2></div><div>${body}</div></section>`;
+      };
+      const rows = (items) => `<dl class="rows">${items.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`;
+
+      document.getElementById('sections').innerHTML = [
+        section(c.sections.summary, `<p class="summary">${esc(c.summary)}</p>`, 'keep'),
+        section(c.sections.skills, `<div class="groups">${c.skills.map(([h, p]) => `<div class="group"><h3>${esc(h)}</h3><p>${esc(p)}</p></div>`).join('')}</div>`, 'keep'),
+        section(c.sections.tools, `<p class="tools">${TOOLS.map((t) => `<span>${esc(t)}</span>`).join('')}</p>`, 'keep'),
+        section(c.sections.experience, `<div class="jobs">${c.jobs.map(([company, role, period, meta, bullets]) => `
+          <article class="job">
+            <div class="job__top"><h3 class="job__title">${esc(company)} <span>— ${esc(role)}</span></h3><span class="job__period">${esc(period)}</span></div>
+            <p class="job__meta">${esc(meta)}</p>
+            <ul>${bullets.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>
+          </article>`).join('')}</div>`),
+        section(c.sections.projects, `<div class="projects">${c.projects.map(([name, type, text, credits, path]) => `
+          <article class="project">
+            <h3>${esc(name)} <span>— ${esc(type)}</span></h3>
+            <p>${esc(text)}</p>
+            ${credits ? `<p class="credits">${esc(credits)}</p>` : ''}
+            <a class="case" href="${LINKS.site}${path}">${esc(c.viewCase)}</a>
+          </article>`).join('')}</div>`),
+        section(c.sections.languages, `<dl class="langs">${c.languages.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`, 'keep'),
+        section(c.sections.additional, rows(c.additional), 'keep'),
+      ].join('');
+      document.body.dataset.ready = 'true';
+    </script>
+  </body>
+</html>

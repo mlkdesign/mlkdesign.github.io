@@ -63,7 +63,7 @@
 - Experience uses native `details`/`summary`, hairline separators and the existing type scale. Measured 350 ms disclosure transitions respect reduced motion; native controls remain functional without JavaScript.
 - Experience contains five owner-supplied professional records after the requested removal of the studio entry in descending start-year order, preserving the supplied order for ties. Roles and company names stay in English; dates and descriptions are localized.
 - The 5+ years and 30+ projects totals are provisional and require the owner's confirmation.
-- Add the genuine `assets/Jack-Milka-CV.pdf`, then remove `hidden` from the prepared CV link. No placeholder PDF is shipped.
+- CV: the hero `view CV` button opens `/cv/` in a new tab (EN default, EN/RU switch without reload, download of the selected PDF). PDFs are `assets/cv/Jack-Milka-CV-{EN,RU}.pdf`, generated from `tools/cv/` (see its README). Desktop browsers with a built-in PDF viewer embed the PDF; touch devices and browsers without one get page previews plus `open PDF`. The Experience CV link stays hidden to avoid a duplicate entry point.
 - English is the first-visit default. The existing reload-based EN/UK mechanism remains, with a personal storage key shared by the home and case pages.
 - Personal production URL: `https://mlkdesign.github.io/milka-cv/`. Canonical, Open Graph URLs and social images use this destination; case metadata preserves the project query parameter.
 - Case forms use the same endpoint, validation, loading, success and retry flow as the original home form. No test inquiry is sent to the owner during verification.
