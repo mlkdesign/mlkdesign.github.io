@@ -354,6 +354,7 @@
     <script>
       const LINKS = {
         site: 'https://mlkdesign.github.io/milka-cv/',
+        upworkSite: 'https://mlkdesign.github.io/milka-cv/upwork/',
         email: 'mailto:milka19051995@gmail.com',
         linkedin: 'https://www.linkedin.com/in/jack-milka-742434173',
         behance: 'https://www.behance.net/eugenemilka',
@@ -575,9 +576,19 @@
         },
       };
 
-      const requested = new URLSearchParams(location.search).get('lang');
+      const params = new URLSearchParams(location.search);
+      const requested = params.get('lang');
       const lang = Object.hasOwn(CONTENT, requested) ? requested : 'en';
       const c = CONTENT[lang];
+      // Upwork edition: no personal contact details; portfolio and case links use the contact-free /upwork/ site.
+      const upworkEdition = params.get('edition') === 'upwork';
+      const siteBase = upworkEdition ? LINKS.upworkSite : LINKS.site;
+      if (upworkEdition) {
+        c.contacts = [
+          [c.contacts[0][0], c.contacts[0][1]],
+          ['Portfolio', 'mlkdesign.github.io/milka-cv/upwork', LINKS.upworkSite],
+        ];
+      }
       const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
       const link = (text, href) => (href ? `<a href="${href}">${esc(text)}</a>` : `<span>${esc(text)}</span>`);
 
@@ -616,7 +627,7 @@
             <h3>${esc(name)} <span>— ${esc(type)}</span></h3>
             <p>${esc(text)}</p>
             ${credits ? `<p class="credits">${esc(credits)}</p>` : ''}
-            <a class="case" href="${LINKS.site}${path}">${esc(c.viewCase)}</a>
+            <a class="case" href="${siteBase}${path}">${esc(c.viewCase)}</a>
           </article>`).join('')}</div>`),
         section(c.sections.languages, `<dl class="langs">${c.languages.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`, 'keep'),
         section(c.sections.additional, rows(c.additional), 'keep'),

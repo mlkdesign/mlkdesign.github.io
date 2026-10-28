@@ -1,4 +1,4 @@
-// Builds assets/cv/Jack-Milka-CV-{EN,UA,RU}.pdf from tools/cv/cv.html.
+// Builds assets/cv/Jack-Milka-CV-{EN,UA,RU}.pdf and the contact-free upwork/Jack-Milka-CV.pdf from tools/cv/cv.html.
 // Set CV_PREVIEW_DIR to also render JPEG page previews there for review.
 // Usage: see tools/cv/README.md.
 import { createRequire } from 'node:module';
@@ -14,15 +14,16 @@ const puppeteer = deps('puppeteer-core');
 const { PDFDocument, PDFName, PDFString } = deps('pdf-lib');
 
 const CHROME = process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const OUT = join(root, 'assets/cv');
 const PREVIEW = process.env.CV_PREVIEW_DIR;
-mkdirSync(OUT, { recursive: true });
 if (PREVIEW) mkdirSync(PREVIEW, { recursive: true });
 
+// key: preview prefix · query: cv.html parameters · file: output path from the repository root.
 const META = {
-  en: { file: 'Jack-Milka-CV-EN.pdf', lang: 'en-US', title: 'Jack Milka — CV — UI/UX & Digital Product Designer', subject: 'Curriculum vitae of Jack Milka, UI/UX & Digital Product Designer' },
-  ru: { file: 'Jack-Milka-CV-RU.pdf', lang: 'ru-RU', title: 'Jack Milka — Резюме — UI/UX и продуктовый дизайнер', subject: 'Резюме Jack Milka, UI/UX и продуктовый дизайнер' },
-  uk: { file: 'Jack-Milka-CV-UA.pdf', lang: 'uk-UA', title: 'Jack Milka — Резюме — UI/UX та продуктовий дизайнер', subject: 'Резюме Jack Milka, UI/UX та продуктовий дизайнер' },
+  en: { query: 'lang=en', file: 'assets/cv/Jack-Milka-CV-EN.pdf', lang: 'en-US', title: 'Jack Milka — CV — UI/UX & Digital Product Designer', subject: 'Curriculum vitae of Jack Milka, UI/UX & Digital Product Designer' },
+  ru: { query: 'lang=ru', file: 'assets/cv/Jack-Milka-CV-RU.pdf', lang: 'ru-RU', title: 'Jack Milka — Резюме — UI/UX и продуктовый дизайнер', subject: 'Резюме Jack Milka, UI/UX и продуктовый дизайнер' },
+  uk: { query: 'lang=uk', file: 'assets/cv/Jack-Milka-CV-UA.pdf', lang: 'uk-UA', title: 'Jack Milka — Резюме — UI/UX та продуктовий дизайнер', subject: 'Резюме Jack Milka, UI/UX та продуктовий дизайнер' },
+  // Upwork edition: no personal contacts, links point into the /upwork/ copy of the site.
+  upwork: { query: 'lang=en&edition=upwork', file: 'upwork/Jack-Milka-CV.pdf', lang: 'en-US', title: 'Jack Milka — CV — UI/UX & Digital Product Designer', subject: 'Curriculum vitae of Jack Milka, UI/UX & Digital Product Designer' },
 };
 
 const footer = `
@@ -33,9 +34,9 @@ const footer = `
 
 const browser = await puppeteer.launch({ executablePath: CHROME, headless: true });
 try {
-  for (const [lang, meta] of Object.entries(META)) {
+  for (const [key, meta] of Object.entries(META)) {
     const page = await browser.newPage();
-    await page.goto(`${pathToFileURL(join(here, 'cv.html')).href}?lang=${lang}`, { waitUntil: 'networkidle0' });
+    await page.goto(`${pathToFileURL(join(here, 'cv.html')).href}?${meta.query}`, { waitUntil: 'networkidle0' });
     await page.waitForSelector('body[data-ready="true"]');
     await page.evaluate(() => document.fonts.ready);
     const pdf = await page.pdf({
@@ -59,11 +60,12 @@ try {
     doc.setProducer('MLK.DESIGN');
     doc.setLanguage(meta.lang);
     doc.catalog.set(PDFName.of('Lang'), PDFString.of(meta.lang));
-    const target = join(OUT, meta.file);
+    const target = join(root, meta.file);
+    mkdirSync(dirname(target), { recursive: true });
     writeFileSync(target, await doc.save());
     console.log(`${meta.file}: ${doc.getPageCount()} pages, ${(readFileSync(target).length / 1024).toFixed(0)} KB`);
 
-    if (PREVIEW) execFileSync('swift', [join(here, 'render-pages.swift'), target, PREVIEW, lang], { stdio: 'inherit' });
+    if (PREVIEW) execFileSync('swift', [join(here, 'render-pages.swift'), target, PREVIEW, key], { stdio: 'inherit' });
   }
 } finally {
   await browser.close();

@@ -51,6 +51,8 @@ jobs:
           test -s _site/index.html
           test -s _site/milka-cv/index.html
           test -s _site/milka-cv/case.html
+          test -s _site/milka-cv/upwork/index.html
+          test -s _site/milka-cv/upwork/Jack-Milka-CV.pdf
           # Deployment metadata is not public site content.
           rm -rf _site/.github _site/.claude _site/milka-cv/.github _site/milka-cv/.claude
           touch _site/.nojekyll
