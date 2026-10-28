@@ -665,8 +665,7 @@ h1 {
   font-variant-numeric: tabular-nums;
 }
 
-.hero h1[data-reveal],
-.experience-title[data-reveal] {
+[data-shuffle] {
   pointer-events: auto;
 }
 

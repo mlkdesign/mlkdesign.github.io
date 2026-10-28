@@ -510,17 +510,11 @@ function setupReveal(el) {
   let frame = 0;
   let finishTimer = 0;
   let observer;
-  let onScroll;
   const cleanup = () => {
     cancelled = true;
     observer?.disconnect();
-    if (onScroll) {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-    }
     cancelAnimationFrame(frame);
     clearTimeout(finishTimer);
-    if (el.hasAttribute('data-shuffle')) cancelHeadingShuffle(el);
     revealCleanups.delete(el);
   };
   revealCleanups.set(el, cleanup);
@@ -530,14 +524,12 @@ function setupReveal(el) {
     el.dataset.revealTriggered = 'true';
     if (scrambleMotionQuery.matches) {
       el.classList.add('is-visible', 'is-revealed');
-      if (el.hasAttribute('data-shuffle')) el.dataset.shuffleTriggered = 'true';
       return;
     }
     el.classList.add('is-revealing');
     frame = requestAnimationFrame(() => {
       if (cancelled) return;
       el.classList.add('is-visible');
-      if (el.hasAttribute('data-shuffle')) startHeadingShuffle(el);
       finishTimer = window.setTimeout(() => {
         el.classList.remove('is-revealing');
         el.classList.add('is-revealed');
@@ -550,38 +542,20 @@ function setupReveal(el) {
     return;
   }
 
-  // Both gates are required: the title is visible and the stair reveal is done.
-  // This also preserves the hero's post-preloader sequence on direct hash visits.
-  let inView = false;
-  let preloaderReady = false;
-  const footerCover = el.closest('.contact-cta')
-    ? document.querySelector('.page-surface')
-    : null;
-  const maybeRun = () => {
-    if (cancelled || !inView || !preloaderReady) return;
-    // The sticky footer intersects the viewport while still behind page-surface.
-    if (footerCover && footerCover.getBoundingClientRect().bottom > el.getBoundingClientRect().top) return;
-    run();
-    observer.disconnect();
-    if (onScroll) {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-    }
-  };
-  if (footerCover) {
-    onScroll = maybeRun;
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
+  // Preserve the original reveal triggers independently of hover interaction.
+  if (el.dataset.revealOn === 'load') {
+    stairRevealDone.then(() => { if (!cancelled) run(); });
+  } else {
+    observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          run();
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.4 });
+    observer.observe(el);
   }
-  observer = new IntersectionObserver(([entry]) => {
-    inView = entry.isIntersecting;
-    maybeRun();
-  }, { threshold: 0.4 });
-  observer.observe(el);
-  stairRevealDone.then(() => {
-    preloaderReady = true;
-    maybeRun();
-  });
 }
 
 // ---------------------------------------------------------------------------
@@ -958,11 +932,13 @@ if (resetScrollAfterLanguageReload) {
 const setTranslatedContent = (element, value, useHtml = false) => {
   if (!element || typeof value !== 'string') return;
   const revealWasReady = element.dataset.revealReady === 'true';
+  if (revealWasReady && element.hasAttribute('data-shuffle')) {
+    element.querySelectorAll('.char').forEach(stopScramble);
+  }
 
   if (revealWasReady) {
     revealCleanups.get(element)?.();
     element.classList.remove('is-visible', 'is-revealed', 'is-revealing');
-    delete element.dataset.shuffleTriggered;
     delete element.dataset.revealReady;
     delete element.dataset.revealTriggered;
   }
@@ -1102,11 +1078,11 @@ document.querySelectorAll('[data-reveal]').forEach(setupReveal);
 setupFadeIn();
 
 // ---------------------------------------------------------------------------
-// Reuse the original character shuffle on each title’s existing reveal stagger.
+// Original Hero character shuffle, triggered only by hovering each letter.
 // ---------------------------------------------------------------------------
 const scrambleCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&$@/\\<>*';
 const activeScrambles = new Map();
-const headingShuffleTimers = new Map();
+const scrambleHoverQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
 
 const stopScramble = (char) => {
   const timers = activeScrambles.get(char);
@@ -1147,38 +1123,39 @@ const startScramble = (char) => {
   activeScrambles.set(char, { intervalId, timeoutId });
 };
 
-function cancelHeadingShuffle(title) {
-  headingShuffleTimers.get(title)?.forEach(clearTimeout);
-  headingShuffleTimers.delete(title);
-  title.querySelectorAll('.char').forEach(stopScramble);
-}
-
-function startHeadingShuffle(title) {
-  if (scrambleMotionQuery.matches || title.dataset.shuffleTriggered === 'true') return;
-  title.dataset.shuffleTriggered = 'true';
-  const pending = new Set();
-  headingShuffleTimers.set(title, pending);
-  title.querySelectorAll('.char').forEach((char) => {
-    const delay = (parseFloat(char.style.transitionDelay) || 0) * 1000;
-    const timer = window.setTimeout(() => {
-      pending.delete(timer);
-      if (!scrambleMotionQuery.matches && char.isConnected) startScramble(char);
-      if (!pending.size) headingShuffleTimers.delete(title);
-    }, delay);
-    pending.add(timer);
+// Delegate to the title so translated/recreated letters need no new handlers.
+const setupScramble = (title) => {
+  title.addEventListener('mouseover', (event) => {
+    if (!scrambleHoverQuery.matches || !title.classList.contains('is-revealed')) return;
+    if (!(event.target instanceof HTMLElement) || !event.target.classList.contains('char')) return;
+    startScramble(event.target);
   });
-}
+
+  title.addEventListener('mouseout', (event) => {
+    if (!(event.target instanceof HTMLElement) || !event.target.classList.contains('char')) return;
+    stopScramble(event.target);
+  });
+
+  title.addEventListener('mouseleave', () => {
+    title.querySelectorAll('.char.is-scrambling').forEach(stopScramble);
+  });
+};
+
+document.querySelectorAll('[data-shuffle]').forEach(setupScramble);
 
 scrambleMotionQuery.addEventListener('change', (event) => {
   if (!event.matches) return;
-  document.querySelectorAll('[data-shuffle]').forEach((title) => {
+  [...activeScrambles.keys()].forEach(stopScramble);
+  document.querySelectorAll('[data-reveal]').forEach((title) => {
     revealCleanups.get(title)?.();
-    cancelHeadingShuffle(title);
     title.dataset.revealTriggered = 'true';
-    title.dataset.shuffleTriggered = 'true';
     title.classList.remove('is-revealing');
     title.classList.add('is-visible', 'is-revealed');
   });
+});
+
+scrambleHoverQuery.addEventListener('change', (event) => {
+  if (!event.matches) [...activeScrambles.keys()].forEach(stopScramble);
 });
 
 // ---------------------------------------------------------------------------
