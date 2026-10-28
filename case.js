@@ -995,6 +995,7 @@ if (formModal) {
       return;
     }
 
+    window.portfolioAnalytics?.track('contact_form_submit');
     const submission = new FormData(requestForm);
 
     const controller = new AbortController();
@@ -1017,9 +1018,11 @@ if (formModal) {
       const rejected = Array.isArray(result?.errors) && result.errors.length > 0;
       if (!response.ok || rejected) throw new Error('Form submission failed');
 
+      window.portfolioAnalytics?.track('generate_lead', { form_id: 'project_request' });
       requestForm.reset();
       setRequestStatus(strings.formSuccess, 'success');
     } catch {
+      window.portfolioAnalytics?.track('contact_form_error', { form_id: 'project_request' });
       setRequestStatus(strings.formError, 'error');
     } finally {
       window.clearTimeout(timeoutId);

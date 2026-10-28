@@ -397,51 +397,6 @@ const stairRevealDone = new Promise((resolve) => {
 });
 
 // ---------------------------------------------------------------------------
-// Cookie preference banner: reveal three seconds after the site is ready.
-// ---------------------------------------------------------------------------
-{
-  const cookieBanner = document.querySelector('.cookie-banner');
-  const cookieChoiceButtons = cookieBanner?.querySelectorAll('[data-cookie-choice]') || [];
-  const cookieCloseButton = cookieBanner?.querySelector('[data-cookie-close]');
-  const cookiePreferenceKey = 'jack-milka-cookie-preference';
-  let savedPreference = null;
-
-  try {
-    savedPreference = localStorage.getItem(cookiePreferenceKey);
-  } catch {
-    // Storage can be unavailable in restrictive/private browsing contexts.
-  }
-
-  if (cookieBanner && !savedPreference) {
-    stairRevealDone.then(() => {
-      window.setTimeout(() => {
-        cookieBanner.classList.add('is-visible');
-        cookieBanner.setAttribute('aria-hidden', 'false');
-      }, 3000);
-    });
-  }
-
-  cookieChoiceButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      const preference = button.dataset.cookieChoice;
-      try {
-        localStorage.setItem(cookiePreferenceKey, preference);
-      } catch {
-        // The visual choice still applies for the current page.
-      }
-      document.body.dataset.cookiePreference = preference;
-      cookieBanner.classList.remove('is-visible');
-      cookieBanner.setAttribute('aria-hidden', 'true');
-    });
-  });
-
-  cookieCloseButton?.addEventListener('click', () => {
-    cookieBanner.classList.remove('is-visible');
-    cookieBanner.setAttribute('aria-hidden', 'true');
-  });
-}
-
-// ---------------------------------------------------------------------------
 // Per-character reveal (blur + slide), capped to 2s total per element
 // ---------------------------------------------------------------------------
 const REVEAL_MAX_TOTAL_SECONDS = 2;
@@ -584,7 +539,7 @@ const UI_TRANSLATIONS = {
     "finalTitle": "Have a project in mind? Let's make it happen.",
     "cookieTitle": "Cookie settings",
     "cookieClose": "Close cookie settings",
-    "cookieDescription": "I use cookies to improve your experience, analyze traffic, and optimize site performance. By continuing to browse, you agree to the use of cookies.",
+    "cookieDescription": "With your permission, Google Analytics measures visits and interactions. Analytics stays off until you accept. You can change your choice in Cookie settings.",
     "accept": "accept",
     "decline": "decline",
     "formName": "name",
@@ -639,7 +594,7 @@ const UI_TRANSLATIONS = {
     "finalTitle": "Маєте ідею проєкту? Нумо втілимо її разом.",
     "cookieTitle": "Налаштування cookie",
     "cookieClose": "Закрити налаштування cookie",
-    "cookieDescription": "Я використовую cookie, щоб покращувати ваш досвід, аналізувати трафік та оптимізувати роботу сайту. Продовжуючи перегляд, ви погоджуєтеся на використання cookie.",
+    "cookieDescription": "За вашою згодою Google Analytics вимірює відвідування та взаємодії. Аналітика вимкнена, доки ви не погодитеся. Змінити вибір можна в налаштуваннях cookie.",
     "accept": "прийняти",
     "decline": "відхилити",
     "formName": "ім’я",
@@ -2683,6 +2638,7 @@ if (formModal) {
       return;
     }
 
+    window.portfolioAnalytics?.track('contact_form_submit');
     const submission = new FormData(requestForm);
 
     const controller = new AbortController();
@@ -2705,9 +2661,11 @@ if (formModal) {
       const rejected = Array.isArray(result?.errors) && result.errors.length > 0;
       if (!response.ok || rejected) throw new Error('Form submission failed');
 
+      window.portfolioAnalytics?.track('generate_lead', { form_id: 'project_request' });
       requestForm.reset();
       setRequestStatus(strings.formSuccess, 'success');
     } catch {
+      window.portfolioAnalytics?.track('contact_form_error', { form_id: 'project_request' });
       setRequestStatus(strings.formError, 'error');
     } finally {
       window.clearTimeout(timeoutId);

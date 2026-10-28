@@ -525,10 +525,11 @@
       </div>
     </section>
 
+    <button type="button" data-cookie-settings style="display:block;margin:24px auto;padding:8px 16px;background:transparent;color:inherit;border:1px solid currentColor;border-radius:4px;cursor:pointer">Cookie settings</button>
     <section class="cookie-banner" aria-label="Cookie settings" aria-live="polite" aria-hidden="true">
       <div class="cookie-banner__copy">
         <h2 class="cookie-banner__title">Cookie settings</h2>
-        <p class="cookie-banner__description">I use cookies to improve your experience, analyze traffic, and optimize site performance. By continuing to browse, you agree to the use of cookies.</p>
+        <p class="cookie-banner__description">With your permission, Google Analytics measures visits and interactions. Analytics stays off until you accept. You can change your choice in Cookie settings.</p>
       </div>
       <div class="cookie-banner__actions">
         <button class="cookie-banner__button cookie-banner__button--accept" type="button" data-cookie-choice="accepted">
@@ -717,6 +718,7 @@
       </div>
     </div>
 
-    <script type="module" src="app.js?v=20261028-experience2"></script>
+    <script src="analytics.js?v=20261028-ga4"></script>
+    <script type="module" src="app.js?v=20261028-ga4"></script>
   </body>
 </html>

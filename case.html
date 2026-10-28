@@ -239,6 +239,31 @@
       </div>
     </aside>
 
+    <button type="button" data-cookie-settings style="display:block;margin:24px auto;padding:8px 16px;background:transparent;color:inherit;border:1px solid currentColor;border-radius:4px;cursor:pointer">Cookie settings</button>
+    <section class="cookie-banner" aria-label="Cookie settings" aria-live="polite" aria-hidden="true">
+      <div class="cookie-banner__copy">
+        <h2 class="cookie-banner__title">Cookie settings</h2>
+        <p class="cookie-banner__description">With your permission, Google Analytics measures visits and interactions. Analytics stays off until you accept. You can change your choice in Cookie settings.</p>
+      </div>
+      <div class="cookie-banner__actions">
+        <button class="cookie-banner__button cookie-banner__button--accept" type="button" data-cookie-choice="accepted">
+          <span class="nav-link-mask">
+            <span class="nav-link-line">accept</span>
+            <span class="nav-link-line">accept</span>
+          </span>
+        </button>
+        <button class="cookie-banner__button cookie-banner__button--decline" type="button" data-cookie-choice="declined">
+          <span class="nav-link-mask">
+            <span class="nav-link-line">decline</span>
+            <span class="nav-link-line">decline</span>
+          </span>
+        </button>
+      </div>
+      <button class="cookie-banner__close" type="button" aria-label="Close cookie settings" data-cookie-close>
+        <img src="assets/cross.svg" alt="" aria-hidden="true" />
+      </button>
+    </section>
+
     <div class="form-modal" aria-hidden="true" aria-label="Project request" role="dialog" aria-modal="true">
       <div class="form-modal__panel">
         <header class="form-modal__header">
@@ -407,6 +432,7 @@
       </div>
     </div>
 
-    <script type="module" src="case.js?v=20261027-cv4"></script>
+    <script src="analytics.js?v=20261028-ga4"></script>
+    <script type="module" src="case.js?v=20261028-ga4"></script>
   </body>
 </html>
