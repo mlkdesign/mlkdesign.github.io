@@ -2930,3 +2930,23 @@ measureWorks();
   measureWorks();
   lenis?.resize();
 });
+
+// Floating panels (case offer, cookie banner) stop above the orange closing block instead of covering it.
+{
+  const closingBlock = document.querySelector('.contact-cta');
+  const coveringSurface = closingBlock?.previousElementSibling;
+  if (closingBlock && coveringSurface) {
+    let footerFrame = 0;
+    const updateFooterOverlap = () => {
+      footerFrame = 0;
+      const overlap = Math.max(0, window.innerHeight - coveringSurface.getBoundingClientRect().bottom);
+      document.documentElement.style.setProperty('--footer-overlap', `${Math.round(overlap)}px`);
+    };
+    const scheduleFooterOverlap = () => {
+      if (!footerFrame) footerFrame = requestAnimationFrame(updateFooterOverlap);
+    };
+    window.addEventListener('scroll', scheduleFooterOverlap, { passive: true });
+    window.addEventListener('resize', scheduleFooterOverlap);
+    updateFooterOverlap();
+  }
+}

@@ -792,3 +792,8 @@ input[type="submit"]::-moz-focus-inner,
 input[type="reset"]::-moz-focus-inner {
   border: 0;
 }
+
+/* Keeps the offer inside the dark area while the orange closing block is on screen (set by JS). */
+.case-offer {
+  bottom: calc(15px + var(--footer-overlap, 0px));
+}

@@ -28,10 +28,10 @@
 ## Project-request modal layout
 
 - Alignment: the form starts on the menu line — the modal's first column ends where the header brand column ends (`--page-inset` + 36 % of the inner width), with the same 15 px gap as the navigation.
-- Left column: no image. Instagram, LinkedIn, Behance, Upwork, Telegram and WhatsApp are square tiles on a faint grid like the team section (columns counted from the right edge, rows centred, cell `min(125px, 25cqw, 15cqh)`), placed unevenly via `--k` (column from the right) and `--r` (row from the centre).
-- Tiles: icon above the network name; black at 30 % with black icon and text at rest, solid black with white icon and text on hover and keyboard focus.
+- Left column: no image. Instagram, LinkedIn, Behance, Upwork, Telegram and WhatsApp are square tiles on a faint grid like the team section (columns counted from the right edge of the tile area, which keeps a `--contacts-gap` before the form; rows centred, cell `min(125px, 25cqw, 15cqh)`), placed unevenly via `--k` (column from the right) and `--r` (row from the centre).
+- Tiles: icon above the network name; black at 10 % with black icon and text at rest, solid black with white icon and text on hover and keyboard focus.
 - Fields: name and email share one row from 1101 px; project details stay full width.
-- Notice: under the submit button, a short privacy notice links to `/privacy-policy/` (new tab, so the form keeps its input). There is no consent checkbox: replies rely on pre-contract steps at the visitor's request.
+- Notice: to the right of the submit button (below it on mobile), with the send status underneath, a short privacy notice links to `/privacy-policy/` (new tab, so the form keeps its input). There is no consent checkbox: replies rely on pre-contract steps at the visitor's request.
 - Mobile (≤ 800 px): form first, tiles below it in a staggered three-column checkerboard.
 - The same markup is used on the home page and the case pages, and both send to the same Formspree endpoint.
 
@@ -66,3 +66,7 @@
 - Failure: preserve all entered values and show a localized retry message that also points to the existing Telegram and WhatsApp links.
 - Accessibility: expose status changes through a pre-rendered `role="status"` live region, keep native form semantics, and never rely on color alone to communicate state.
 - Security: rely on Formspree's submission filtering and keep credentials or private keys out of the repository; the public form endpoint is the only service identifier stored in the page.
+
+## Floating panels and the closing block
+
+- The case offer ("Like this project?") and the cookie banner sit 15 px from the viewport edges. While the orange closing block scrolls into view they lift by its visible height (`--footer-overlap`, set in JS), so they stay inside the dark area.

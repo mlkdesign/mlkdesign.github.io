@@ -12,8 +12,8 @@
     <title>PandaWin — Online Casino Platform — MLK.STUDIO</title>
     <meta name="description" content="PandaWin is a modern online casino platform designed to combine an engaging gaming experience with clear navigation and a distinctive visual identity." />
     <link rel="preload" href="assets/fonts/NotoSans-300.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="style.css?v=20261029-form-legal-2" />
-    <link rel="stylesheet" href="case.css?v=20261029-form-legal-2" />
+    <link rel="stylesheet" href="style.css?v=20261029-form-tweaks-2" />
+    <link rel="stylesheet" href="case.css?v=20261029-form-tweaks-2" />
   </head>
   <body class="case-page" data-case-project="pandawin">
     <div class="page-transition is-covered" aria-hidden="true">
@@ -469,14 +469,16 @@
                   <span class="btn__line" data-case-i18n="formRequest">request</span>
                 </span>
               </button>
-              <p id="case-request-status" class="request-form__status" role="status" aria-live="polite"></p>
+              <div class="request-form__aside">
+                <p id="case-request-notice" class="request-form__notice" data-case-i18n-html="formNotice">Your information will be used to respond to your inquiry. Learn more in our <a href="privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>
+                <p id="case-request-status" class="request-form__status" role="status" aria-live="polite"></p>
+              </div>
             </div>
-            <p id="case-request-notice" class="request-form__notice" data-case-i18n-html="formNotice">Your information will be used to respond to your inquiry. Learn more in our <a href="privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>
           </form>
         </div>
       </div>
     </div>
 
-    <script type="module" src="case.js?v=20261029-form-legal-2"></script>
+    <script type="module" src="case.js?v=20261029-form-tweaks-2"></script>
   </body>
 </html>

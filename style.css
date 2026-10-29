@@ -3057,9 +3057,14 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   }
 }
 
-.request-form__notice {
+.request-form__aside {
+  display: grid;
+  gap: 0.6rem;
   max-width: 30rem;
-  margin: -0.5rem 0 0;
+}
+
+.request-form__notice {
+  margin: 0;
   color: rgba(10, 10, 10, 0.58);
   font-size: 0.76rem;
   font-weight: 300;
@@ -3078,9 +3083,12 @@ a[href]:is(:hover, :focus-visible):not(:active) {
 }
 
 .form-modal__contacts {
-  --contact-cell: min(125px, 25cqw, 15cqh);
+  /* Space between the tile grid and the form. */
+  --contacts-gap: clamp(45px, 5vw, 90px);
+  /* Four columns fit between the page inset and the gap. */
+  --contact-cell: min(125px, calc((100cqw - var(--contacts-gap) - var(--page-inset)) / 4), 15cqh);
   position: absolute;
-  inset: 0;
+  inset: 0 var(--contacts-gap) 0 0;
 }
 
 /* Grid lines like the team section: columns counted from the right edge, rows centred. */
@@ -3122,7 +3130,7 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   gap: 0.65rem;
   width: var(--contact-cell);
   height: var(--contact-cell);
-  background: rgba(10, 10, 10, 0.3);
+  background: rgba(10, 10, 10, 0.1);
   color: #0a0a0a;
   font-size: 0.78rem;
   line-height: 1;
@@ -3190,6 +3198,7 @@ a[href]:is(:hover, :focus-visible):not(:active) {
 
   .form-modal__contacts {
     position: static;
+    inset: auto;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -3213,4 +3222,9 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   .contact-tile:nth-child(4) { grid-area: 3 / 1; }
   .contact-tile:nth-child(5) { grid-area: 3 / 3; }
   .contact-tile:nth-child(6) { grid-area: 4 / 2; }
+}
+
+/* Keeps the cookie banner inside the dark area while the orange closing block is on screen (set by JS). */
+.cookie-banner {
+  bottom: calc(15px + var(--footer-overlap, 0px));
 }
