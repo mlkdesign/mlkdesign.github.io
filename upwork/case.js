@@ -255,6 +255,28 @@ const CASE_PROJECTS = {
         imageAlt: 'Повний дизайн вебсайту Kowalski & Partners',
       },
     },
+  },  6: {
+    image: '../milka-cv/assets/azerux/case.jpg',
+    // No public site yet: the "visit this site" button is removed.
+    visitUrl: null,
+    copy: {
+      en: {
+        pageTitle: 'Azerux — Jack Milka',
+        caseTitle: 'Azerux',
+        caseKicker: 'Cybersecurity services website design',
+        caseDescription: 'A dark, technology-driven website for a cybersecurity company, presenting DDoS protection and security services with clarity, depth and confidence.',
+        skills: 'Art direction · UX/UI design · Information architecture · Design system',
+        imageAlt: 'Full website design for Azerux',
+      },
+      uk: {
+        pageTitle: 'Azerux — Jack Milka',
+        caseTitle: 'Azerux',
+        caseKicker: 'Дизайн сайту сервісів кібербезпеки',
+        caseDescription: 'Темний технологічний сайт для компанії з кібербезпеки, що чітко й упевнено представляє захист від DDoS-атак і безпекові сервіси.',
+        skills: 'Артдирекшн · UX/UI дизайн · Інформаційна архітектура · Дизайн-система',
+        imageAlt: 'Повний дизайн вебсайту Azerux',
+      },
+    },
   },
 };
 
@@ -383,6 +405,7 @@ const applyCaseLanguage = () => {
   const visitLink = document.querySelector('[data-case-visit]');
   if (visitLink && activeProject.visitUrl) visitLink.href = activeProject.visitUrl;
   else visitLink?.remove();
+  if (activeProject.visitUrl === null) visitLink?.remove();
 };
 
 applyCaseLanguage();
