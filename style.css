@@ -1434,6 +1434,14 @@ h1 {
   transition-delay: 0.45s;
 }
 
+.work-card:nth-child(7) {
+  transition-delay: 0.54s;
+}
+
+.work-card:nth-child(8) {
+  transition-delay: 0.63s;
+}
+
 .work-card.is-in {
   opacity: 1;
   transform: none;

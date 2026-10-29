@@ -1,5 +1,8 @@
 name: Deploy to GitHub Pages
 
+# The published site combines this branch (root) with the milka-cv branch (/milka-cv/, /upwork/).
+# That assembly lives in the milka-cv workflow, so a push here asks it to redeploy instead of
+# publishing this branch alone, which would remove the other versions.
 on:
   push:
     branches:
@@ -7,34 +10,13 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
+  actions: write
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  redeploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-
-      - name: Upload site
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .
-
-      - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Rebuild the combined site
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --repo "$GITHUB_REPOSITORY" --ref milka-cv
