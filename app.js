@@ -392,51 +392,6 @@ const stairRevealDone = new Promise((resolve) => {
 });
 
 // ---------------------------------------------------------------------------
-// Cookie preference banner: reveal three seconds after the site is ready.
-// ---------------------------------------------------------------------------
-{
-  const cookieBanner = document.querySelector('.cookie-banner');
-  const cookieChoiceButtons = cookieBanner?.querySelectorAll('[data-cookie-choice]') || [];
-  const cookieCloseButton = cookieBanner?.querySelector('[data-cookie-close]');
-  const cookiePreferenceKey = 'mlk-cookie-preference';
-  let savedPreference = null;
-
-  try {
-    savedPreference = localStorage.getItem(cookiePreferenceKey);
-  } catch {
-    // Storage can be unavailable in restrictive/private browsing contexts.
-  }
-
-  if (cookieBanner && !savedPreference) {
-    stairRevealDone.then(() => {
-      window.setTimeout(() => {
-        cookieBanner.classList.add('is-visible');
-        cookieBanner.setAttribute('aria-hidden', 'false');
-      }, 3000);
-    });
-  }
-
-  cookieChoiceButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      const preference = button.dataset.cookieChoice;
-      try {
-        localStorage.setItem(cookiePreferenceKey, preference);
-      } catch {
-        // The visual choice still applies for the current page.
-      }
-      document.body.dataset.cookiePreference = preference;
-      cookieBanner.classList.remove('is-visible');
-      cookieBanner.setAttribute('aria-hidden', 'true');
-    });
-  });
-
-  cookieCloseButton?.addEventListener('click', () => {
-    cookieBanner.classList.remove('is-visible');
-    cookieBanner.setAttribute('aria-hidden', 'true');
-  });
-}
-
-// ---------------------------------------------------------------------------
 // Per-character reveal (blur + slide), capped to 2s total per element
 // ---------------------------------------------------------------------------
 const REVEAL_MAX_TOTAL_SECONDS = 2;
@@ -563,11 +518,6 @@ const UI_TRANSLATIONS = {
     worksCta: 'your project could be here',
     worksProcess: 'Behind every project is a process built around strategy, clarity and attention to detail.',
     finalTitle: 'Still thinking?<br>Write to us right now!',
-    cookieTitle: 'Cookie settings',
-    cookieClose: 'Close cookie settings',
-    cookieDescription: 'We use cookies to improve your experience, analyze traffic, and optimize site performance. By continuing to browse, you agree to our use of cookies.',
-    accept: 'accept',
-    decline: 'decline',
     formName: 'name',
     formEmail: 'email',
     formDetails: 'project details',
@@ -576,6 +526,10 @@ const UI_TRANSLATIONS = {
     formSuccess: "Request sent. We'll get back to you soon.",
     formError: 'We could not send your request. Please try again or contact us via Telegram or WhatsApp.',
     formRequired: 'Please complete all three fields and enter a valid email address.',
+    formNotice: 'Your information will be used to respond to your inquiry. Learn more in our <a href="privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.',
+    privacyPolicy: 'Privacy Policy',
+    legalInformation: 'Legal Information',
+    legalNavigation: 'Legal',
     telegramContact: 'Contact us on Telegram, @EugeneMilka',
     whatsappContact: 'Contact us on WhatsApp, +380 73 826 53 54',
     primaryNavigation: 'Primary navigation',
@@ -612,11 +566,6 @@ const UI_TRANSLATIONS = {
     worksCta: 'тут може бути ваш проєкт',
     worksProcess: 'За кожним проєктом стоїть процес, побудований на стратегії, ясності та увазі до деталей.',
     finalTitle: 'Ще думаєте?<br>Напишіть нам просто зараз!',
-    cookieTitle: 'Налаштування cookie',
-    cookieClose: 'Закрити налаштування cookie',
-    cookieDescription: 'Ми використовуємо cookie, щоб покращувати ваш досвід, аналізувати трафік та оптимізувати роботу сайту. Продовжуючи перегляд, ви погоджуєтеся на використання cookie.',
-    accept: 'прийняти',
-    decline: 'відхилити',
     formName: 'ім’я',
     formEmail: 'електронна пошта',
     formDetails: 'деталі проєкту',
@@ -625,6 +574,10 @@ const UI_TRANSLATIONS = {
     formSuccess: 'Заявку надіслано. Ми зв’яжемося з вами найближчим часом.',
     formError: 'Не вдалося надіслати заявку. Спробуйте ще раз або напишіть нам у Telegram чи WhatsApp.',
     formRequired: 'Заповніть усі три поля та вкажіть коректну електронну адресу.',
+    formNotice: 'Ваші дані будуть використані для відповіді на ваш запит. Докладніше — у нашій <a href="privacy-policy/" target="_blank" rel="noopener">Політиці конфіденційності</a>.',
+    privacyPolicy: 'Політика конфіденційності',
+    legalInformation: 'Юридична інформація',
+    legalNavigation: 'Юридична інформація',
     telegramContact: 'Написати нам у Telegram, @EugeneMilka',
     whatsappContact: 'Написати нам у WhatsApp, +380 73 826 53 54',
     primaryNavigation: 'Основна навігація',
@@ -793,19 +746,30 @@ const I18N_TEXT_BINDINGS = {
   worksProcess: '.works-process-lead',
   finalTitle: '.contact-cta__title',
   navContactFinal: '.contact-cta__button .btn__line',
-  cookieTitle: '.cookie-banner__title',
-  cookieDescription: '.cookie-banner__description',
-  accept: '.cookie-banner__button--accept .nav-link-line',
-  decline: '.cookie-banner__button--decline .nav-link-line',
   formName: '.request-field[for="request-name"] > span',
   formEmail: '.request-field[for="request-email"] > span',
   formDetails: '.request-field[for="request-details"] > span',
   formRequest: '.request-btn .btn__line',
+  formNotice: '.request-form__notice',
+  privacyPolicy: '.contact-cta__legal a[href="privacy-policy/"]',
+  legalInformation: '.contact-cta__legal a[href="legal/"]',
 };
 
-const I18N_HTML_KEYS = new Set(['statYears', 'statProjects', 'statTeam', 'finalTitle']);
+const I18N_HTML_KEYS = new Set(['statYears', 'statProjects', 'statTeam', 'finalTitle', 'formNotice']);
 const languageButtons = Array.from(document.querySelectorAll('[data-language]'));
 const languagePreferenceKey = 'mlk-language';
+// Ukrainian by default for visitors in Ukraine (browser language or time zone), English elsewhere.
+const UKRAINE_TIME_ZONES = ['Europe/Kyiv', 'Europe/Kiev', 'Europe/Uzhgorod', 'Europe/Zaporozhye', 'Europe/Simferopol'];
+const defaultLanguage = () => {
+  const browserLanguage = navigator.languages?.[0] || navigator.language || '';
+  let timeZone = '';
+  try {
+    timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+  } catch {
+    // Older browsers: rely on the browser language only.
+  }
+  return browserLanguage.toLowerCase().startsWith('uk') || UKRAINE_TIME_ZONES.includes(timeZone) ? 'uk' : 'en';
+};
 const languageScrollResetKey = 'mlk-language-scroll-reset';
 let activeLanguage = 'en';
 
@@ -903,11 +867,10 @@ const applyLanguage = (language) => {
     ['.team-roles', 'aria-label', 'teamMembers'],
     ['.form-modal', 'aria-label', 'projectRequest'],
     ['.form-modal__close', 'aria-label', 'close'],
-    ['.social-link--telegram', 'aria-label', 'telegramContact'],
-    ['.social-link--whatsapp', 'aria-label', 'whatsappContact'],
-    ['.social-links, .form-modal__socials', 'aria-label', 'socialMedia'],
-    ['.cookie-banner', 'aria-label', 'cookieTitle'],
-    ['.cookie-banner__close', 'aria-label', 'cookieClose'],
+    ['.social-link--telegram, .contact-tile--telegram', 'aria-label', 'telegramContact'],
+    ['.social-link--whatsapp, .contact-tile--whatsapp', 'aria-label', 'whatsappContact'],
+    ['.social-links, .form-modal__contacts', 'aria-label', 'socialMedia'],
+    ['.contact-cta__legal', 'aria-label', 'legalNavigation'],
   ];
   attributeBindings.forEach(([selector, attribute, key]) => {
     document.querySelectorAll(selector).forEach((element) => element.setAttribute(attribute, strings[key]));
@@ -945,11 +908,10 @@ try {
   if (storedLanguage === 'uk' || storedLanguage === 'en') {
     activeLanguage = storedLanguage;
   } else {
-    const browserLanguage = navigator.languages?.[0] || navigator.language || 'en';
-    activeLanguage = browserLanguage.toLowerCase().startsWith('uk') ? 'uk' : 'en';
+    activeLanguage = defaultLanguage();
   }
 } catch {
-  activeLanguage = (navigator.language || 'en').toLowerCase().startsWith('uk') ? 'uk' : 'en';
+  activeLanguage = defaultLanguage();
 }
 
 applyLanguage(activeLanguage);

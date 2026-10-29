@@ -307,6 +307,13 @@ const CASE_TRANSLATIONS = {
     formEmail: 'email',
     formDetails: 'project details',
     formRequest: 'request',
+    formSending: 'sending…',
+    formSuccess: "Request sent. We'll get back to you soon.",
+    formError: 'We could not send your request. Please try again or contact us via Telegram or WhatsApp.',
+    formRequired: 'Please complete all three fields and enter a valid email address.',
+    formNotice: 'Your information will be used to respond to your inquiry. Learn more in our <a href="privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.',
+    privacyPolicy: 'Privacy Policy',
+    legalInformation: 'Legal Information',
   },
   uk: {
     navServices: 'послуги',
@@ -326,10 +333,29 @@ const CASE_TRANSLATIONS = {
     formEmail: 'електронна пошта',
     formDetails: 'деталі проєкту',
     formRequest: 'надіслати',
+    formSending: 'надсилаємо…',
+    formSuccess: 'Заявку надіслано. Ми зв’яжемося з вами найближчим часом.',
+    formError: 'Не вдалося надіслати заявку. Спробуйте ще раз або напишіть нам у Telegram чи WhatsApp.',
+    formRequired: 'Заповніть усі три поля та вкажіть коректну електронну адресу.',
+    formNotice: 'Ваші дані будуть використані для відповіді на ваш запит. Докладніше — у нашій <a href="privacy-policy/" target="_blank" rel="noopener">Політиці конфіденційності</a>.',
+    privacyPolicy: 'Політика конфіденційності',
+    legalInformation: 'Юридична інформація',
   },
 };
 
 const languagePreferenceKey = 'mlk-language';
+// Ukrainian by default for visitors in Ukraine (browser language or time zone), English elsewhere.
+const UKRAINE_TIME_ZONES = ['Europe/Kyiv', 'Europe/Kiev', 'Europe/Uzhgorod', 'Europe/Zaporozhye', 'Europe/Simferopol'];
+const defaultLanguage = () => {
+  const browserLanguage = navigator.languages?.[0] || navigator.language || '';
+  let timeZone = '';
+  try {
+    timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+  } catch {
+    // Older browsers: rely on the browser language only.
+  }
+  return browserLanguage.toLowerCase().startsWith('uk') || UKRAINE_TIME_ZONES.includes(timeZone) ? 'uk' : 'en';
+};
 let activeLanguage = 'en';
 
 try {
@@ -337,10 +363,10 @@ try {
   if (storedLanguage === 'uk' || storedLanguage === 'en') {
     activeLanguage = storedLanguage;
   } else {
-    activeLanguage = (navigator.language || 'en').toLowerCase().startsWith('uk') ? 'uk' : 'en';
+    activeLanguage = defaultLanguage();
   }
 } catch {
-  activeLanguage = (navigator.language || 'en').toLowerCase().startsWith('uk') ? 'uk' : 'en';
+  activeLanguage = defaultLanguage();
 }
 
 const applyCaseLanguage = () => {
@@ -1055,7 +1081,69 @@ if (formModal) {
     });
   });
   closeButton?.addEventListener('click', closeModal);
-  requestForm?.addEventListener('submit', (event) => event.preventDefault());
+  const requestButton = requestForm?.querySelector('.request-btn');
+  const requestStatus = requestForm?.querySelector('.request-form__status');
+  let requestSubmitting = false;
+
+  const setRequestButtonLabel = (text) => {
+    requestButton?.querySelectorAll('.btn__line').forEach((line) => {
+      line.textContent = text;
+    });
+  };
+
+  const setRequestStatus = (message = '', state = '') => {
+    if (!requestStatus) return;
+    requestStatus.textContent = message;
+    requestStatus.classList.toggle('is-success', state === 'success');
+    requestStatus.classList.toggle('is-error', state === 'error');
+  };
+
+  // Same Formspree endpoint and flow as the home page form.
+  requestForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (requestSubmitting) return;
+
+    const strings = CASE_TRANSLATIONS[activeLanguage];
+    setRequestStatus();
+
+    if (!requestForm.checkValidity()) {
+      setRequestStatus(strings.formRequired, 'error');
+      requestForm.reportValidity();
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 15000);
+    requestSubmitting = true;
+    requestForm.setAttribute('aria-busy', 'true');
+    if (requestButton) requestButton.disabled = true;
+    setRequestButtonLabel(strings.formSending);
+
+    try {
+      const response = await fetch(requestForm.action, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+        },
+        body: new FormData(requestForm),
+        signal: controller.signal,
+      });
+      const result = await response.json().catch(() => null);
+      const rejected = Array.isArray(result?.errors) && result.errors.length > 0;
+      if (!response.ok || rejected) throw new Error('Form submission failed');
+
+      requestForm.reset();
+      setRequestStatus(strings.formSuccess, 'success');
+    } catch {
+      setRequestStatus(strings.formError, 'error');
+    } finally {
+      window.clearTimeout(timeoutId);
+      requestSubmitting = false;
+      requestForm.removeAttribute('aria-busy');
+      if (requestButton) requestButton.disabled = false;
+      setRequestButtonLabel(strings.formRequest);
+    }
+  });
   document.addEventListener('keydown', (event) => {
     if (open && event.key === 'Escape') closeModal();
   });
