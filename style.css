@@ -2996,6 +2996,7 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   .contact-tile:nth-child(4) { grid-area: 3 / 1; }
   .contact-tile:nth-child(5) { grid-area: 3 / 3; }
   .contact-tile:nth-child(6) { grid-area: 4 / 2; }
+  .contact-tile:nth-child(7) { grid-area: 5 / 1; }
 }
 
 /* Keeps the cookie banner inside the dark area while the orange closing block is on screen (set by JS). */

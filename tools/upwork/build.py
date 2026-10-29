@@ -27,7 +27,7 @@ CV_LINK = f'href="{CV}" target="_blank" rel="noopener"'
 
 # Anything matching these must not survive in the generated edition.
 FORBIDDEN = [
-    r'mailto:', r'milka19051995', r't\.me/', r'wa\.me/', r'EugeneMilka', r'380\s?73', r'instagram\.com',
+    r'mailto:', r'milka19051995', r'mlkdesignweb', r't\.me/', r'wa\.me/', r'EugeneMilka', r'380\s?73', r'instagram\.com',
     r'linkedin\.com/in/', r'behance\.net(?!/gallery/257750803/)', r'upwork\.com/freelancers', r'freelancehunt\.com/freelancer',
     r'formspree',
 ]
