@@ -255,7 +255,8 @@ const CASE_PROJECTS = {
         imageAlt: 'Повний дизайн вебсайту Kowalski & Partners',
       },
     },
-  },  6: {
+  },
+  6: {
     image: '../milka-cv/assets/azerux/case.jpg',
     // No public site yet: the "visit this site" button is removed.
     visitUrl: null,
