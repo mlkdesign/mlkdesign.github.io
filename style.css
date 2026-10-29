@@ -1,3 +1,12 @@
+/* Self-hosted Noto Sans Light (Latin + Cyrillic subset): no font requests to Google. */
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("assets/fonts/NotoSans-300.woff2") format("woff2");
+}
+
 :root {
   --bg: #0B0B0B;
   --text: #f4efe3;
@@ -2807,4 +2816,189 @@ a[href]:is(:hover, :focus-visible):not(:active) {
 }
 @media (prefers-reduced-motion: reduce) {
   .experience-company, .experience-toggle { transition: none; }
+}
+/* ---------------------------------------------------------------------------
+   Project request modal: contact tiles on the left, form on the menu line.
+   --------------------------------------------------------------------------- */
+.form-modal__panel {
+  /* The first column ends where the header brand column ends, so the form starts on the menu line. */
+  grid-template-columns: calc(var(--page-inset) + (100% - 2 * var(--page-inset)) * 0.36) minmax(0, 1fr);
+  column-gap: 15px;
+}
+
+.form-modal__side {
+  padding-left: 0;
+}
+
+.request-form {
+  max-width: 56rem;
+}
+
+.request-form__row {
+  display: grid;
+  gap: inherit;
+}
+
+@media (min-width: 1101px) {
+  .request-form__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2.5rem;
+  }
+}
+
+.request-form__aside {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 30rem;
+}
+
+.request-form__notice {
+  margin: 0;
+  color: rgba(10, 10, 10, 0.58);
+  font-size: 0.76rem;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+}
+
+.request-form__notice a {
+  color: #0a0a0a;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.form-modal__media {
+  container-type: size;
+}
+
+.form-modal__contacts {
+  /* Space between the tile grid and the form. */
+  --contacts-gap: clamp(45px, 5vw, 90px);
+  /* Four columns fit between the page inset and the gap. */
+  --contact-cell: min(125px, calc((100cqw - var(--contacts-gap) - var(--page-inset)) / 4), 15cqh);
+  position: absolute;
+  inset: 0 var(--contacts-gap) 0 0;
+}
+
+/* Grid lines like the team section: columns counted from the right edge, rows centred. */
+.form-modal__contacts::before,
+.form-modal__contacts::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.form-modal__contacts::before {
+  background-image: linear-gradient(to left, rgba(10, 10, 10, 0.1) 0 1px, transparent 1px 100%);
+  background-position: right top;
+  background-size: var(--contact-cell) 100%;
+  background-repeat: repeat-x;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 50%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 50%, transparent 100%);
+}
+
+.form-modal__contacts::after {
+  background-image: linear-gradient(to bottom, rgba(10, 10, 10, 0.1) 0 1px, transparent 1px 100%);
+  background-position: left center;
+  background-size: 100% var(--contact-cell);
+  background-repeat: repeat-y;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 50%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 50%, transparent 100%);
+}
+
+.contact-tile {
+  position: absolute;
+  top: calc(50% - var(--contact-cell) / 2 + var(--r) * var(--contact-cell));
+  right: calc(var(--k) * var(--contact-cell));
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  width: var(--contact-cell);
+  height: var(--contact-cell);
+  background: rgba(10, 10, 10, 0.1);
+  color: #0a0a0a;
+  font-size: 0.78rem;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  transition: background-color 0.35s var(--ease), color 0.35s var(--ease);
+}
+
+/* Beats the site-wide resting opacity for links. */
+.form-modal__contacts > a.contact-tile:not([data-fade]) {
+  opacity: 1;
+}
+
+.contact-tile:hover,
+.contact-tile:focus-visible {
+  background: #0a0a0a;
+  color: #fff;
+  transition-duration: 0.15s;
+}
+
+.contact-tile:focus-visible {
+  outline: 2px solid #0a0a0a !important;
+  outline-offset: 3px;
+}
+
+.contact-tile__icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 800px) {
+  .form-modal__panel {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 0;
+  }
+
+  .form-modal__side {
+    min-height: auto;
+    padding-left: var(--page-inset);
+  }
+
+  .form-modal__media {
+    display: block;
+    grid-row: 2;
+    container-type: normal;
+    padding: 0 var(--page-inset) calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .form-modal__contacts {
+    position: static;
+    inset: auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .form-modal__contacts::before,
+  .form-modal__contacts::after {
+    display: none;
+  }
+
+  .contact-tile {
+    position: static;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  /* Staggered like the desktop grid: a checkerboard of three columns. */
+  .contact-tile:nth-child(1) { grid-area: 1 / 1; }
+  .contact-tile:nth-child(2) { grid-area: 1 / 3; }
+  .contact-tile:nth-child(3) { grid-area: 2 / 2; }
+  .contact-tile:nth-child(4) { grid-area: 3 / 1; }
+  .contact-tile:nth-child(5) { grid-area: 3 / 3; }
+  .contact-tile:nth-child(6) { grid-area: 4 / 2; }
+}
+
+/* Keeps the cookie banner inside the dark area while the orange closing block is on screen (set by JS). */
+.cookie-banner {
+  bottom: calc(15px + var(--footer-overlap, 0px));
 }

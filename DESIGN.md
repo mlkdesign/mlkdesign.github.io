@@ -120,3 +120,10 @@
 - Card height depends on card width, so tall browser windows no longer stretch the gallery covers. The existing images, order, hover effects and case transitions are retained.
 - Previous/next measure the rendered card width plus the actual CSS column gap on every click. Native smooth scrolling and boundary button states remain unchanged, including after resizing.
 - QA: Chrome checked 375, 768, 1024, 1280, 1440, 1920 and 3840 px; 1280 px cards remain identical at 800 and 1400 px viewport heights. Desktop/mobile next and previous traverse the full gallery, clamp at both ends and update disabled states. No browser console errors.
+
+## Project-request modal (shared with the studio site)
+
+- Same layout as the studio: the form starts on the menu line, name and email share a row from 1101 px, contact tiles (10 % black at rest, solid black with white icon and label on hover) replace the image on the left, and a privacy notice sits to the right of the submit button with the send status under it.
+- The notice links to the shared policy at `/privacy-policy/`, which also describes this portfolio's consent-based Google Analytics.
+- The case offer and the cookie banner lift by `--footer-overlap` so they stay 15 px above the orange closing block.
+- Noto Sans 300 is self-hosted (`assets/fonts/NotoSans-300.woff2`); the Upwork edition loads it from `/milka-cv/`.

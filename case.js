@@ -310,6 +310,7 @@ const CASE_TRANSLATIONS = {
     "formSuccess": "Request sent. I'll get back to you soon.",
     "formError": "I could not send your request. Please try again or contact me via Telegram or WhatsApp.",
     "formRequired": "Please complete all three fields and enter a valid email address.",
+    "formNotice": "Your information will be used to respond to your inquiry. Learn more in the <a href=\"../privacy-policy/\" target=\"_blank\" rel=\"noopener\">Privacy Policy</a>.",
     "formSending": "sending…",
     "telegramContact": "Contact Jack Milka on Telegram, @EugeneMilka",
     "whatsappContact": "Contact Jack Milka on WhatsApp, +380 73 826 53 54",
@@ -341,6 +342,7 @@ const CASE_TRANSLATIONS = {
     "formSuccess": "Заявку надіслано. Я зв’яжуся з вами найближчим часом.",
     "formError": "Не вдалося надіслати заявку. Спробуйте ще раз або напишіть мені в Telegram чи WhatsApp.",
     "formRequired": "Заповніть усі три поля та вкажіть коректну електронну адресу.",
+    "formNotice": "Ваші дані будуть використані для відповіді на ваш запит. Докладніше — у <a href=\"../privacy-policy/\" target=\"_blank\" rel=\"noopener\">Політиці конфіденційності</a>.",
     "formSending": "надсилаю…",
     "telegramContact": "Написати Jack Milka в Telegram, @EugeneMilka",
     "whatsappContact": "Написати Jack Milka у WhatsApp, +380 73 826 53 54",
@@ -381,7 +383,7 @@ const applyCaseLanguage = () => {
   document.querySelector('meta[name="description"]')?.setAttribute('content', strings.caseDescription);
   ['og:title', 'twitter:title'].forEach((name) => document.querySelector(`meta[property="${name}"], meta[name="${name}"]`)?.setAttribute('content', strings.pageTitle));
   ['og:description', 'twitter:description'].forEach((name) => document.querySelector(`meta[property="${name}"], meta[name="${name}"]`)?.setAttribute('content', strings.caseDescription));
-  [['.nav, .mobile-menu-modal, .mobile-menu-modal__links', 'primaryNavigation'], ['.language-switcher', 'language'], ['.form-modal', 'projectRequest'], ['.form-modal__close, .mobile-menu-modal__close, .case-offer__close', 'close'], ['.form-modal__socials', 'socialMedia'], ['.social-link--telegram', 'telegramContact'], ['.social-link--whatsapp', 'whatsappContact']].forEach(([selector, key]) => {
+  [['.nav, .mobile-menu-modal, .mobile-menu-modal__links', 'primaryNavigation'], ['.language-switcher', 'language'], ['.form-modal', 'projectRequest'], ['.form-modal__close, .mobile-menu-modal__close, .case-offer__close', 'close'], ['.form-modal__contacts', 'socialMedia'], ['.social-link--telegram, .contact-tile--telegram', 'telegramContact'], ['.social-link--whatsapp, .contact-tile--whatsapp', 'whatsappContact']].forEach(([selector, key]) => {
     document.querySelectorAll(selector).forEach((el) => el.setAttribute('aria-label', strings[key]));
   });
 
@@ -1181,4 +1183,24 @@ if (formModal) {
       event.preventDefault(); first?.focus();
     }
   });
+}
+
+// Floating panels (case offer, cookie banner) stop above the orange closing block instead of covering it.
+{
+  const closingBlock = document.querySelector('.contact-cta');
+  const coveringSurface = closingBlock?.previousElementSibling;
+  if (closingBlock && coveringSurface) {
+    let footerFrame = 0;
+    const updateFooterOverlap = () => {
+      footerFrame = 0;
+      const overlap = Math.max(0, window.innerHeight - coveringSurface.getBoundingClientRect().bottom);
+      document.documentElement.style.setProperty('--footer-overlap', `${Math.round(overlap)}px`);
+    };
+    const scheduleFooterOverlap = () => {
+      if (!footerFrame) footerFrame = requestAnimationFrame(updateFooterOverlap);
+    };
+    window.addEventListener('scroll', scheduleFooterOverlap, { passive: true });
+    window.addEventListener('resize', scheduleFooterOverlap);
+    updateFooterOverlap();
+  }
 }

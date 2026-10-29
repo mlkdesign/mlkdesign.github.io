@@ -546,6 +546,7 @@ const UI_TRANSLATIONS = {
     "formSuccess": "Request sent. I'll get back to you soon.",
     "formError": "I could not send your request. Please try again or contact me via Telegram or WhatsApp.",
     "formRequired": "Please complete all three fields and enter a valid email address.",
+    "formNotice": "Your information will be used to respond to your inquiry. Learn more in the <a href=\"../privacy-policy/\" target=\"_blank\" rel=\"noopener\">Privacy Policy</a>.",
     "primaryNavigation": "Primary navigation",
     "modalNavigation": "Modal navigation",
     "language": "Language",
@@ -600,6 +601,7 @@ const UI_TRANSLATIONS = {
     "formSuccess": "Заявку надіслано. Я зв’яжуся з вами найближчим часом.",
     "formError": "Не вдалося надіслати заявку. Спробуйте ще раз або напишіть мені в Telegram чи WhatsApp.",
     "formRequired": "Заповніть усі три поля та вкажіть коректну електронну адресу.",
+    "formNotice": "Ваші дані будуть використані для відповіді на ваш запит. Докладніше — у <a href=\"../privacy-policy/\" target=\"_blank\" rel=\"noopener\">Політиці конфіденційності</a>.",
     "primaryNavigation": "Основна навігація",
     "modalNavigation": "Навігація форми",
     "language": "Мова",
@@ -844,9 +846,10 @@ const I18N_TEXT_BINDINGS = {
   formEmail: '.request-field[for="request-email"] > span',
   formDetails: '.request-field[for="request-details"] > span',
   formRequest: '.request-btn .btn__line',
+  formNotice: '.request-form__notice',
 };
 
-const I18N_HTML_KEYS = new Set(['statYears', 'statProjects']);
+const I18N_HTML_KEYS = new Set(['statYears', 'statProjects', 'formNotice']);
 const languageButtons = Array.from(document.querySelectorAll('[data-language]'));
 const languagePreferenceKey = 'jack-milka-language';
 const languageScrollResetKey = 'jack-milka-language-scroll-reset';
@@ -944,9 +947,9 @@ const applyLanguage = (language) => {
     ['.works-nav .works-arrow--next', 'aria-label', 'nextProject'],
     ['.form-modal', 'aria-label', 'projectRequest'],
     ['.form-modal__close', 'aria-label', 'close'],
-    ['.social-link--telegram', 'aria-label', 'telegramContact'],
-    ['.social-link--whatsapp', 'aria-label', 'whatsappContact'],
-    ['.social-links, .form-modal__socials', 'aria-label', 'socialMedia'],
+    ['.social-link--telegram, .contact-tile--telegram', 'aria-label', 'telegramContact'],
+    ['.social-link--whatsapp, .contact-tile--whatsapp', 'aria-label', 'whatsappContact'],
+    ['.social-links, .form-modal__contacts', 'aria-label', 'socialMedia'],
     // The CV follows the site language: EN → English PDF, УКР → Ukrainian PDF.
     ['[data-hero-cv], [data-cv-link]', 'href', 'cvFile'],
     ['.cookie-banner', 'aria-label', 'cookieTitle'],
@@ -2764,3 +2767,23 @@ measureWorks();
   measureWorks();
   lenis?.resize();
 });
+
+// Floating panels (case offer, cookie banner) stop above the orange closing block instead of covering it.
+{
+  const closingBlock = document.querySelector('.contact-cta');
+  const coveringSurface = closingBlock?.previousElementSibling;
+  if (closingBlock && coveringSurface) {
+    let footerFrame = 0;
+    const updateFooterOverlap = () => {
+      footerFrame = 0;
+      const overlap = Math.max(0, window.innerHeight - coveringSurface.getBoundingClientRect().bottom);
+      document.documentElement.style.setProperty('--footer-overlap', `${Math.round(overlap)}px`);
+    };
+    const scheduleFooterOverlap = () => {
+      if (!footerFrame) footerFrame = requestAnimationFrame(updateFooterOverlap);
+    };
+    window.addEventListener('scroll', scheduleFooterOverlap, { passive: true });
+    window.addEventListener('resize', scheduleFooterOverlap);
+    updateFooterOverlap();
+  }
+}
