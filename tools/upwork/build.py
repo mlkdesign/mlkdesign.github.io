@@ -93,8 +93,10 @@ def common_html(text, page, label):
     text = text.replace(f'{BASE_URL}index.html', BASE_URL)
     text = replace_once(text, '<meta name="viewport"', '<meta name="robots" content="noindex" />\n    <meta name="viewport"', label)
     # The language switcher used to push "contact me" to the right edge; the CV link takes over that role.
-    # The case-page CTA becomes a link, so it must not pick up link underlining.
-    text = replace_once(text, '</head>', '  <style>.nav-menu .book { margin-left: auto; } a.case-start { text-decoration: none; }</style>\n  </head>', label)
+    # The case-page CTA becomes a link, so it must not pick up link underlining, and the site-wide resting
+    # opacity for links must not show it before its entrance animation starts.
+    text = replace_once(text, '</head>', '  <style>.nav-menu .book { margin-left: auto; } a.case-start { text-decoration: none; }'
+                        ' .case-info__copy.has-sequence:not(.is-sequence-visible) > a.case-start { opacity: 0; }</style>\n  </head>', label)
 
     # English only, no contact routes.
     text = remove_elements(text, r'<div class="language-switcher"', 'div', f'{label} language switcher')
