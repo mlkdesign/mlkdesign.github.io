@@ -28,7 +28,7 @@ CV_LINK = f'href="{CV}" target="_blank" rel="noopener"'
 # Anything matching these must not survive in the generated edition.
 FORBIDDEN = [
     r'mailto:', r'milka19051995', r't\.me/', r'wa\.me/', r'EugeneMilka', r'380\s?73', r'instagram\.com',
-    r'linkedin\.com/in/', r'behance\.net', r'upwork\.com/freelancers', r'freelancehunt\.com/freelancer',
+    r'linkedin\.com/in/', r'behance\.net(?!/gallery/257750803/)', r'upwork\.com/freelancers', r'freelancehunt\.com/freelancer',
     r'formspree',
 ]
 # Markup that must be gone from the generated pages (JS may still mention these selectors).
@@ -165,8 +165,9 @@ def build_case_js():
     text = (ROOT / 'case.js').read_text()
     label = 'case.js'
     text = re.sub(r"(['\"])assets/", rf"\1{SHARED}assets/", text)
-    # Behance galleries belong to the personal profile; Kowalski demo lives one level up.
-    text, removed = re.subn(r"\n    visitUrl: 'https://www\.behance\.net/[^']*',", '', text)
+    # Behance galleries belong to the personal profile (PandaWin's stays: it is the project's public showcase);
+    # Kowalski demo lives one level up.
+    text, removed = re.subn(r"\n    visitUrl: 'https://www\.behance\.net/gallery/(?!257750803/)[^']*',", '', text)
     assert removed == 2, f'{label}: Behance visit links {removed}'
     text = replace_once(text, "visitUrl: 'Kowalski%20%26%20Partners/'", f"visitUrl: '{SHARED}Kowalski%20%26%20Partners/'", label)
     text = replace_once(text, "'https://mlkdesign.github.io/milka-cv/');", f"'{BASE_URL}');", label)

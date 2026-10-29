@@ -61,6 +61,7 @@ const CASE_PROJECTS = {
   pandawin: {
     image: '../milka-cv/assets/pandawin/hero.jpg',
     pageUrl: 'pandawin.html',
+    visitUrl: 'https://www.behance.net/gallery/257750803/Online-Casino-Platform-UIUX-Design',
     copy: {
       en: {
         pageTitle: 'PandaWin — Online Casino Platform — Jack Milka',
