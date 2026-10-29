@@ -494,7 +494,7 @@ function setupReveal(el) {
 // ---------------------------------------------------------------------------
 const UI_TRANSLATIONS = {
   en: {
-    pageTitle: 'MLK.STUDIO — Digital experiences',
+    pageTitle: 'MLK.STUDIO — UI/UX Design & Digital Development Studio',
     preloader: 'Creating digital experiences.',
     navServices: 'services',
     navWorks: 'our works',
@@ -542,7 +542,7 @@ const UI_TRANSLATIONS = {
     socialMedia: 'Social media',
   },
   uk: {
-    pageTitle: 'MLK.STUDIO — Цифрові продукти',
+    pageTitle: 'MLK.STUDIO — студія UI/UX дизайну та цифрової розробки',
     preloader: 'Створюємо цифрові продукти.',
     navServices: 'послуги',
     navWorks: 'наші роботи',

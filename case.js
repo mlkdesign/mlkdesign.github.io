@@ -376,6 +376,15 @@ const applyCaseLanguage = () => {
   };
   document.documentElement.lang = activeLanguage;
   document.title = strings.pageTitle;
+  // Each project gets its own address and description for search engines.
+  let canonical = document.querySelector('link[rel="canonical"]');
+  if (!canonical) {
+    canonical = document.createElement('link');
+    canonical.rel = 'canonical';
+    document.head.append(canonical);
+  }
+  canonical.href = new URL(activeProject.pageUrl || `case.html?project=${activeProjectKey}`, 'https://mlkdesign.github.io/').href;
+  document.querySelector('meta[name="description"]')?.setAttribute('content', strings.caseDescription);
 
   document.querySelectorAll('[data-case-i18n]').forEach((element) => {
     const value = strings[element.dataset.caseI18n];
