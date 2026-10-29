@@ -1315,6 +1315,33 @@ h1 {
   line-height: 1.3;
 }
 
+.team-caption__social {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.55rem;
+  color: #fff;
+  font-size: 0.82rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  pointer-events: auto;
+}
+
+.team-caption__icon {
+  flex: none;
+}
+
+.team-caption__handle {
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.25s ease;
+}
+
+.team-caption__social:hover .team-caption__handle,
+.team-caption__social:focus-visible .team-caption__handle {
+  border-color: currentColor;
+}
+
 .team-caption__desc {
   max-width: 25rem;
   margin: 0.8rem 0 0;

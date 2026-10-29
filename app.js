@@ -760,6 +760,18 @@ const TEAM_TRANSLATIONS = {
   ],
 };
 
+// Instagram handles, in the same order as TEAM_TRANSLATIONS.
+const TEAM_INSTAGRAM = ['ana.sia26', 'katinesss', 'andrey.vasyukov', 'milka__lisa', 'eugenemi', 'vodolaskyi'];
+
+const setTeamSocial = (link, index, member) => {
+  const handle = TEAM_INSTAGRAM[index];
+  if (!link || !handle) return;
+  link.href = `https://www.instagram.com/${handle}/`;
+  link.setAttribute('aria-label', `${member.name} — Instagram`);
+  const label = link.querySelector('.team-caption__handle');
+  if (label) label.textContent = handle;
+};
+
 const I18N_TEXT_BINDINGS = {
   preloader: '.stair-reveal__text',
   navServices: '.nav-menu a[href="#services"] .nav-link-line, .mobile-menu-modal__links a[href="#services"] .mobile-menu-modal__label',
@@ -920,6 +932,7 @@ const applyLanguage = (language) => {
       document.querySelector('.team-caption__name'),
       `${initialTeamMember.name}, ${initialTeamMember.role}`,
     );
+    setTeamSocial(document.querySelector('.team-caption__social'), 3, initialTeamMember);
     setTranslatedContent(
       document.querySelector('.team-caption__desc'),
       initialTeamMember.description,
@@ -1714,6 +1727,7 @@ const teamRoles = Array.from(teamSection?.querySelectorAll('.team-role') || []);
 const teamImages = Array.from(teamSection?.querySelectorAll('.team-media__image') || []);
 const teamCaptionName = teamSection?.querySelector('.team-caption__name');
 const teamCaptionDescription = teamSection?.querySelector('.team-caption__desc');
+const teamCaptionSocial = teamSection?.querySelector('.team-caption__social');
 
 if (
   teamSection
@@ -1756,8 +1770,8 @@ if (
   const clearCaptionMotion = () => {
     captionTimers.forEach(clearTimeout);
     captionTimers = [];
-    [teamCaptionName, teamCaptionDescription].forEach((element) => {
-      element.getAnimations().forEach((animation) => animation.cancel());
+    [teamCaptionName, teamCaptionSocial, teamCaptionDescription].forEach((element) => {
+      element?.getAnimations().forEach((animation) => animation.cancel());
     });
   };
 
@@ -1769,13 +1783,15 @@ if (
     clearCaptionMotion();
     if (immediate || prefersReducedMotion) {
       teamCaptionName.textContent = name;
+      setTeamSocial(teamCaptionSocial, index, member);
       teamCaptionDescription.textContent = member.description;
       return;
     }
 
     const outgoingX = direction >= 0 ? -28 : 28;
     const incomingX = -outgoingX;
-    const swapElement = (element, text, delay) => {
+    const swapElement = (element, update, delay) => {
+      if (!element) return;
       const exitAnimation = element.animate(
         [
           { opacity: 1, transform: 'translate3d(0, 0, 0)' },
@@ -1786,7 +1802,7 @@ if (
 
       const timer = window.setTimeout(() => {
         exitAnimation.cancel();
-        element.textContent = text;
+        update();
         const enterAnimation = element.animate(
           [
             { opacity: 0, transform: `translate3d(${incomingX}px, 0, 0)` },
@@ -1799,8 +1815,9 @@ if (
       captionTimers.push(timer);
     };
 
-    swapElement(teamCaptionName, name, 0);
-    swapElement(teamCaptionDescription, member.description, 300);
+    swapElement(teamCaptionName, () => { teamCaptionName.textContent = name; }, 0);
+    swapElement(teamCaptionSocial, () => setTeamSocial(teamCaptionSocial, index, member), 150);
+    swapElement(teamCaptionDescription, () => { teamCaptionDescription.textContent = member.description; }, 300);
   };
 
   const applyActivePhotoTransform = () => {
