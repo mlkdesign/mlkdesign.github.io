@@ -215,6 +215,7 @@ const CASE_PROJECTS = {
   },
   4: {
     image: '../milka-cv/assets/case-4.avif',
+    visitUrl: '../milka-cv/serenity/',
     copy: {
       en: {
         pageTitle: 'Serenity — Jack Milka',
