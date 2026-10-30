@@ -61,8 +61,8 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => link.addEventListene
 }));
 
 // Parallax --------------------------------------------------------------------
-// Scroll: People and everything below it slide up over the poster; the bone on the rope and
-// the boy in the footer drift. Cursor: the big moon moves most, the small moon less, the blue bone least.
+// Scroll: People and everything below it slide up over the poster; the bone on the rope, the boy in
+// the footer and the moons drift. Cursor: the big moon moves most, the small moon less, the blue bone least.
 const boneRope = document.querySelector('.bone-rope');
 const capGuy = document.querySelector('.cap-guy');
 const depthItems = [...document.querySelectorAll('[data-depth]')];
@@ -94,7 +94,8 @@ const render = () => {
   pointer.cy = lerp(pointer.cy, pointer.y, 0.08);
   depthItems.forEach((element) => {
     const depth = Number(element.dataset.depth) * u;
-    element.style.transform = `translate3d(${(pointer.cx * depth).toFixed(2)}px, ${(pointer.cy * depth).toFixed(2)}px, 0)`;
+    const drift = clamp(Number(element.dataset.scroll || 0) * (y + view / 2 - (top + Number(element.dataset.center || 0) * u)), -200 * u, 200 * u);
+    element.style.transform = `translate3d(${(pointer.cx * depth).toFixed(2)}px, ${(pointer.cy * depth + drift).toFixed(2)}px, 0)`;
   });
   if (Math.abs(pointer.cx - pointer.x) > 0.001 || Math.abs(pointer.cy - pointer.y) > 0.001) requestRender();
 };
@@ -116,7 +117,8 @@ requestRender();
 
 // Text effects ------------------------------------------------------------------
 // Headings shuffle their letters for a moment before settling.
-const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&$@!?';
+// Narrow glyphs only, and no wrapping while it runs, so a line never spills onto the next one.
+const GLYPHS = 'ABCDEFGHJKLNOPRSTUVXYZ0123456789';
 const textNodes = (element) => {
   const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
   const nodes = [];
@@ -129,6 +131,7 @@ const shuffle = (element) => {
   const total = originals.reduce((sum, text) => sum + text.length, 0);
   const duration = 650;
   const start = performance.now();
+  element.style.whiteSpace = 'nowrap';
   const frame = (now) => {
     const t = (now - start) / duration;
     let index = 0;
@@ -140,7 +143,10 @@ const shuffle = (element) => {
       }).join('');
     });
     if (t < 1) requestAnimationFrame(frame);
-    else nodes.forEach((node, n) => { node.data = originals[n]; });
+    else {
+      nodes.forEach((node, n) => { node.data = originals[n]; });
+      element.style.whiteSpace = '';
+    }
   };
   requestAnimationFrame(frame);
 };
