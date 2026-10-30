@@ -17,7 +17,7 @@ burger?.addEventListener('click', () => {
   const open = header.classList.toggle('is-open');
   burger.setAttribute('aria-expanded', String(open));
 });
-header?.querySelectorAll('.header__nav a').forEach((link) => link.addEventListener('click', () => {
+header?.querySelectorAll('.header__nav a, .menu a[href^="#"]').forEach((link) => link.addEventListener('click', () => {
   header.classList.remove('is-open');
   burger?.setAttribute('aria-expanded', 'false');
 }));
@@ -43,8 +43,8 @@ if ('IntersectionObserver' in window) {
 
 // Loading ----------------------------------------------------------------------------
 // The hero button grows into a progress bar while the page loads (to the width of the content on
-// desktop, to its own width on phones). At 100% the logo flies into the header, the bar shrinks back
-// into the button and the hero plays in.
+// desktop, to its own width on phones). At 100% the logo fades out with the loading screen, the bar
+// shrinks back into the button and the hero plays in with the header.
 const bootLogo = document.querySelector('.boot-logo');
 const heroButton = document.querySelector('.btn--hero');
 const bar = heroButton?.querySelector('.btn__bar');
@@ -103,37 +103,36 @@ const boot = async () => {
   percent.textContent = '100%';
   await wait(250);
 
-  // The logo flies from the middle into the header.
-  const target = document.querySelector('.header__logo').getBoundingClientRect();
-  const from = bootLogo.getBoundingClientRect();
-  bootLogo.classList.add('is-flying');
-  bootLogo.style.left = `${from.left}px`;
-  bootLogo.style.top = `${from.top}px`;
-  bootLogo.style.width = `${from.width}px`;
-  bootLogo.style.transform = 'none';
+  // The logo leaves with the loading screen; the bar shrinks back into the button at the same time.
+  bootLogo.classList.add('is-leaving');
   root.classList.remove('is-booting');
-  bootLogo.getBoundingClientRect();
-  bootLogo.style.minWidth = '0';
-  bootLogo.style.left = `${target.left}px`;
-  bootLogo.style.top = `${target.top}px`;
-  bootLogo.style.width = `${target.width}px`;
-  // The bar shrinks back into the button at the same time.
   bar.style.removeProperty('width');
-  await wait(650);
-  setReady();
   await wait(500);
+  setReady();
+  await wait(600);
   bootLogo.remove();
 };
 
 // Parallax -------------------------------------------------------------------------
 // Cursor: dots, glows, rings and stickers each move by their data-depth (frame px at the screen edge).
 // Scroll: rings, the about orbit and the collaboration stickers drift by their data-speed.
-const layers = [...document.querySelectorAll('[data-depth], [data-speed]')].map((element) => ({
-  element,
-  depth: Number(element.dataset.depth || 0),
-  speed: Number(element.dataset.speed || 0),
-  center: 0,
-}));
+// data-bound keeps a layer inside an ellipse ("half-axis along, half-axis across, angle"): the sphere in its ring.
+const layers = [...document.querySelectorAll('[data-depth], [data-speed]')].map((element) => {
+  const [along, across, angle] = (element.dataset.bound || '').split(' ').map(Number);
+  return {
+    element,
+    depth: Number(element.dataset.depth || 0),
+    speed: Number(element.dataset.speed || 0),
+    bound: element.dataset.bound ? { along, across, cos: Math.cos((angle * Math.PI) / 180), sin: Math.sin((angle * Math.PI) / 180) } : null,
+    center: 0,
+  };
+});
+const keepInside = (x, y, { along, across, cos, sin }, u) => {
+  const a = x * cos + y * sin;
+  const b = -x * sin + y * cos;
+  const reach = Math.hypot(a / (along * u), b / (across * u));
+  return reach > 1 ? [x / reach, y / reach] : [x, y];
+};
 const pointer = { x: 0, y: 0, cx: 0, cy: 0 };
 let ticking = false;
 
@@ -147,6 +146,7 @@ const measure = () => {
 };
 const render = () => {
   ticking = false;
+  markRow();
   if (!desktop.matches || reduceMotion) {
     layers.forEach((layer) => { layer.element.style.translate = ''; });
     return;
@@ -155,9 +155,12 @@ const render = () => {
   const middle = window.scrollY + window.innerHeight / 2;
   pointer.cx = lerp(pointer.cx, pointer.x, 0.08);
   pointer.cy = lerp(pointer.cy, pointer.y, 0.08);
-  layers.forEach(({ element, depth, speed, center }) => {
+  layers.forEach(({ element, depth, speed, bound, center }) => {
     const drift = speed ? clamp(speed * (center - middle), -240 * u, 240 * u) : 0;
-    element.style.translate = `${(pointer.cx * depth * u).toFixed(2)}px ${(pointer.cy * depth * u + drift).toFixed(2)}px`;
+    let x = pointer.cx * depth * u;
+    let y = pointer.cy * depth * u + drift;
+    if (bound) [x, y] = keepInside(x, y, bound, u);
+    element.style.translate = `${x.toFixed(2)}px ${y.toFixed(2)}px`;
   });
   if (Math.abs(pointer.cx - pointer.x) > 0.001 || Math.abs(pointer.cy - pointer.y) > 0.001) requestRender();
 };
@@ -179,11 +182,15 @@ window.addEventListener('load', measure);
 measure();
 
 // Core Focus -------------------------------------------------------------------
-// Desktop: the row under the cursor lights up. Phones: the rows are a slider with arrows.
+// Desktop: the row passing the middle of the screen lights up as the page scrolls. Phones: the rows are a slider with arrows.
 const rows = [...document.querySelectorAll('.row')];
-rows.forEach((row) => row.addEventListener('pointerenter', () => {
-  rows.forEach((other) => other.classList.toggle('is-active', other === row));
-}));
+function markRow() {
+  if (!desktop.matches || !rows.length) return;
+  const line = window.innerHeight * 0.5;
+  let active = rows[0];
+  rows.forEach((row) => { if (row.getBoundingClientRect().top <= line) active = row; });
+  rows.forEach((row) => row.classList.toggle('is-active', row === active));
+}
 const list = document.querySelector('.focus__list');
 const slide = (direction) => {
   const step = (rows[0]?.offsetWidth || 300) + 8;

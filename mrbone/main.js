@@ -294,6 +294,47 @@ document.querySelectorAll('.cta').forEach((button) => {
   button.addEventListener('pointerleave', () => shuffle(label, 420));
 });
 
+// Footer icons -------------------------------------------------------------------
+// Pointing at the footer sets each icon cycling through the four, each at its own pace;
+// leaving lets them run on and settle back on their own icon one after another, left to right.
+const footer = document.querySelector('.footer');
+const slots = [...document.querySelectorAll('.footer__slot')].map((slot, index) => ({
+  index,
+  icons: [...slot.children],
+  shown: index,
+  timer: 0,
+  settle: 0,
+}));
+const showIcon = (slot, icon) => {
+  slot.icons[slot.shown].classList.remove('is-on');
+  slot.shown = icon;
+  slot.icons[icon].classList.add('is-on');
+};
+if (footer && slots.length && !reduceMotion) {
+  footer.addEventListener('pointerenter', () => {
+    slots.forEach((slot) => {
+      clearTimeout(slot.settle);
+      if (slot.timer) return;
+      const pace = 70 + slot.index * 17;
+      const step = () => {
+        showIcon(slot, (slot.shown + 1) % slot.icons.length);
+        slot.timer = setTimeout(step, pace);
+      };
+      slot.timer = setTimeout(step, slot.index * 35);
+    });
+  });
+  footer.addEventListener('pointerleave', () => {
+    slots.forEach((slot) => {
+      clearTimeout(slot.settle);
+      slot.settle = setTimeout(() => {
+        clearTimeout(slot.timer);
+        slot.timer = 0;
+        showIcon(slot, slot.index);
+      }, 200 + slot.index * 160);
+    });
+  });
+}
+
 // Photo band ------------------------------------------------------------------
 // Each row holds its photos twice and slides by half its width, so it loops without a seam.
 // Pointing at a photo frames it (CSS) and slows the row to a stop; leaving lets it pick up speed again.

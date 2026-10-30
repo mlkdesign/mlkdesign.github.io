@@ -9,7 +9,7 @@
     <meta name="description" content="Black Ring: result-driven affiliation, SEO, marketing and CRO for brands in the competitive world of digital entertainment." />
     <link rel="preload" href="assets/fonts/kanit-800.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="assets/fonts/kanit-300.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="style.css?v=20261030-1" />
+    <link rel="stylesheet" href="style.css?v=20261030-2" />
     <script>
       document.documentElement.classList.add('js', 'is-booting');
       // If main.js never runs, the page still shows itself.
@@ -31,7 +31,35 @@
         <a href="#team">Join the team</a>
       </nav>
       <span class="header__lang" aria-label="Language: English">EN</span>
-      <button class="burger" type="button" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <button class="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
+      <!-- Phones: the header opens into the Figma "iPhone Menu" panel. -->
+      <div class="menu" id="menu">
+        <nav class="menu__group" aria-label="Menu">
+          <p class="menu__title">Menu</p>
+          <div class="menu__links">
+            <a href="#focus">Core focus</a>
+            <a href="#about">About Us</a>
+            <a href="#contact">Contact</a>
+            <a href="#team">Join the team</a>
+          </div>
+        </nav>
+        <div class="menu__group menu__group--contact">
+          <p class="menu__title">Contact us</p>
+          <div class="menu__social">
+            <a href="https://www.linkedin.com/" target="_blank" rel="noopener"><img src="assets/icon-linkedin.svg" alt="" width="24" height="24" />Linkedin</a>
+            <a href="https://www.facebook.com/" target="_blank" rel="noopener"><img src="assets/icon-facebook.svg" alt="" width="24" height="24" />Facebook</a>
+          </div>
+        </div>
+        <div class="menu__partners">
+          <img class="menu__gpwa" src="assets/gpwa.webp" alt="GPWA — Gambling Portal Webmasters Association" width="119" height="43" loading="lazy" />
+          <span class="footer__affpapa menu__affpapa"><img src="assets/affpapa.svg" alt="affpapa.com" loading="lazy" /><img src="assets/affpapa-tag.svg" alt="where operators meet affiliates" loading="lazy" /></span>
+        </div>
+        <div class="menu__orbit" aria-hidden="true">
+          <img src="assets/ring-back.webp" alt="" loading="lazy" />
+          <img class="menu__sphere" src="assets/sphere.webp" alt="" loading="lazy" />
+          <img src="assets/ring-front.webp" alt="" loading="lazy" />
+        </div>
+      </div>
     </header>
 
     <main class="stage">
@@ -63,7 +91,7 @@
         <h1 class="hero__title">
           <span class="a hero__line hero__line--1" style="--x:88;--y:176">Transforming</span>
           <span class="a hero__line hero__line--2" style="--x:321;--y:277">clicks</span>
-          <span class="a hero__sub" style="--x:88;--y:424"><em>in the</em> World of Entertainment</span>
+          <span class="a hero__sub" style="--x:88;--y:424"><em>in the</em> World <br class="br-phone" />of Entertainment</span>
         </h1>
         <img class="a hero__glow-cursor" src="assets/glow-16.svg" alt="" aria-hidden="true" data-depth="14" style="--x:209;--y:325;--w:91;--h:91" />
         <img class="a hero__cursor" src="assets/cursor.webp" alt="" aria-hidden="true" data-depth="14" style="--x:253;--y:368;--w:41;--h:44" />
@@ -81,7 +109,7 @@
       <section class="sec focus" id="focus" style="--y:880;--h:800">
         <img class="a focus__ring" src="assets/ring.webp" alt="" aria-hidden="true" data-depth="34" data-speed="-0.12" style="--x:-268;--y:75;--w:505;--h:268" />
         <!-- The title stays in view while the list scrolls past, down to the end of the block. -->
-        <div class="a focus__aside" style="--x:88;--y:26;--w:232;--h:774">
+        <div class="a focus__aside rv" style="--x:88;--y:26;--w:232;--h:774">
           <h2 class="title focus__title">Core<br />Focus</h2>
           <div class="focus__arrows">
             <button class="focus__prev" type="button" aria-label="Previous"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H5m6-7-7 7 7 7" /></svg></button>
@@ -89,11 +117,11 @@
           </div>
         </div>
         <ol class="a focus__list" style="--x:320;--y:0;--w:1040;--h:800">
-          <li class="row is-active"><div class="row__in"><span class="row__num">01</span><h3 class="row__title">Affiliate<br />Management</h3><p class="row__text">Navigating the bustling landscape of high-competition niches requires a keen sense of direction. At Black Ring, our seasoned team specializes in driving targeted traffic, ensuring that every click translates into tangible returns. With a proven track record in high-stakes sectors, we're your trusted partner in maximizing affiliate potential.</p></div></li>
-          <li class="row"><div class="row__in"><span class="row__num">02</span><h3 class="row__title">Business<br />Development</h3><p class="row__text">Every brand is unique, and so are its challenges and aspirations. Our business development approach is rooted in understanding your distinct needs. We craft bespoke strategies, tailored to ensure your brand not only survives but thrives in the competitive gaming and entertainment arena.</p></div></li>
-          <li class="row"><div class="row__in"><span class="row__num">03</span><h3 class="row__title">Marketing</h3><p class="row__text">In the dynamic world of digital entertainment, visibility is the key to success. Our holistic marketing strategies are designed to put you in the spotlight, ensuring consistent engagement and acquisition. Dive into a world where your brand story resonates, and your message captivates.</p></div></li>
-          <li class="row"><div class="row__in"><span class="row__num">04</span><h3 class="row__title">SEO</h3><p class="row__text">The digital realm of gaming and entertainment is vast, but with Black Ring's SEO expertise, you'll never get lost in the crowd. Our strategies are tailored to ensure your platform ranks at the pinnacle, driving organic traffic and building a loyal audience base.</p></div></li>
-          <li class="row"><div class="row__in"><span class="row__num">05</span><h3 class="row__title">CRO</h3><p class="row__text">Clicks are just the beginning; conversions are the endgame. Our CRO strategies delve deep into user behavior, optimizing every touchpoint of your platform. Experience enhanced user journeys, increased engagement, and a surge in conversions, ensuring every visitor is a potential loyalist.</p></div></li>
+          <li class="row rv is-active"><div class="row__in"><span class="row__num">01</span><h3 class="row__title">Affiliate<br />Management</h3><p class="row__text">Navigating the bustling landscape of high-competition niches requires a keen sense of direction. At Black Ring, our seasoned team specializes in driving targeted traffic, ensuring that every click translates into tangible returns. With a proven track record in high-stakes sectors, we're your trusted partner in maximizing affiliate potential.</p></div></li>
+          <li class="row rv"><div class="row__in"><span class="row__num">02</span><h3 class="row__title">Business<br />Development</h3><p class="row__text">Every brand is unique, and so are its challenges and aspirations. Our business development approach is rooted in understanding your distinct needs. We craft bespoke strategies, tailored to ensure your brand not only survives but thrives in the competitive gaming and entertainment arena.</p></div></li>
+          <li class="row rv"><div class="row__in"><span class="row__num">03</span><h3 class="row__title">Marketing</h3><p class="row__text">In the dynamic world of digital entertainment, visibility is the key to success. Our holistic marketing strategies are designed to put you in the spotlight, ensuring consistent engagement and acquisition. Dive into a world where your brand story resonates, and your message captivates.</p></div></li>
+          <li class="row rv"><div class="row__in"><span class="row__num">04</span><h3 class="row__title">SEO</h3><p class="row__text">The digital realm of gaming and entertainment is vast, but with Black Ring's SEO expertise, you'll never get lost in the crowd. Our strategies are tailored to ensure your platform ranks at the pinnacle, driving organic traffic and building a loyal audience base.</p></div></li>
+          <li class="row rv"><div class="row__in"><span class="row__num">05</span><h3 class="row__title">CRO</h3><p class="row__text">Clicks are just the beginning; conversions are the endgame. Our CRO strategies delve deep into user behavior, optimizing every touchpoint of your platform. Experience enhanced user journeys, increased engagement, and a surge in conversions, ensuring every visitor is a potential loyalist.</p></div></li>
         </ol>
       </section>
 
@@ -101,11 +129,12 @@
       <section class="sec about" id="about" style="--y:1760;--h:640">
         <h2 class="a title rv" style="--x:88;--y:0">About<br />us</h2>
         <p class="a body rv" style="--x:88;--y:135;--w:232"><b>Black Ring</b> started in 2021 with a focus on the competitive world of digital entertainment. Over the past 2 years, we've grown by helping brands stand out in this busy space. Our experience and success stories have made us a go-to name in the industry.</p>
-        <!-- Figma "parallax ring": the back of the ring, the sphere and the front of the ring move at different depths. -->
-        <div class="a orbit" aria-hidden="true" style="--x:141;--y:177;--w:602;--h:605">
-          <img class="orbit__layer orbit__back" src="assets/ring-back.webp" alt="" data-depth="12" data-speed="0.05" />
-          <img class="orbit__layer orbit__sphere" src="assets/sphere.webp" alt="" data-depth="24" data-speed="0.11" />
-          <img class="orbit__layer orbit__front" src="assets/ring-front.webp" alt="" data-depth="38" data-speed="0.17" />
+        <!-- Figma "parallax ring": the ring moves as one piece; the sphere moves further inside it,
+             held within an ellipse along the ring (data-bound: half-axes in frame px, and the ring's angle). -->
+        <div class="a orbit" aria-hidden="true" data-depth="16" data-speed="0.06" style="--x:141;--y:177;--w:602;--h:605">
+          <img class="orbit__layer orbit__back" src="assets/ring-back.webp" alt="" />
+          <img class="orbit__layer orbit__sphere" src="assets/sphere.webp" alt="" data-depth="30" data-speed="0.14" data-bound="70 22 -44" />
+          <img class="orbit__layer orbit__front" src="assets/ring-front.webp" alt="" />
         </div>
         <article class="a card card--red rv" style="--x:720;--y:0;--w:320;--h:400"><div class="card__in"><h3 class="card__title">Our<br />mission</h3><p>Our goal at Black Ring is straightforward - help brands shine in the digital world. We turn potential into results, making sure every click counts. With our expertise in affiliation and SEO, we're here to make sure our partners always stay ahead.</p></div></article>
         <article class="a card card--red rv" style="--x:1040;--y:0;--w:320;--h:400"><div class="card__in"><h3 class="card__title">Our<br />Vision</h3><p>We see a future where Black Ring sets the bar in the affiliate industry. We want to be the team everyone trusts to take their brand to the top. Our dream is to help our partners lead in the digital world, with us by their side every step of the way</p></div></article>
@@ -204,6 +233,6 @@
         <p class="a footer__copy" style="--x:0;--y:258;--w:1440;--h:40">©&nbsp; 2023 Black-ring.com</p>
       </footer>
     </main>
-    <script src="main.js?v=20261030-1" defer></script>
+    <script src="main.js?v=20261030-2" defer></script>
   </body>
 </html>

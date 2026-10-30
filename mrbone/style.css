@@ -147,8 +147,9 @@ img.a { max-width: none; }
   translate: calc(-12 * var(--u)) 0;
   transition: opacity 0.3s, translate 0.5s cubic-bezier(0.65, 0, 0.35, 1);
 }
-.socials a:hover, .socials a:focus-visible { width: var(--open, calc(200 * var(--u))); background-color: rgba(255, 255, 255, 0.14); }
-.socials a:hover span, .socials a:focus-visible span { opacity: 1; translate: 0 0; transition: opacity 0.45s 0.2s, translate 0.6s 0.1s cubic-bezier(0.22, 1, 0.36, 1); }
+/* Opening is quick; closing keeps the slower, smooth pace of the rule above. */
+.socials a:hover, .socials a:focus-visible { width: var(--open, calc(200 * var(--u))); background-color: rgba(255, 255, 255, 0.14); transition: width 0.38s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.25s; }
+.socials a:hover span, .socials a:focus-visible span { opacity: 1; translate: 0 0; transition: opacity 0.3s 0.08s, translate 0.4s 0.04s cubic-bezier(0.22, 1, 0.36, 1); }
 /* OpenSea: the orange square with the cut corner from the design, drawn in CSS so hover never shows a box behind it. */
 .socials .socials__sea {
   background: #d66222;
@@ -333,7 +334,9 @@ img.a { max-width: none; }
 }
 .footer p a { margin-left: calc(14 * var(--u)); }
 .footer p a:hover { color: var(--orange); }
-.footer > img { position: absolute; left: calc(943 * var(--u)); top: 50%; width: calc(177 * var(--u)); height: calc(30 * var(--u)); object-fit: contain; transform: translateY(-50%); }
+.footer__icons { position: absolute; left: calc(943 * var(--u)); top: 50%; width: calc(177 * var(--u)); height: calc(30 * var(--u)); overflow: visible; fill: var(--ink); transform: translateY(-50%); }
+.footer__slot > g { visibility: hidden; }
+.footer__slot > g.is-on { visibility: visible; }
 
 /* Loading screen ---------------------------------------------------------- */
 .loader { display: none; }
@@ -506,7 +509,7 @@ html.js:not(.is-loaded) { overflow: hidden; }
   .pug { display: none; }
   .footer { height: auto; margin: 60px 0 0; padding: 30px 0; text-align: center; border-top: 0; }
   .footer p { position: static; transform: none; font-size: 12px; }
-  .footer > img { position: static; transform: none; width: 140px; margin: 20px auto 0; }
+  .footer__icons { position: static; display: block; transform: none; width: 140px; height: 24px; margin: 20px auto 0; }
   .cap-guy { width: 80%; height: auto; flex-basis: 80%; margin: 0 auto; aspect-ratio: 499 / 716; }
 }
 

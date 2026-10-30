@@ -96,7 +96,7 @@ img.a { max-width: none; }
   display: flex;
   align-items: center;
   padding: 0 calc(29 * var(--u));
-  background: rgba(232, 232, 232, 0.03);
+  background: rgba(0, 0, 0, 0.7);
   border: 1px solid var(--line);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -134,7 +134,7 @@ img.a { max-width: none; }
   font-size: max(11px, calc(13 * var(--u)));
   letter-spacing: calc(1.3 * var(--u));
 }
-.burger { display: none; }
+.burger, .menu, .br-phone { display: none; }
 
 /* Buttons ------------------------------------------------------------------- */
 .btn {
@@ -351,9 +351,9 @@ img.a { max-width: none; }
 
 /* Loading ---------------------------------------------------------------------------- */
 /* While loading: only the hero background, glows and dots show, the logo waits in the middle and the hero
-   button fills up as a progress bar. Then the logo flies into the header and the hero plays in. */
+   button fills up as a progress bar. Then the logo fades out with the loading screen and the hero and header play in. */
 .boot-logo { display: none; }
-.js.is-booting .boot-logo, .js .boot-logo.is-flying {
+.js.is-booting .boot-logo, .js .boot-logo.is-leaving {
   display: block;
   position: fixed;
   z-index: 60;
@@ -365,12 +365,10 @@ img.a { max-width: none; }
   transform-origin: 0 0;
 }
 .boot-logo img { width: 100%; height: auto; }
-.boot-logo.is-flying { transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1), left 0.9s cubic-bezier(0.76, 0, 0.24, 1), top 0.9s cubic-bezier(0.76, 0, 0.24, 1), width 0.9s cubic-bezier(0.76, 0, 0.24, 1), min-width 0.9s; }
+.boot-logo.is-leaving { opacity: 0; filter: blur(6px); transform: translate(-50%, -50%) scale(0.92); transition: opacity 0.5s, filter 0.5s, transform 0.6s var(--ease); }
 html.js.is-booting { overflow: hidden; }
 .js .header { transition: opacity 0.6s, translate 0.8s var(--ease); }
 .js:not(.is-ready) .header { opacity: 0; translate: 0 -20px; }
-.js:not(.is-ready) .header__logo { opacity: 0; }
-.js .is-booting .header__logo, .js.is-booting .header__logo { opacity: 0; }
 .js.is-booting .btn--hero { overflow: visible; }
 .js.is-booting .btn__percent { opacity: 1; }
 .js .btn--hero .btn__bar { transition: width 0.8s cubic-bezier(0.76, 0, 0.24, 1), background-color 0.3s; }
@@ -396,6 +394,11 @@ html.js.is-booting { overflow: hidden; }
 .js .rv { opacity: 0; translate: 0 40px; transition: opacity 0.9s, translate 1s var(--ease); }
 .js .rv.is-in { opacity: 1; translate: 0 0; }
 
+.js .row.rv:nth-child(2) { transition-delay: 0.08s; }
+.js .row.rv:nth-child(3) { transition-delay: 0.16s; }
+.js .row.rv:nth-child(4) { transition-delay: 0.24s; }
+.js .row.rv:nth-child(5) { transition-delay: 0.32s; }
+
 /* Parallax is applied from main.js through the translate property. */
 [data-depth], [data-speed] { will-change: translate; }
 
@@ -411,17 +414,78 @@ html.js.is-booting { overflow: hidden; }
   .bleed { left: 0; width: 100%; }
   .title { font-size: 43px; white-space: normal; }
 
-  .header { top: 0; width: calc(100% - 54px); max-width: 600px; height: 80px; padding: 0 20px; border-top: 0; }
+  /* Header: the bar opens into the 720px menu panel of the "iPhone Menu" frame. */
+  .header {
+    top: 0;
+    width: calc(100% - 54px);
+    max-width: 600px;
+    height: 80px;
+    max-height: 100dvh;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    padding: 0 20px;
+    border-top: 0;
+    overflow: hidden;
+  }
+  .header, .js .header { transition: opacity 0.6s, translate 0.8s var(--ease), height 0.7s cubic-bezier(0.76, 0, 0.24, 1); }
+  .header::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: radial-gradient(160% 120% at 0 0, rgba(228, 75, 70, 0.1), rgba(228, 75, 70, 0)), var(--panel);
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
   .header__logo { width: 98px; }
-  .header__nav, .header__lang { display: none; }
-  .burger { display: grid; gap: 4px; place-content: center; width: 40px; height: 40px; margin-left: auto; border: 1px solid rgba(232, 232, 232, 0.3); border-radius: 50%; }
+  .header__nav { display: none; }
+  .header__lang { position: absolute; top: 19px; right: 75px; margin: 0; width: 40px; height: 40px; opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0s 0.4s; }
+  .burger { display: grid; gap: 4px; place-content: center; width: 40px; height: 40px; margin: 20px 0 20px auto; border: 1px solid rgba(232, 232, 232, 0.3); border-radius: 50%; }
   .burger span { width: 14px; height: 1.5px; background: var(--ink); transition: transform 0.25s, opacity 0.25s; }
-  .header.is-open { flex-wrap: wrap; height: auto; padding-bottom: 24px; background: rgba(13, 13, 13, 0.92); }
-  .header.is-open .header__logo, .header.is-open .burger { margin-top: 20px; }
-  .header.is-open .header__nav { display: flex; flex-direction: column; gap: 18px; width: 100%; margin: 24px 0 0; font-size: 18px; }
+  .header.is-open { height: 720px; overflow-y: auto; }
+  .header.is-open::before { opacity: 1; }
+  .header.is-open .header__lang { opacity: 1; visibility: visible; transition: opacity 0.4s 0.15s; }
   .header.is-open .burger span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
   .header.is-open .burger span:nth-child(2) { opacity: 0; }
   .header.is-open .burger span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+
+  .menu {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    width: calc(100% + 40px);
+    min-height: 640px;
+    margin: 0 -20px;
+    padding: 39px 20px 220px;
+    border-top: 1px solid var(--line);
+    visibility: hidden;
+    transition: visibility 0s 0.7s;
+  }
+  .header.is-open .menu { visibility: visible; transition: none; }
+  .menu > * { opacity: 0; translate: 0 16px; transition: opacity 0.3s, translate 0.3s; }
+  .header.is-open .menu > * { opacity: 1; translate: none; transition: opacity 0.6s, translate 0.8s var(--ease); }
+  .header.is-open .menu > :nth-child(1) { transition-delay: 0.2s; }
+  .header.is-open .menu > :nth-child(2) { transition-delay: 0.28s; }
+  .header.is-open .menu > :nth-child(3) { transition-delay: 0.36s; }
+  .header.is-open .menu > :nth-child(4) { transition-delay: 0.3s; }
+  .menu__group { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .menu__group--contact { gap: 17px; }
+  .menu__title { color: #ebebeb; font-size: 30px; font-weight: 600; line-height: 0.84; text-transform: uppercase; }
+  .menu__links, .menu__social { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 20px; line-height: 1.495; letter-spacing: 2px; color: #fff; }
+  .menu__social { align-items: flex-start; }
+  .menu__social a { display: flex; align-items: center; gap: 16px; }
+  .menu__social img { width: 24px; height: 24px; }
+  .menu a { transition: color 0.25s; }
+  .menu a:hover { color: var(--red); }
+  .menu__partners { display: flex; align-items: center; justify-content: center; gap: 20px; }
+  .menu__gpwa { width: 119px; height: 43px; border-radius: 11px; }
+  .menu__affpapa { width: 119px; height: 37px; }
+  /* The ring and sphere at the bottom of the panel, as in the About block but turned to -29°. */
+  .menu__orbit { position: absolute; left: 0; bottom: 0; width: 100%; height: 205px; overflow: hidden; pointer-events: none; }
+  .menu__orbit img { position: absolute; left: calc(50% + 24px); top: 167px; width: 469px; height: 181px; max-width: none; transform: translate(-50%, -50%) rotate(-29.04deg); }
+  .menu__orbit .menu__sphere { width: 220px; height: 220px; }
 
   /* Hero */
   .hero { min-height: 624px; }
@@ -429,11 +493,14 @@ html.js.is-booting { overflow: hidden; }
   .hero__title { position: relative; z-index: 3; padding-top: 55px; }
   .hero__line { display: block; font-size: 43px; }
   .hero__line--2 { margin: -18px 0 0 80px; }
-  .hero__sub { display: block; max-width: 230px; margin-top: 10px; font-size: 20px; line-height: 28px; white-space: normal; }
-  .hero__sub em { font-size: 13px; }
-  .hero__ring { position: absolute; left: 92px; top: 0; width: 722px; height: 384px; }
-  .hero__cursor { position: absolute; left: 77px; top: 216px; width: 15px; height: 16px; }
-  .hero__glow-cursor { position: absolute; left: 61px; top: 199px; width: 33px; height: 33px; }
+  .hero__sub { display: block; margin-top: 10px; font-size: 24px; line-height: 1.155; }
+  .hero__sub em { font-size: 15px; }
+  .br-phone { display: inline; }
+  /* Ring and cursor are placed from the left edge of the text column, as in the iPhone frame
+     (ring at 119, cursor just before "clicks"). */
+  .hero__ring { position: absolute; left: calc(max(27px, 50% - 300px) + 92px); top: 0; width: 722px; height: 384px; }
+  .hero__cursor { position: absolute; left: calc(max(27px, 50% - 300px) + 50px); top: 120px; width: 15px; height: 16px; }
+  .hero__glow-cursor { position: absolute; left: calc(max(27px, 50% - 300px) + 34px); top: 103px; width: 33px; height: 33px; }
   .hero__text { z-index: 3; margin-top: 170px; padding-left: 18px; font-size: 13px; }
   .hero__text.bullet::before { top: 6px; width: 6px; height: 6px; }
   .btn--hero { z-index: 3; height: 80px; margin-top: 20px; padding: 0 30px; }
