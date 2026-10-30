@@ -43,7 +43,7 @@ COUNTRIES = [
     [('england', 'England', 'england'), ('scotland', 'Scotland', 'scotland'), ('ireland', 'Ireland', 'ireland'),
      ('saint-vincent', 'SVG (Saint Vincent and the Grenadines)', 'saint-vincent'), ('uae', 'UAE', 'uae'),
      ('turkey', 'Turkey', 'turkey'), ('hungary', 'Hungary', 'hungary'), ('netherlands', 'Netherlands', 'netherlands'),
-     ('armenia', 'Armenia', 'armenia')],
+     ('armenia', 'Armenia', 'armenia'), ('ukraine', 'Ukraine', None)],
     [('georgia', 'Georgia', 'georgia'), ('russia', 'Russia', None), ('kazakhstan', 'Kazakhstan', 'kazakhstan'),
      ('lithuania', 'Lithuania', 'lithuania'), ('latvia', 'Latvia', 'latvia'), ('estonia', 'Estonia', 'estonia'),
      ('kyrgyzstan', 'Kyrgyzstan', 'kyrgyzstan'), ('italy', 'Italy', 'italy'), ('egypt', 'Egypt', None), ('china', 'China', 'china')],
@@ -64,7 +64,7 @@ DOT_SLUGS = {
     'Мальта': 'malta', 'Португалия': 'portugal', 'Гибраалтар': 'gibraltar', 'Египет': 'egypt', 'Армения': 'armenia',
     'Грузия': 'georgia', 'Венгрия': 'hungary', 'Англия': 'england', 'Ирландия': 'ireland', 'Шотландия': 'scotland',
     'Норвегия': 'norway', 'СВГСентВинсентиГренадины': 'saint-vincent', 'Белиз': 'belize', 'Чили': 'chile',
-    'Колумбия': 'colombia', 'Кюрасао': 'curacao', 'Невис': 'nevis',
+    'Колумбия': 'colombia', 'Кюрасао': 'curacao', 'Невис': 'nevis', 'Украина': 'ukraine',
 }
 
 # Short form used inside sentences ("register a company in …").
