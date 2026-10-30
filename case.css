@@ -272,55 +272,17 @@ a.case-back:focus-visible {
   transform: translateY(calc(-100% - 5px));
 }
 
-/* "visit this site": a plain text link beside the CTA, opening the project in a new tab. */
+/* "visit this site": a social-style text link beside the CTA, opening the project in a new tab. */
 .case-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 12px;
+  gap: 12px 44px;
   margin-top: clamp(2rem, 5vh, 3rem);
 }
 
 .case-visit {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
   height: 32px;
-  color: rgba(244, 239, 227, 0.6);
-  font: 300 0.82rem/1 var(--font);
-  letter-spacing: 0.14em;
-  text-decoration: none;
-  transition: color 0.3s var(--ease);
-}
-
-.case-visit:hover,
-.case-visit:focus-visible {
-  color: var(--text);
-}
-
-.case-visit .nav-link-line {
-  transition: transform 0.3s ease-in-out;
-}
-
-.case-visit:hover .nav-link-line,
-.case-visit:focus-visible .nav-link-line {
-  transform: translateY(-105%);
-}
-
-.case-visit:hover .nav-link-line:last-child,
-.case-visit:focus-visible .nav-link-line:last-child {
-  transform: translateY(calc(-105% - 5px));
-}
-
-.case-visit__icon {
-  display: block;
-  flex: none;
-  transition: transform 0.3s var(--ease);
-}
-
-.case-visit:hover .case-visit__icon,
-.case-visit:focus-visible .case-visit__icon {
-  transform: translate(2px, -2px);
 }
 
 .case-visual {
@@ -580,6 +542,7 @@ a.case-offer__button {
   .case-visit {
     justify-content: center;
     height: 48px;
+    margin: 0;
   }
 
   .case-visual {
