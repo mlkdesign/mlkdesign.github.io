@@ -4,8 +4,9 @@ import assets from "@/lib/assets.json";
 
 type Point = [number, number];
 type Bolt = {
-  trunk: Point[];
-  forks: Point[][];
+  trunk: Path2D;
+  forks: Path2D;
+  mid: Point;
   born: number;
   life: number;
   width: number;
@@ -13,7 +14,7 @@ type Bolt = {
 
 // Midpoint displacement: each pass splits every segment and pushes the new point sideways,
 // with less push on every pass, which gives lightning its jagged, self-similar line.
-function jag(a: Point, b: Point, spread: number, passes = 7): Point[] {
+function jag(a: Point, b: Point, spread: number, passes = 6): Point[] {
   let points: Point[] = [a, b];
   for (let pass = 0; pass < passes; pass++) {
     const next: Point[] = [points[0]];
@@ -32,6 +33,15 @@ function jag(a: Point, b: Point, spread: number, passes = 7): Point[] {
   return points;
 }
 
+const addLine = (path: Path2D, points: Point[]) =>
+  points.forEach(([px, py], i) => (i ? path.lineTo(px, py) : path.moveTo(px, py)));
+
+// Drawing budget: canvas shadows (shadowBlur) blur every stroke on the GPU and froze the page.
+// Instead the glow is drawn into a quarter-size canvas and stretched over the capsule with a
+// single blur pass per frame, the flash is a pre-drawn sprite, each strike's lines are built once
+// as Path2D, and the electricity redraws at 30 fps.
+const FRAME = 1000 / 30;
+
 /** The capsule over the hero: glass shell, money inside and electricity drawn live across the whole capsule. */
 export default function Lightning({ paused }: { paused: boolean }) {
   const root = useRef<HTMLDivElement>(null);
@@ -41,12 +51,26 @@ export default function Lightning({ paused }: { paused: boolean }) {
       hero = el.closest("section")!,
       c = canvas.current!,
       ctx = c.getContext("2d")!;
+    const glow = document.createElement("canvas"),
+      gctx = glow.getContext("2d")!;
+    const flash = document.createElement("canvas");
+    flash.width = flash.height = 128;
+    {
+      const f = flash.getContext("2d")!;
+      const g = f.createRadialGradient(64, 64, 0, 64, 64, 64);
+      g.addColorStop(0, "rgba(60, 150, 255, 1)");
+      g.addColorStop(1, "rgba(60, 150, 255, 0)");
+      f.fillStyle = g;
+      f.fillRect(0, 0, 128, 128);
+    }
     const media = matchMedia("(prefers-reduced-motion: reduce)");
     let reduce = media.matches,
       visible = true,
       frame = 0,
       last = 0,
+      lastDraw = 0,
       nextStrike = 0,
+      nextPlasma = 0,
       w = 0,
       h = 0,
       scale = 1;
@@ -55,16 +79,20 @@ export default function Lightning({ paused }: { paused: boolean }) {
       x = 0,
       y = 0;
     let bolts: Bolt[] = [];
+    let plasma = new Path2D();
 
     // The canvas fills the inside of the capsule (the long axis runs left to right before the 45° turn).
     const size = () => {
-      const ratio = Math.min(devicePixelRatio || 1, 2);
+      const ratio = Math.min(devicePixelRatio || 1, 1.5);
       w = c.clientWidth;
       h = c.clientHeight;
       if (!w || !h) return;
       c.width = Math.round(w * ratio);
       c.height = Math.round(h * ratio);
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      glow.width = Math.ceil(w / 4);
+      glow.height = Math.ceil(h / 4);
+      gctx.setTransform(glow.width / w, 0, 0, glow.height / h, 0, 0);
       scale = h / 230;
     };
     const resize = new ResizeObserver(size);
@@ -84,85 +112,78 @@ export default function Lightning({ paused }: { paused: boolean }) {
       // Mostly end to end along the capsule, sometimes a short jump across it.
       const across = Math.random() < 0.3;
       const a = across ? inside(0.15, 0.85) : inside(0, 0.22);
-      const b = across ? [a[0] + (Math.random() - 0.5) * w * 0.35, Math.random() < 0.5 ? h * 0.06 : h * 0.94] as Point : inside(0.78, 1);
-      const trunk = jag(a, b, Math.hypot(b[0] - a[0], b[1] - a[1]) * 0.42);
-      const forks: Point[][] = [];
-      const count = 2 + Math.floor(Math.random() * 4);
+      const b: Point = across ? [a[0] + (Math.random() - 0.5) * w * 0.35, Math.random() < 0.5 ? h * 0.06 : h * 0.94] : inside(0.78, 1);
+      const line = jag(a, b, Math.hypot(b[0] - a[0], b[1] - a[1]) * 0.42);
+      const trunk = new Path2D(),
+        forks = new Path2D();
+      addLine(trunk, line);
+      const count = 2 + Math.floor(Math.random() * 3);
       for (let i = 0; i < count; i++) {
-        const start = trunk[4 + Math.floor(Math.random() * (trunk.length - 8))];
+        const start = line[4 + Math.floor(Math.random() * (line.length - 8))];
         const angle = Math.atan2(b[1] - a[1], b[0] - a[0]) + (Math.random() < 0.5 ? -1 : 1) * (0.35 + Math.random() * 0.7);
         const length = (0.12 + Math.random() * 0.28) * w;
-        const end: Point = [start[0] + Math.cos(angle) * length, start[1] + Math.sin(angle) * length];
-        const fork = jag(start, end, length * 0.5, 5);
-        forks.push(fork);
+        const fork = jag(start, [start[0] + Math.cos(angle) * length, start[1] + Math.sin(angle) * length], length * 0.5, 5);
+        addLine(forks, fork);
         // Forks fork again, smaller.
         if (Math.random() < 0.6) {
           const s2 = fork[Math.floor(fork.length / 2)];
           const a2 = angle + (Math.random() - 0.5) * 1.4;
           const l2 = length * 0.45;
-          forks.push(jag(s2, [s2[0] + Math.cos(a2) * l2, s2[1] + Math.sin(a2) * l2], l2 * 0.5, 4));
+          addLine(forks, jag(s2, [s2[0] + Math.cos(a2) * l2, s2[1] + Math.sin(a2) * l2], l2 * 0.5, 4));
         }
       }
-      bolts.push({ trunk, forks, born: now, life: 110 + Math.random() * 230, width: 0.8 + Math.random() * 0.6 });
+      bolts.push({ trunk, forks, mid: line[Math.floor(line.length / 2)], born: now, life: 110 + Math.random() * 230, width: 0.8 + Math.random() * 0.6 });
     };
 
-    const path = (points: Point[]) => {
-      ctx.beginPath();
-      points.forEach(([px, py], i) => (i ? ctx.lineTo(px, py) : ctx.moveTo(px, py)));
+    // Faint electricity crawling over the whole capsule between the strikes, renewed a few times a second.
+    const renewPlasma = () => {
+      plasma = new Path2D();
+      for (let i = 0; i < 3; i++) {
+        const a = inside(), b = inside();
+        addLine(plasma, jag(a, b, Math.hypot(b[0] - a[0], b[1] - a[1]) * 0.5, 5));
+      }
     };
-    // Three passes per line: a wide blue glow, a cyan body and a white-hot core.
-    const glowLine = (points: Point[], alpha: number, width: number) => {
-      path(points);
-      ctx.shadowColor = "#0a6bff";
-      ctx.shadowBlur = 26 * scale;
-      ctx.strokeStyle = `rgba(20, 110, 255, ${0.45 * alpha})`;
-      ctx.lineWidth = 9 * width * scale;
-      ctx.stroke();
-      ctx.shadowColor = "#3fd0ff";
-      ctx.shadowBlur = 10 * scale;
-      ctx.strokeStyle = `rgba(70, 200, 255, ${0.85 * alpha})`;
-      ctx.lineWidth = 3.2 * width * scale;
-      ctx.stroke();
-      ctx.shadowColor = "#ffffff";
-      ctx.shadowBlur = 4 * scale;
-      ctx.strokeStyle = `rgba(240, 252, 255, ${alpha})`;
-      ctx.lineWidth = 1.2 * width * scale;
-      ctx.stroke();
+
+    const stroke = (target: CanvasRenderingContext2D, path: Path2D, color: string, width: number) => {
+      target.strokeStyle = color;
+      target.lineWidth = width;
+      target.stroke(path);
     };
 
     const render = (now: number) => {
       ctx.clearRect(0, 0, w, h);
-      ctx.globalCompositeOperation = "lighter";
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      // Faint plasma that crawls over the whole capsule between the strikes.
-      for (let i = 0; i < 4; i++) {
-        const a = inside(), b = inside();
-        path(jag(a, b, Math.hypot(b[0] - a[0], b[1] - a[1]) * 0.5, 5));
-        ctx.shadowColor = "#1f8bff";
-        ctx.shadowBlur = 12 * scale;
-        ctx.strokeStyle = "rgba(90, 190, 255, 0.22)";
-        ctx.lineWidth = 1.1 * scale;
-        ctx.stroke();
-      }
+      gctx.clearRect(0, 0, w, h);
+      ctx.globalCompositeOperation = gctx.globalCompositeOperation = "lighter";
+      ctx.lineCap = gctx.lineCap = "round";
+      ctx.lineJoin = gctx.lineJoin = "round";
+      stroke(gctx, plasma, "rgba(40, 140, 255, 0.3)", 5 * scale);
       for (const bolt of bolts) {
         const t = (now - bolt.born) / bolt.life;
         // Bright at once, then flickering out (a re-strike now and then).
         const flicker = Math.random() < 0.12 ? 1 : 0.55 + Math.random() * 0.45;
         const alpha = Math.max(0, (1 - t) ** 0.6) * flicker;
-        const mid = bolt.trunk[Math.floor(bolt.trunk.length / 2)];
-        // The flash lights the inside of the capsule round the strike.
-        const flash = ctx.createRadialGradient(mid[0], mid[1], 0, mid[0], mid[1], w * 0.55);
-        flash.addColorStop(0, `rgba(60, 150, 255, ${0.32 * alpha})`);
-        flash.addColorStop(1, "rgba(60, 150, 255, 0)");
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = flash;
-        ctx.fillRect(0, 0, w, h);
-        bolt.forks.forEach((fork) => glowLine(fork, alpha * 0.7, bolt.width * 0.55));
-        glowLine(bolt.trunk, alpha, bolt.width);
+        const r = w * 0.55;
+        ctx.globalAlpha = 0.32 * alpha;
+        ctx.drawImage(flash, bolt.mid[0] - r, bolt.mid[1] - r, r * 2, r * 2);
+        ctx.globalAlpha = 1;
+        stroke(gctx, bolt.forks, `rgba(20, 110, 255, ${0.55 * alpha})`, 7 * bolt.width * scale);
+        stroke(gctx, bolt.trunk, `rgba(30, 125, 255, ${0.85 * alpha})`, 13 * bolt.width * scale);
       }
-      ctx.globalCompositeOperation = "source-over";
-      ctx.shadowBlur = 0;
+      // The soft glow: the quarter-size layer stretched over the capsule with one light blur pass.
+      ctx.filter = `blur(${3 * scale}px)`;
+      ctx.drawImage(glow, 0, 0, w, h);
+      ctx.drawImage(glow, 0, 0, w, h);
+      ctx.filter = "none";
+      stroke(ctx, plasma, "rgba(110, 200, 255, 0.28)", 1.1 * scale);
+      for (const bolt of bolts) {
+        const t = (now - bolt.born) / bolt.life;
+        const alpha = Math.max(0, (1 - t) ** 0.6) * (0.6 + Math.random() * 0.4);
+        stroke(ctx, bolt.forks, `rgba(70, 200, 255, ${0.6 * alpha})`, 1.8 * bolt.width * scale);
+        stroke(ctx, bolt.forks, `rgba(240, 252, 255, ${0.7 * alpha})`, 0.7 * bolt.width * scale);
+        stroke(ctx, bolt.trunk, `rgba(70, 200, 255, ${0.85 * alpha})`, 3.4 * bolt.width * scale);
+        stroke(ctx, bolt.trunk, `rgba(240, 252, 255, ${alpha})`, 1.3 * bolt.width * scale);
+      }
+      ctx.globalCompositeOperation = gctx.globalCompositeOperation = "source-over";
     };
 
     const move = (e: PointerEvent) => {
@@ -197,20 +218,28 @@ export default function Lightning({ paused }: { paused: boolean }) {
         if (!bolts.length) {
           strike(now);
           strike(now);
+          renewPlasma();
           bolts.forEach((b) => (b.life = Infinity));
           render(now);
         }
         return;
       }
+      // The capsule itself moves every frame; only the electricity is held to 30 fps.
       x += (tx - x) * (1 - Math.exp(-dt / 180));
       y += (ty - y) * (1 - Math.exp(-dt / 180));
       el.style.transform = `translate3d(${x * 28}px,${y * 24 + Math.sin(now / 900) * 7}px,0) rotateX(${-y * 6}deg) rotateY(${x * 7}deg)`;
       el.style.setProperty("--inner-x", `${x * 11}px`);
       el.style.setProperty("--inner-y", `${y * 9}px`);
+      if (now - lastDraw < FRAME) return;
+      lastDraw = now;
       if (now >= nextStrike) {
         strike(now);
         if (Math.random() < 0.35) strike(now);
         nextStrike = now + 60 + Math.random() * 190;
+      }
+      if (now >= nextPlasma) {
+        renewPlasma();
+        nextPlasma = now + 90;
       }
       bolts = bolts.filter((b) => now - b.born < b.life);
       render(now);

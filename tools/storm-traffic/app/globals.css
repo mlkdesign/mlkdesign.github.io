@@ -516,12 +516,12 @@ select:focus-visible,
   transform: translate(var(--inner-x, 0px), var(--inner-y, 0px)) rotate(-20deg);
   opacity: 0.83;
 }
+/* Drawn additively on a clear canvas, so plain blending looks the same as "screen" and costs less. */
 .capsule-inside canvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  mix-blend-mode: screen;
 }
 .capsule-gloss {
   position: absolute;
