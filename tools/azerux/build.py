@@ -278,6 +278,7 @@ def footer(r):
 {touch_card(r, form_id="consult-form", modal=True)}
   </dialog>
   <script src="{r}main.js?v={VERSION}" defer></script>
+  <script type="module" src="{r}logo3d.js?v=20261030-1"></script>
   </body>
 </html>
 '''
@@ -346,7 +347,7 @@ def benefits(r, items, title='Benefits'):
         <h2 class="title">{e(title)}</h2>
         <div class="benefits__grid">
           <div class="benefits__col">{left}</div>
-          <img class="benefits__logo" src="{r}assets/logo-3d.webp" alt="" width="771" height="800" loading="lazy" />
+          <div class="benefits__logo logo3d" data-logo3d><img src="{r}assets/logo-3d.webp" alt="" width="771" height="800" loading="lazy" /></div>
           <div class="benefits__col">{right}</div>
         </div>
       </div>
@@ -417,7 +418,7 @@ def build_home():
       <img class="hero__word" src="assets/hero-wordmark.svg" alt="" />
       <img class="hero__blob hero__blob--1" src="assets/logo-3d.webp" alt="" />
       <img class="hero__blob hero__blob--2" src="assets/logo-3d.webp" alt="" />
-      <img class="hero__logo" src="assets/logo-3d.webp" alt="" width="821" height="871" fetchpriority="high" />
+      <div class="hero__logo logo3d" data-logo3d><img src="assets/logo-3d.webp" alt="" width="821" height="871" fetchpriority="high" /></div>
       <div class="wrap hero__inner">
         <div class="slider-nav hero__nav" aria-hidden="true"><img src="assets/arrow-left.svg" alt="" width="24" height="24" /><span><i></i></span><img src="assets/arrow-right.svg" alt="" width="24" height="24" /></div>
         <p class="hero__tagline">Ensuring consistent on-line avaibility to prevent customer loss</p>
