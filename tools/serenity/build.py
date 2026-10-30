@@ -85,9 +85,9 @@ def map_dots(key, r):
     """Country dots over a map image: each grows into a name pill on hover/focus and links to the country page."""
     names = {slug: name for column in COUNTRIES for slug, name, _ in column}
     dots = []
-    for dot in MAP_DOTS[key]:
+    for i, dot in enumerate(MAP_DOTS[key]):
         slug = DOT_SLUGS[dot['ru']]
-        dots.append(f'<a class="map-dot" href="{r}countries/{slug}.html" style="left: {dot["x"]}%; top: {dot["y"]}%">'
+        dots.append(f'<a class="map-dot" href="{r}countries/{slug}.html" style="left: {dot["x"]}%; top: {dot["y"]}%; --i: {i}">'
                     f'<span>{e(names[slug])}</span></a>')
     return '<nav class="map-dots" aria-label="Jurisdictions on the map">' + ''.join(dots) + '</nav>'
 
@@ -107,7 +107,7 @@ def head(r, title, description):
     <title>{e(title)}</title>
     <meta name="description" content="{e(description)}" />
     <link rel="preload" href="{r}assets/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="{r}style.css?v=20261030-5" />
+    <link rel="stylesheet" href="{r}style.css?v=20261030-6" />
     <script>document.documentElement.classList.add('js');</script>
   </head>
   <body>
@@ -165,7 +165,7 @@ def footer(r):
     <dialog class="modal" id="consult" aria-labelledby="consult-title">
       <button class="modal__close" type="button" aria-label="Close" data-modal-close>&times;</button>
 {request_form(r, '<span id="consult-title">Get a consultation from our specialist <em>within 24 hours</em></span>', form_id='consult-form')}    </dialog>
-    <script src="{r}main.js?v=20261030-5" defer></script>
+    <script src="{r}main.js?v=20261030-6" defer></script>
   </body>
 </html>
 '''

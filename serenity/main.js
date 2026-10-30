@@ -81,7 +81,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 
 // Standard reveal: blocks fade up as they enter the viewport; siblings are staggered.
 const revealTargets = [
-  '.display', '.title-48', '.title-40', '.home-hero__text > *', '.about__card', '.about__mark', '.advantages',
+  '.display', '.title-48', '.title-40', '.about__card', '.about__mark', '.advantages',
   '.advantage', '.offer-row', '.turnkey__pill', '.turnkey__title', 'main .request', '.partners__logos img', '.article-card',
   '.registration > *', '.service-menu', '.service-card', '.service-map', '.service-closing', '.step', '.landing-copy > *',
   '.company', '.companies__more', '.article > *', '.legal-form', '.country-note', '.tax-row', '.country-band__grid > *',
