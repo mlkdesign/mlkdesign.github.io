@@ -156,6 +156,14 @@ a.case-back:focus-visible {
   animation-delay: var(--case-copy-delay);
 }
 
+/* Once the copy is in, drop the filled animation: a transform held on .case-actions keeps the CTA row on
+   its own GPU layer, and Chrome could then stop clipping the visit link's rolling label (both lines at once). */
+.case-info__copy.has-sequence.is-sequence-done > :is(.case-kicker, .case-title, .case-description, .case-meta, .case-actions) {
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+
 @keyframes case-copy-block-in {
   from {
     opacity: 0;
