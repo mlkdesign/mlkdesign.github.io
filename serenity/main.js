@@ -2,6 +2,10 @@
 const header = document.querySelector('.header');
 const burger = document.querySelector('.burger');
 
+const updateHeader = () => header?.classList.toggle('is-scrolled', window.scrollY > 10);
+window.addEventListener('scroll', updateHeader, { passive: true });
+updateHeader();
+
 burger?.addEventListener('click', () => {
   const open = header.classList.toggle('is-open');
   burger.setAttribute('aria-expanded', String(open));
