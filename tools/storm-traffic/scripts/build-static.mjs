@@ -72,8 +72,8 @@ const pages = [
   {
     file: "index.html",
     referral: false,
-    title: "STORM TRAFFIC — команда медиабаинга",
-    description: "STORM TRAFFIC — сильная команда медиабаинга. Качественный трафик в Gambling, Finance и Crypto, вакансии и реферальная программа.",
+    title: "STORM TRAFFIC — media buying team",
+    description: "STORM TRAFFIC is a strong media buying team: quality traffic in Gambling, Finance and Crypto, open vacancies and a referral program.",
   },
   {
     file: "referral.html",
@@ -85,7 +85,7 @@ const pages = [
 for (const page of pages) {
   const body = relativize(render(page.referral));
   const html = `<!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

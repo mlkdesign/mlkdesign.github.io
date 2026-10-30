@@ -5,13 +5,13 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     "https://storm-traffic-studio.milka19051995.chatgpt.site",
   ),
-  title: "STORM TRAFFIC — команда медиабаинга",
+  title: "STORM TRAFFIC — media buying team",
   description:
-    "STORM TRAFFIC — сильная команда медиабаинга. Качественный трафик в Gambling, Finance и Crypto, вакансии и реферальная программа.",
+    "STORM TRAFFIC is a strong media buying team: quality traffic in Gambling, Finance and Crypto, open vacancies and a referral program.",
   alternates: { canonical: "/" },
   openGraph: {
     title: "STORM TRAFFIC",
-    description: "Сильная команда. Качественный трафик. Присоединяйся к нам.",
+    description: "A strong team. Quality traffic. Join us.",
     type: "website",
     images: [
       { url: "/assets/74-50627_imgImg47771.webp", width: 1600, height: 1600 },
@@ -26,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ru">
+    <html lang="en">
       <body>
         {children}
         <script

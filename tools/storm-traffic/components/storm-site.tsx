@@ -101,7 +101,7 @@ export default function StormSite({
   referral?: boolean;
 }) {
   const [mounted, setMounted] = useState(false);
-  const [lang, setLang] = useState<Lang>("ru"),
+  const [lang, setLang] = useState<Lang>("en"),
     [paused, setPaused] = useState(false),
     [modal, setModal] = useState<"details" | "cv" | "privacy" | null>(null),
     [selected, setSelected] = useState(""),
@@ -140,14 +140,6 @@ export default function StormSite({
       { threshold: 0.09 },
     );
     root.querySelectorAll(".reveal").forEach((e) => reveal.observe(e));
-    const benefits = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((e) => {
-          e.target.classList.toggle("is-active", e.isIntersecting);
-        }),
-      { rootMargin: "-38% 0px -38% 0px" },
-    );
-    root.querySelectorAll(".benefit-row").forEach((e) => benefits.observe(e));
     const sections = new IntersectionObserver(
       (entries) =>
         entries.forEach((e) => {
@@ -158,33 +150,33 @@ export default function StormSite({
     root
       .querySelectorAll("section[id],footer[id]")
       .forEach((e) => sections.observe(e));
+    // Money follows the cursor: --mx/--my run from -1 to 1 across the window and ease toward the pointer.
     const m = matchMedia("(prefers-reduced-motion: reduce)");
+    const fine = matchMedia("(hover: hover) and (pointer: fine)");
+    const aim = { x: 0, y: 0 },
+      now = { x: 0, y: 0 };
     let raf = 0;
-    const scroll = () => {
-      if (raf || paused || m.matches) return;
-      raf = requestAnimationFrame(() => {
-        root.querySelectorAll<HTMLElement>("[data-parallax]").forEach((el) => {
-          const rect = el.parentElement!.getBoundingClientRect();
-          if (rect.bottom > 0 && rect.top < innerHeight) {
-            const delta =
-              (innerHeight / 2 - rect.top - rect.height / 2) *
-              Number(el.dataset.parallax);
-            el.style.setProperty(
-              "--parallax",
-              `${Math.max(-55, Math.min(55, delta))}px`,
-            );
-          }
-        });
-        raf = 0;
-      });
+    const tick = () => {
+      now.x += (aim.x - now.x) * 0.08;
+      now.y += (aim.y - now.y) * 0.08;
+      root.style.setProperty("--mx", now.x.toFixed(4));
+      root.style.setProperty("--my", now.y.toFixed(4));
+      raf =
+        Math.abs(aim.x - now.x) + Math.abs(aim.y - now.y) > 0.001
+          ? requestAnimationFrame(tick)
+          : 0;
     };
-    addEventListener("scroll", scroll, { passive: true });
-    scroll();
+    const pointer = (e: PointerEvent) => {
+      if (paused || m.matches || !fine.matches) return;
+      aim.x = (e.clientX / innerWidth) * 2 - 1;
+      aim.y = (e.clientY / innerHeight) * 2 - 1;
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+    addEventListener("pointermove", pointer, { passive: true });
     return () => {
       reveal.disconnect();
-      benefits.disconnect();
       sections.disconnect();
-      removeEventListener("scroll", scroll);
+      removeEventListener("pointermove", pointer);
       cancelAnimationFrame(raf);
     };
   }, [paused, referral]);
@@ -272,14 +264,24 @@ export default function StormSite({
     t.nav.map((label, i) => (
       <a
         key={hrefs[i]}
-        className={active === hrefs[i].slice(1) ? "active" : ""}
-        aria-current={active === hrefs[i].slice(1) ? "location" : undefined}
+        className={!referral && active === hrefs[i].slice(1) ? "active" : ""}
+        aria-current={!referral && active === hrefs[i].slice(1) ? "location" : undefined}
         href={(referral ? "/" : "") + hrefs[i]}
         onClick={() => setMenu(false)}
       >
         {label}
       </a>
-    ));
+    )).concat(
+      <a
+        key="/referral"
+        className={referral ? "active" : ""}
+        aria-current={referral ? "page" : undefined}
+        href="/referral"
+        onClick={() => setMenu(false)}
+      >
+        {t.referral}
+      </a>,
+    );
   const language = () => (
     <select
       className="language"
@@ -351,7 +353,7 @@ export default function StormSite({
   return (
     <div
       ref={siteRoot}
-      className={`site ${paused ? "motion-paused" : ""} lang-${lang}`}
+      className={`site ${paused ? "motion-paused" : ""} ${mounted ? "is-mounted" : ""} lang-${lang}`}
     >
       <a className="skip-link" href="#main">
         {t.skip}
@@ -401,12 +403,14 @@ export default function StormSite({
               <Art
                 id="420:2760"
                 name="imgImg47781"
-                className="ref-money money-left"
+                className="money ref-money money-left"
+                style={{ "--depth": 1, "--rot": "-20deg" } as React.CSSProperties}
               />
               <Art
                 id="420:2760"
                 name="imgImg47781"
-                className="ref-money money-right"
+                className="money ref-money money-right"
+                style={{ "--depth": 1.4, "--rot": "20deg" } as React.CSSProperties}
               />
               <div className="hero-strips">
                 <p>{emphasis(t.strap)}</p>
@@ -470,7 +474,8 @@ export default function StormSite({
                 <Art
                   id="420:3126"
                   name="imgImg47991"
-                  className="recommend-bill"
+                  className="money recommend-bill"
+                  style={{ "--depth": 1 } as React.CSSProperties}
                 />
               </div>
               <div className="recommend-fields">
@@ -506,7 +511,7 @@ export default function StormSite({
                 </span>
                 <span className="traffic">TRAFFIC</span>
               </h1>
-              <div className="hero-contact">
+              <div className="hero-contact reveal">
                 <Art id="hero" name="imgBarcode" loading="eager" />
                 <p>{emphasis(t.hero)}</p>
                 {contactButton()}
@@ -542,7 +547,13 @@ export default function StormSite({
                     <div className="stat-caption">
                       <strong>
                         {["30", "70", "5", "65"][i]}
-                        {i === 0 && <em>K</em>}
+                        {i === 0 && (
+                          <img
+                            className="stat-k"
+                            src={asset("74:50624", "imgK")}
+                            alt="K"
+                          />
+                        )}
                       </strong>
                       <span>{t.stats[i]}</span>
                     </div>
@@ -564,18 +575,17 @@ export default function StormSite({
                         : "Иллюстрированный персонаж Storm Traffic"
                   }
                 />
-                {Array.from({ length: 6 }, (_, i) => (
-                  <Art
+              </div>
+              {/* The bills of the design's "fly money" layer, each in its Figma place, angle and blur; they follow the cursor. */}
+              <div className="fly-money" aria-hidden="true">
+                {[0.5, 0.8, 1, 0.6, 0.9, 1.6].map((depth, i) => (
+                  <img
                     key={i}
-                    id="74:50627"
-                    name="imgImg47781"
-                    className={`flying-bill bill-${i}`}
-                    style={
-                      {
-                        "--bill-rotate": `${[-20, 15, 45, -15, 20, 35][i]}deg`,
-                      } as React.CSSProperties
-                    }
-                    {...{ "data-parallax": String((i % 2 ? 1 : -1) * 0.08) }}
+                    src={`/assets/bill-${i}.webp`}
+                    className={`money flying-bill bill-${i}`}
+                    alt=""
+                    loading="lazy"
+                    style={{ "--depth": depth } as React.CSSProperties}
                   />
                 ))}
               </div>
@@ -620,14 +630,16 @@ export default function StormSite({
               <Art
                 id="74:50638"
                 name="imgImg47991"
-                className="buyers-bill one"
+                className="money buyers-bill one"
+                style={{ "--depth": 1.2 } as React.CSSProperties}
               />
               <Art
                 id="74:50638"
                 name="imgImg47991"
-                className="buyers-bill two"
+                className="money buyers-bill two"
+                style={{ "--depth": 0.7 } as React.CSSProperties}
               />
-              <div className="buyers-notes">
+              <div className="buyers-notes reveal">
                 {t.notes.map((note, i) => (
                   <p key={note} className={`note-${i}`}>
                     <b aria-hidden="true">×</b>
@@ -635,7 +647,7 @@ export default function StormSite({
                   </p>
                 ))}
               </div>
-              <div className="buyers-banner">
+              <div className="buyers-banner reveal">
                 <p>{t.joinPitch}</p>
                 {contactButton("light-button")}
                 <Art id="74:50638" name="imgFrame9" />
@@ -676,7 +688,7 @@ export default function StormSite({
             </section>
           </>
         )}
-        <section className="intrigue reveal" aria-label={t.intrigue}>
+        <section className="intrigue" aria-label={t.intrigue}>
           {lang === "ru" ? (
             <>
               <Art id="74:50702" name="imgText" className="intrigue-top" />
@@ -696,7 +708,7 @@ export default function StormSite({
           )}
         </section>
         <section className="partners section-pad" id="partners">
-          <div className="partners-heading">
+          <div className="partners-heading reveal">
             <h2>
               S<em>TOR</em>M TRAFFIC
             </h2>
@@ -774,7 +786,6 @@ export default function StormSite({
         <div className="footer-layout">
           <nav aria-label={t.nav[5]}>
             {nav()}
-            <a href="/referral">{t.referral}</a>
             <button onClick={() => open("privacy")}>{t.privacy}</button>
           </nav>
           <div className="footer-social">

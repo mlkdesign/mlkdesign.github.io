@@ -140,7 +140,7 @@ select:focus-visible,
   z-index: 1;
 }
 .header {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
@@ -153,8 +153,22 @@ select:focus-visible,
   align-items: center;
   justify-content: space-between;
   padding: 1.6% 3.125%;
-  background: linear-gradient(var(--bg), transparent);
   gap: 24px;
+}
+/* Under the fixed menu the page fades into the background colour, bottom to top. */
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 -60%;
+  z-index: -1;
+  background: linear-gradient(
+    to top,
+    rgba(21, 21, 22, 0) 0%,
+    rgba(21, 21, 22, 0.55) 35%,
+    rgba(21, 21, 22, 0.92) 70%,
+    var(--bg) 100%
+  );
+  pointer-events: none;
 }
 .logo-art {
   display: block;
@@ -509,24 +523,6 @@ select:focus-visible,
   height: 100%;
   mix-blend-mode: screen;
 }
-.electric-texture {
-  position: absolute;
-  max-width: none;
-  width: 140%;
-  mix-blend-mode: screen;
-  opacity: 0.75;
-  transform: translate(calc(var(--inner-x, 0px) * -0.6), var(--inner-y, 0px));
-}
-.texture-a {
-  left: -20%;
-  top: 15%;
-  animation: electrical-shift 3.1s ease-in-out infinite alternate;
-}
-.texture-b {
-  left: -10%;
-  top: -25%;
-  animation: electrical-shift 4.3s ease-in-out infinite alternate-reverse;
-}
 .capsule-gloss {
   position: absolute;
   inset: 0;
@@ -609,6 +605,19 @@ select:focus-visible,
   font-size: clamp(42px, 6.67vw, 170px);
   line-height: 1;
   letter-spacing: -0.04em;
+}
+/* The hand-drawn blue K of the design crosses the last digit, as in Figma. */
+.stat-caption strong:has(.stat-k) {
+  position: relative;
+  padding-right: 0.18em;
+}
+.stat-k {
+  position: absolute;
+  right: -0.06em;
+  bottom: -0.04em;
+  height: 0.98em;
+  width: auto;
+  max-width: none;
 }
 .stat-caption em {
   color: var(--blue);
@@ -703,39 +712,33 @@ select:focus-visible,
 .we-copy > .button {
   width: 75%;
 }
+/* Money follows the cursor (--mx/--my from storm-site.tsx), deeper bills further. --rot keeps a bill's own angle. */
+.money {
+  transform: translate3d(
+      calc(var(--mx, 0) * var(--depth, 1) * 26px),
+      calc(var(--my, 0) * var(--depth, 1) * 20px),
+      0
+    )
+    rotate(var(--rot, 0deg));
+  will-change: transform;
+}
+/* The design's fly-money layer over the WE ARE block: positions from the 1920 x 919 frame. */
+.fly-money {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
 .flying-bill {
   position: absolute;
-  width: 20%;
   height: auto;
-  transform: translateY(var(--parallax, 0px)) rotate(var(--bill-rotate, 0deg));
-  will-change: transform;
-  z-index: 2;
 }
-.bill-0 {
-  left: 0;
-  top: 10%;
-}
-.bill-1 {
-  left: 67%;
-  top: 1%;
-}
-.bill-2 {
-  left: 82%;
-  top: 68%;
-}
-.bill-3 {
-  left: -7%;
-  top: 66%;
-}
-.bill-4 {
-  left: 42%;
-  top: 84%;
-}
-.bill-5 {
-  left: 170%;
-  top: 12%;
-  width: 28%;
-}
+.bill-0 { left: 7.92%; top: 11.3%; width: 4.64%; }
+.bill-1 { left: 38.4%; top: 4.35%; width: 7.76%; }
+.bill-2 { left: 33.3%; top: 45%; width: 9.27%; }
+.bill-3 { left: -0.57%; top: 62.1%; width: 7.66%; }
+.bill-4 { left: 41.6%; top: 80.5%; width: 9.27%; }
+.bill-5 { left: 77.4%; top: 0.4%; width: 21.9%; }
 .benefits {
   padding-top: 4%;
   padding-bottom: 3%;
@@ -991,6 +994,11 @@ select:focus-visible,
   color: var(--bg);
   padding: 2.083vw;
   min-width: 0;
+  transition: scale 0.45s var(--ease);
+}
+/* Hover: the card grows a little, the cross behind it grows more and turns 10° clockwise. */
+.vacancy-card:hover {
+  scale: 1.025;
 }
 .job-tags {
   display: flex;
@@ -1088,9 +1096,10 @@ select:focus-visible,
   transform-origin: 50% 0;
   opacity: 0.9;
 }
+/* Partners and footer are pure white, the colour of the INTRIGUING letters, so the picture runs into them without a seam. */
 .partners {
   position: relative;
-  background: var(--fg);
+  background: #fff;
   color: var(--bg);
   padding-top: 1.5%;
   padding-bottom: 3%;
@@ -1144,7 +1153,7 @@ select:focus-visible,
   animation-play-state: paused;
 }
 .footer {
-  background: var(--fg);
+  background: #fff;
   color: var(--bg);
   position: relative;
   min-height: 23.125vw;
@@ -1318,12 +1327,10 @@ select:focus-visible,
 .money-left {
   left: 6%;
   top: 45%;
-  transform: rotate(-20deg);
 }
 .money-right {
   right: 4%;
   top: 29%;
-  transform: rotate(20deg);
   animation-delay: -3s;
 }
 .referral-explainer {
@@ -1436,6 +1443,13 @@ select:focus-visible,
 .featured .card-x {
   opacity: 0.3;
 }
+.card-x {
+  transition: scale 0.6s var(--ease), rotate 0.6s var(--ease);
+}
+.vacancy-card:hover .card-x {
+  scale: 1.12;
+  rotate: 10deg;
+}
 .bonus {
   grid-area: bonus;
   display: flex;
@@ -1488,9 +1502,15 @@ select:focus-visible,
   border-bottom: 1px solid #aaa5;
   padding: 1.5% 2%;
 }
-.steps li:nth-child(2) {
+/* A step lights up only under the cursor (or keyboard focus). */
+.steps li {
+  transition: background 0.3s, color 0.3s, transform 0.3s;
+}
+.steps li:hover,
+.steps li:focus-within {
   background: var(--fg);
   color: var(--bg);
+  transform: translateX(10px);
 }
 .step-number {
   font: 500 clamp(22px, 1.875vw, 48px) var(--display);
@@ -1947,15 +1967,17 @@ select:focus-visible,
   z-index: 0;
   pointer-events: none;
 }
-.reveal {
-  opacity: 1;
-  transform: none;
-}
+/* Blocks rise into place as they enter the screen (storm-site.tsx marks them is-visible).
+   Opacity and translate only, so the blocks' own transforms and hovers keep working. */
 @media (prefers-reduced-motion: no-preference) {
-  .reveal:not(.is-visible) {
-    animation: reveal-in 0.9s var(--ease) both;
-    animation-timeline: view();
-    animation-range: entry 0% entry 25%;
+  .is-mounted .reveal {
+    transition:
+      opacity 0.9s var(--ease),
+      translate 0.9s var(--ease);
+  }
+  .is-mounted .reveal:not(.is-visible) {
+    opacity: 0;
+    translate: 0 48px;
   }
 }
 @keyframes reveal-in {
@@ -2023,8 +2045,8 @@ select:focus-visible,
 .motion-paused * {
   animation-play-state: paused !important;
 }
-.motion-paused [data-parallax] {
-  transform: translateY(0) rotate(var(--bill-rotate, 0deg)) !important;
+.motion-paused .money {
+  transform: rotate(var(--rot, 0deg)) !important;
 }
 @media (min-width: 1921px) {
   .header {
@@ -2317,32 +2339,17 @@ select:focus-visible,
   .we-copy > .button {
     width: 100%;
   }
-  .flying-bill {
-    width: 22%;
+  /* Phones: the art sits on top, so the bills gather round it. */
+  .fly-money {
+    inset: 25px 0 auto;
+    height: 105vw;
   }
-  .bill-0 {
-    left: 0;
-    top: 12%;
-  }
-  .bill-1 {
-    left: 70%;
-    top: 0;
-  }
-  .bill-2 {
-    left: 77%;
-    top: 70%;
-  }
-  .bill-3 {
-    left: -5%;
-    top: 66%;
-  }
-  .bill-4 {
-    left: 45%;
-    top: 83%;
-  }
-  .bill-5 {
-    display: none;
-  }
+  .bill-0 { left: 4%; top: 8%; width: 10%; }
+  .bill-1 { left: 78%; top: 2%; width: 14%; }
+  .bill-2 { left: 70%; top: 52%; width: 17%; }
+  .bill-3 { left: -3%; top: 66%; width: 15%; }
+  .bill-4 { left: 40%; top: 84%; width: 17%; }
+  .bill-5 { display: none; }
   .benefits {
     padding-top: 15px;
     padding-bottom: 30px;
@@ -2969,8 +2976,8 @@ select:focus-visible,
     opacity: 1 !important;
     transform: none !important;
   }
-  .flying-bill {
-    transform: rotate(var(--bill-rotate, 0deg)) !important;
+  .money {
+    transform: rotate(var(--rot, 0deg)) !important;
   }
   .partner-track {
     animation: none !important;
@@ -2980,10 +2987,6 @@ select:focus-visible,
   }
 }
 
-.benefit-row.is-active {
-  background: var(--fg);
-  color: var(--bg);
-}
 .intrigue-localized {
   position: absolute;
   left: 0;
