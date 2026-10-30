@@ -28,12 +28,22 @@ if (track) {
   document.querySelector('.articles__prev')?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
   document.querySelector('.articles__next')?.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
 
+  const prev = document.querySelector('.articles__prev');
+  const next = document.querySelector('.articles__next');
+  const setArrow = (button, enabled) => {
+    if (!button) return;
+    button.classList.toggle('arrow-btn--active', enabled);
+    button.disabled = !enabled;
+  };
+
   const updateThumb = () => {
+    const max = track.scrollWidth - track.clientWidth;
+    setArrow(prev, track.scrollLeft > 1);
+    setArrow(next, track.scrollLeft < max - 1);
     if (!thumb) return;
     const bar = thumb.parentElement.clientWidth;
     // The design shows a fixed thumb of about 40% of the bar.
     const width = bar * 0.4;
-    const max = track.scrollWidth - track.clientWidth;
     const progress = max > 0 ? track.scrollLeft / max : 0;
     thumb.style.width = `${width}px`;
     thumb.style.transform = `translateX(${(bar - width) * progress}px)`;
