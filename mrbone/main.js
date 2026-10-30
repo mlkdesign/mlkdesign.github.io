@@ -28,7 +28,7 @@ if (!loader || root.classList.contains('is-loaded')) {
     icons[current].classList.remove('is-on');
     current = (current + 1) % icons.length;
     icons[current].classList.add('is-on');
-  }, 160);
+  }, 80);
   const finish = () => {
     clearInterval(timer);
     loader.remove();

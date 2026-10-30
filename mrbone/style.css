@@ -47,7 +47,6 @@ img.a { max-width: none; }
 /* The light images carry their brightness as transparency, so normal blending lightens like "screen" in every browser. */
 .light { z-index: 22; translate: 0 var(--lift, 0px); object-fit: fill; }
 .light--right { transform: scaleX(-1); }
-.light--left { filter: opacity(0.4); }
 .join-bg, .join-bg + .fade-top { z-index: 1; }
 .pug--mirror { z-index: 1; }
 .join-title, .fight, .tv, .links, .pug:not(.pug--mirror) { z-index: 2; }
@@ -68,7 +67,8 @@ img.a { max-width: none; }
 .fade-top { z-index: 27; background: linear-gradient(180deg, #040404, rgba(4, 4, 4, 0)); }
 .join-bg + .fade-top { z-index: 1; }
 .strip, .why, .culture, .why-sub, .lead, .lead + .copy, .cta--wide { z-index: 28; }
-.bone-rope { z-index: 30; }
+/* The bone rope sits outside .lower so it can pass over the menu; it follows the People lift itself. */
+.bone-rope { z-index: 45; translate: 0 var(--lift, 0px); }
 .header, .socials { z-index: 40; }
 
 /* Type ------------------------------------------------------------------- */
@@ -188,9 +188,10 @@ img.a { max-width: none; }
   font-size: max(11px, calc(16 * var(--u)));
   letter-spacing: calc(0.8 * var(--u));
   background: url('assets/btn-shape.svg') center / 100% 100% no-repeat;
-  transition: filter 0.2s, transform 0.2s;
+  transition: filter 0.2s, transform 0.2s, scale 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .cta--wide { padding-left: calc(52 * var(--u)); background-image: url('assets/btn-shape-wide.svg'); }
+.cta:hover, .cta:focus-visible { scale: 1.05; }
 .cta img { width: calc(30 * var(--u)); height: calc(30 * var(--u)); transition: rotate 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
 .cta:hover img, .cta:focus-visible img { rotate: 25deg; }
 .cta span { flex: 1; padding-right: calc(30 * var(--u)); text-align: center; white-space: nowrap; }
@@ -241,11 +242,7 @@ img.a { max-width: none; }
 /* Endless photo band: the row holds its photos twice and slides by half its width. */
 .strip__row { display: flex; width: max-content; animation: marquee 60s linear infinite; }
 @keyframes marquee { to { transform: translateX(-50%); } }
-.strip--b .strip__row { margin-left: calc(-1188 * var(--u)); }
 .strip__row > * { flex: none; width: calc(137 * var(--u)); height: calc(137 * var(--u)); object-fit: cover; }
-.strip__plus { position: relative; display: grid; place-items: center; border: 1px solid rgba(255, 255, 255, 0.3); }
-.strip__plus img:first-child { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.06; }
-.strip__plus img:last-child { position: relative; width: calc(23 * var(--u)); }
 .strip__cell { position: relative; }
 .strip__cell img { width: 100%; height: 100%; object-fit: cover; }
 .strip__cell::after {
@@ -349,23 +346,6 @@ img.a { max-width: none; }
   background: var(--bg);
   transition: transform 1.1s cubic-bezier(0.76, 0, 0.24, 1);
 }
-/* Film grain: a tiled noise texture that jumps a few pixels every frame. */
-.loader::before {
-  content: '';
-  position: absolute;
-  inset: -100px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.6 -0.62'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: 0.16;
-  animation: grain 0.6s steps(6) infinite;
-  pointer-events: none;
-}
-@keyframes grain {
-  0% { transform: translate(0, 0); }
-  20% { transform: translate(-37px, 21px); }
-  40% { transform: translate(24px, -43px); }
-  60% { transform: translate(-15px, 52px); }
-  80% { transform: translate(46px, 9px); }
-}
 .loader__icons { position: relative; width: 120px; height: 91px; }
 .loader__icons svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: var(--ink); visibility: hidden; }
 .loader__icons svg.is-on { visibility: visible; }
@@ -376,6 +356,17 @@ html.js:not(.is-loaded) { overflow: hidden; }
 .js.is-ready .stage { animation: stage-in 1.3s cubic-bezier(0.22, 1, 0.36, 1); }
 @keyframes stage-in { from { transform: translateY(14vh); } }
 .js:not(.is-ready) :is(.hero-title span, .hero-copy, .tag, .hero-script, .cta:first-of-type, .hero-bone) { animation-play-state: paused; }
+
+/* Noise ------------------------------------------------------------------ */
+/* Figma "Noise pattern": the texture tile with its mirrored copies at 20%, kept 1:1 (1280 × 685.33 px) at every width.
+   Its light specks are stored as transparency, so it lightens like "screen" and never dims the photos. */
+.noise {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: url('assets/noise.webp') 0 0 / 1280px 685.333px repeat;
+  pointer-events: none;
+}
 
 /* Entrance --------------------------------------------------------------- */
 .js .hero-title span, .js .hero-copy, .js .tag, .js .hero-script, .js .cta:first-of-type { animation: rise 1s cubic-bezier(0.22, 1, 0.36, 1) both; }
@@ -434,7 +425,7 @@ html.js:not(.is-loaded) { overflow: hidden; }
   body { font-size: 12px; }
   .stage { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 0 12px; width: 100%; height: auto; padding: 12px 12px 0; overflow: hidden; }
   .a { position: relative; left: auto; top: auto; width: 100%; height: auto; flex: 0 0 100%; }
-  .deco, .socials, .lore, .tag, .strip--b, .pug--mirror, .rope { display: none; }
+  .deco, .socials, .lore, .tag, .pug--mirror, .rope { display: none; }
   .lower, .bone-rope { display: contents; }
   .crowd, .astro { max-width: none; }
 
@@ -489,7 +480,7 @@ html.js:not(.is-loaded) { overflow: hidden; }
   .culture { height: auto; margin: 10px -12px 0; flex-basis: calc(100% + 24px); }
   .why-sub { text-align: center; margin-top: 10px; }
   .bone-white { width: 70%; height: auto; flex-basis: 70%; margin: 20px auto 0; transform: rotate(-21.65deg); }
-  .strip:not(.strip--b) { height: 90px; margin: 20px -12px 0; flex-basis: calc(100% + 24px); }
+  .strip { height: 90px; margin: 20px -12px 0; flex-basis: calc(100% + 24px); }
   .strip__row > * { width: 90px; height: 90px; }
   .join-title { margin-top: 70px; font-size: 44px; line-height: 46px; }
   .join-title span:first-child { font-size: 52px; line-height: 52px; }
