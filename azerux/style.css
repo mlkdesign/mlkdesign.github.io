@@ -210,7 +210,7 @@ b, strong { font-weight: 500; }
 .hero > img { position: absolute; pointer-events: none; user-select: none; max-width: none; }
 .hero__lines { left: calc(-458 * var(--u)); top: calc(-243 * var(--u)); width: calc(1394 * var(--u)); }
 .hero__word { left: 50%; top: calc(285 * var(--u)); width: calc(1601 * var(--u)); transform: translateX(-50%); filter: blur(22px); opacity: 0.9; }
-.hero__logo { left: calc(660 * var(--u)); top: calc(60 * var(--u)); width: calc(800 * var(--u)); transform: rotate(14deg); }
+.hero__logo { position: absolute; pointer-events: none; left: calc(660 * var(--u)); top: calc(60 * var(--u)); width: calc(800 * var(--u)); transform: rotate(14deg); }
 .hero__blob { width: calc(160 * var(--u)); filter: blur(6px); opacity: 0.9; }
 .hero__blob--1 { left: calc(411 * var(--u)); top: calc(260 * var(--u)); transform: rotate(-20deg); }
 .hero__blob--2 { left: calc(1398 * var(--u)); top: calc(693 * var(--u)); width: calc(150 * var(--u)); transform: rotate(35deg); }
@@ -458,6 +458,19 @@ b, strong { font-weight: 500; }
   rotate: 14deg;
   pointer-events: none;
 }
+/* The 3D mark (logo3d.js): the picture holds the box and stays as the fallback until the first frame is drawn.
+   The canvas overhangs the box so the tilted model is never cut off; the glow is a blue drop shadow. */
+.logo3d > img { display: block; width: 100%; height: auto; }
+.logo3d > canvas {
+  position: absolute;
+  left: -12%;
+  top: -12%;
+  width: 124%;
+  height: 124%;
+  pointer-events: none;
+  filter: drop-shadow(0 0 calc(36 * var(--u)) rgba(43, 119, 246, 0.4));
+}
+.logo3d.is-3d > img { visibility: hidden; }
 .benefit {
   display: flex;
   align-items: center;
@@ -1066,7 +1079,7 @@ b, strong { font-weight: 500; }
   .modal .touch .tags { top: auto; bottom: 70px; }
   .latest__grid { grid-template-columns: minmax(0, 1fr); }
   .benefits__grid { grid-template-columns: minmax(0, 1fr); gap: 10px; padding-top: 0; }
-  .benefits__logo { position: static; order: 3; width: min(420px, 80%); margin: 20px auto 0; translate: none; }
+  .benefits__logo { position: relative; left: auto; top: auto; order: 3; width: min(420px, 80%); margin: 20px auto 0; translate: none; }
   .benefit, .benefit--right { padding: 20px 24px; }
   .why-grid, .why-use__grid { grid-template-columns: minmax(0, 1fr); }
   .why-use__label:nth-of-type(2) { order: 3; }
