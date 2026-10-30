@@ -302,6 +302,9 @@ const CASE_TRANSLATIONS = {
     "offerDescription": "My CV covers experience, skills and selected work.",
     "startProject": "view my CV",
     "visitSite": "visit this site",
+    "relatedTitle": "You may also like",
+    "relatedIntro": "More projects from the portfolio, one click away.",
+    "worksCta": "view my CV",
     "formName": "name",
     "formEmail": "email",
     "formDetails": "project details",
@@ -332,6 +335,9 @@ const CASE_TRANSLATIONS = {
     "offerDescription": "Давайте створимо для вас такий самий сильний продукт.",
     "startProject": "працюймо разом",
     "visitSite": "переглянути сайт",
+    "relatedTitle": "Вам також може сподобатися",
+    "relatedIntro": "Інші проєкти з портфоліо — в один клік.",
+    "worksCta": "наступним може бути ваш проєкт",
     "formName": "ім’я",
     "formEmail": "електронна пошта",
     "formDetails": "деталі проєкту",
@@ -781,6 +787,48 @@ if (mobileMenuModal && mobileMenuToggle) {
   mqMobile.addEventListener('change', (event) => {
     if (!event.matches) closeMobileMenu({ immediate: true, restoreFocus: false });
   });
+}
+
+// "You may also like": every case except the open one, scrolled sideways with the arrows like Selected works.
+const relatedWorks = document.querySelector('.works--related');
+if (relatedWorks) {
+  relatedWorks.querySelector(`.work-card[data-case-key="${activeProjectKey}"]`)?.remove();
+  const relatedViewport = relatedWorks.querySelector('.works-viewport');
+  const relatedTrack = relatedWorks.querySelector('.works-track');
+  const relatedTitle = relatedWorks.querySelector('.works-title');
+  const relatedInner = relatedWorks.querySelector('.works-inner');
+  const relatedCards = [...relatedWorks.querySelectorAll('.work-card')];
+  const relatedPrev = relatedWorks.querySelector('.works-arrow--prev');
+  const relatedNext = relatedWorks.querySelector('.works-arrow--next');
+  const relatedStep = () => relatedCards[0].getBoundingClientRect().width + (Number.parseFloat(getComputedStyle(relatedTrack).columnGap) || 0);
+  const renderRelatedControls = () => {
+    const maxScroll = Math.max(0, relatedViewport.scrollWidth - relatedViewport.clientWidth);
+    relatedPrev.disabled = relatedViewport.scrollLeft <= 0.5;
+    relatedNext.disabled = relatedViewport.scrollLeft >= maxScroll - 0.5;
+  };
+  // The first card lines up with the title on desktop and with the page edge on phones.
+  const measureRelated = () => {
+    const start = mqMobile.matches
+      ? Number.parseFloat(getComputedStyle(relatedInner).paddingLeft) || 0
+      : relatedTitle.getBoundingClientRect().left;
+    relatedTrack.style.setProperty('--works-start-offset', `${start}px`);
+    renderRelatedControls();
+  };
+  const behavior = prefersReducedMotion ? 'auto' : 'smooth';
+  relatedPrev.addEventListener('click', () => relatedViewport.scrollBy({ left: -relatedStep(), behavior }));
+  relatedNext.addEventListener('click', () => relatedViewport.scrollBy({ left: relatedStep(), behavior }));
+  relatedViewport.addEventListener('scroll', renderRelatedControls, { passive: true });
+  window.addEventListener('resize', measureRelated);
+  measureRelated();
+  if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+    relatedCards.forEach((card) => card.classList.add('is-in'));
+  } else {
+    new IntersectionObserver(([entry], observer) => {
+      if (!entry.isIntersecting) return;
+      relatedCards.forEach((card) => card.classList.add('is-in'));
+      observer.disconnect();
+    }, { threshold: 0.2 }).observe(relatedWorks);
+  }
 }
 
 const caseOffer = document.querySelector('.case-offer');

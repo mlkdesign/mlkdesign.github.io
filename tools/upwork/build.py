@@ -138,6 +138,7 @@ def build_case(name):
     text = common_html((ROOT / name).read_text(), 'case', label)
     text = retag_as_cv_link(text, r'<button class="case-start corner-frame" type="button" data-open-form>', f'{label} case start')
     text = retag_as_cv_link(text, r'<button class="case-offer__button case-offer__button--primary" type="button" data-open-form>', f'{label} offer button')
+    text = replace_once(text, '<span data-case-i18n="worksCta">your project could be next</span>', '<span data-case-i18n="worksCta">view my CV</span>', label)
     return text
 
 
@@ -179,6 +180,7 @@ def build_case_js():
     text = replace_once(text, '"startProject": "let\'s work together"', '"startProject": "view my CV"', label)
     text = replace_once(text, '"offerDescription": "Let’s build something just as strong for you."', '"offerDescription": "My CV covers experience, skills and selected work."', label)
     text = replace_once(text, '"finalButton": "get in touch"', '"finalButton": "view CV"', label)
+    text = replace_once(text, '"worksCta": "your project could be next"', '"worksCta": "view my CV"', label)
     # Without a public site to show, drop the "visit this site" button instead of opening the image.
     text = replace_once(text, '    else visitLink.href = activeProject.visitUrl || activeProject.image;',
                         '    else if (activeProject.visitUrl) visitLink.href = activeProject.visitUrl;\n    else visitLink.remove();', label)
