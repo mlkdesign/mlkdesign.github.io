@@ -99,6 +99,22 @@ document.querySelectorAll('.faq__box').forEach((box) => {
       item.querySelector('.faq__q').setAttribute('aria-expanded', String(open));
     });
   });
+  // The answers sit beside the list, out of flow: the box grows to fit the longest one,
+  // so its button keeps the same 40px inset from the bottom and the right.
+  const answers = items.map((item) => item.querySelector('.faq__a'));
+  const fit = () => {
+    if (window.innerWidth <= 767) {
+      box.style.minHeight = '';
+      return;
+    }
+    const tallest = Math.max(...answers.map((answer) => {
+      const gap = parseFloat(getComputedStyle(answer).rowGap) || 0;
+      return [...answer.children].reduce((sum, child) => sum + child.offsetHeight, 0) + gap * (answer.children.length - 1);
+    }));
+    box.style.minHeight = `${Math.max(414, Math.ceil(tallest) + 82)}px`;
+  };
+  new ResizeObserver(fit).observe(box);
+  document.fonts?.ready.then(fit);
 });
 
 // "Companies that trust us" slider: arrows scroll a card at a time and switch off at either end; the bar fills as it scrolls.
