@@ -13,7 +13,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--bg); color: #fff; font: 300 15px/1.4 var(--sans); overflow-x: clip; }
 img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
@@ -22,7 +22,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 :focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
 
 /* Stage: blocks sit at their Figma coordinates. */
-.stage { position: relative; width: calc(1920 * var(--u)); height: calc(7814 * var(--u)); margin: 0 auto; overflow-x: clip; }
+.stage { position: relative; width: calc(1920 * var(--u)); height: calc(7814 * var(--u)); margin: 0 auto; overflow: clip; }
 html { overflow-x: clip; }
 .a {
   position: absolute;
@@ -36,29 +36,31 @@ img.a, .a > img { object-fit: cover; }
 .flip-x { transform: scaleX(-1); }
 .flip-xy { transform: rotate(180deg); }
 
-/* Layers follow the Figma order: the join scene is the bottom layer, the header the top one. */
+/* Layers follow the Figma order: the background image is the bottom layer, the header the top one.
+   .lower (People and everything below it) is one layer above the Hello block; the side lights sit over it. */
+.bg { z-index: 1; }
+.lower { position: absolute; inset: 0; z-index: 21; pointer-events: none; transform: translate3d(0, var(--lift, 0px), 0); }
+.lower > * { pointer-events: auto; }
+.lower > .deco { pointer-events: none; }
+.light { z-index: 22; mix-blend-mode: screen; opacity: 0.4; translate: 0 var(--lift, 0px); object-fit: fill; }
 .join-bg, .join-bg + .fade-top { z-index: 1; }
-.join-title, .fight, .tv, .links, .pug, .footer, .cap-guy { z-index: 2; }
+.join-title, .fight, .tv, .links, .pug, .footer-blur, .footer, .cap-guy { z-index: 2; }
 .cap-guy { z-index: 3; }
-.hero-bg, .flip-x.a, .flip-xy.a { z-index: 10; }
-.beam { z-index: 11; mix-blend-mode: screen; opacity: 0.4; }
 .tag, .hero-title, .hero-script, .hero-copy { z-index: 12; }
 .hero-bone { z-index: 13; }
 .fade-up { z-index: 14; background: linear-gradient(0deg, #040404, rgba(4, 4, 4, 0)); }
 .cta { z-index: 15; }
 .poster, .hello-title, .hello-title + .copy, .lore { z-index: 20; }
-.crowd { z-index: 21; }
+.crowd, .crowd-badge { z-index: 21; }
 .slate { z-index: 22; background: var(--slate); }
-.beam.flip-x { z-index: 23; }
 .title-xl, .secure, .card, .skull, .story-script, .story-title, .designs-title, .designs-copy, .sea-card, .moon, .stats, .astro, .astro-2, .supply-title, .supply-title + .copy { z-index: 24; }
 .hello-title, .hello-title + .copy { z-index: 20; }
 .smoke { z-index: 25; filter: blur(27px); }
 .fade-down { z-index: 26; background: linear-gradient(180deg, rgba(4, 4, 4, 0), #040404); }
 .fade-top { z-index: 27; background: linear-gradient(180deg, #040404, rgba(4, 4, 4, 0)); }
 .join-bg + .fade-top { z-index: 1; }
-.strip, .why, .culture, .why-sub, .rope, .bone-white, .lead, .lead + .copy, .cta--wide { z-index: 28; }
-.bone-white { z-index: 29; }
-.rope--b, .cta--wide, .lead, .lead + .copy { z-index: 30; }
+.strip, .why, .culture, .why-sub, .lead, .lead + .copy, .cta--wide { z-index: 28; }
+.bone-rope { z-index: 30; }
 .header, .socials { z-index: 40; }
 
 /* Type ------------------------------------------------------------------- */
@@ -115,16 +117,46 @@ img.a, .a > img { object-fit: cover; }
 .header__nav a { transition: color 0.2s; }
 .header__nav a:hover { color: var(--orange); }
 .burger { display: none; }
-.socials { display: flex; justify-content: space-between; }
-.socials a { display: grid; place-items: center; width: calc(80 * var(--u)); height: calc(80 * var(--u)); transition: background-color 0.2s; }
-.socials a:hover { background: rgba(255, 255, 255, 0.14); }
-.socials img { width: calc(34 * var(--u)); height: calc(34 * var(--u)); }
-.socials .socials__sea { background: none; border: 0; backdrop-filter: none; }
-.socials .socials__sea img { width: 100%; height: 100%; }
-.socials .socials__sea:hover { filter: brightness(1.12); }
+/* Socials: a square per network; on hover it widens to the left and shows the network's name. */
+.socials { display: flex; justify-content: flex-end; gap: calc(23.33 * var(--u)); }
+.socials a {
+  display: flex;
+  align-items: center;
+  height: calc(80 * var(--u));
+  max-width: calc(80 * var(--u));
+  overflow: hidden;
+  transition: max-width 0.5s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s;
+}
+.socials img { flex: none; width: calc(34 * var(--u)); height: calc(34 * var(--u)); margin: 0 calc(22 * var(--u)); }
+.socials span {
+  flex: none;
+  padding-right: calc(26 * var(--u));
+  font-size: max(10px, calc(14 * var(--u)));
+  letter-spacing: calc(1.96 * var(--u));
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.socials a:hover, .socials a:focus-visible { max-width: calc(260 * var(--u)); background-color: rgba(255, 255, 255, 0.14); }
+.socials a:hover span, .socials a:focus-visible span { opacity: 1; transition-delay: 0.1s; }
+/* OpenSea: the orange square with the cut corner from the design, drawn in CSS so hover never shows a box behind it. */
+.socials .socials__sea {
+  background: #d66222;
+  border: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20 * var(--u)), calc(100% - 20 * var(--u)) 100%, 0 100%);
+}
+.socials .socials__sea:hover, .socials .socials__sea:focus-visible { background-color: #e2732f; }
+@media (min-width: 1024px) {
+  /* The menu stays on screen while the page scrolls. */
+  .header, .socials { position: fixed; top: calc(40 * var(--u)); }
+  .header { left: calc(50% - 960 * var(--u) + 40 * var(--u)); }
+  .socials { left: auto; right: calc(50% - 960 * var(--u) + 40 * var(--u)); width: auto; }
+}
 
 /* Hero ------------------------------------------------------------------- */
-.hero-bg img { width: 100%; height: 100%; object-position: bottom; }
 .hero-title { font-size: calc(176 * var(--u)); line-height: calc(166 * var(--u)); }
 .hero-title span {
   display: block;
@@ -196,17 +228,21 @@ img.a, .a > img { object-fit: cover; }
 
 /* Why own ---------------------------------------------------------------- */
 .strip { overflow: hidden; }
-.strip__row { display: flex; width: max-content; }
+/* Endless photo band: the row holds its photos twice and slides by half its width. */
+.strip__row { display: flex; width: max-content; animation: marquee 60s linear infinite; }
+@keyframes marquee { to { transform: translateX(-50%); } }
 .strip--b .strip__row { margin-left: calc(-1188 * var(--u)); }
 .strip__row > * { flex: none; width: calc(137 * var(--u)); height: calc(137 * var(--u)); object-fit: cover; }
 .strip__plus { position: relative; display: grid; place-items: center; border: 1px solid rgba(255, 255, 255, 0.3); }
 .strip__plus img:first-child { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.06; }
 .strip__plus img:last-child { position: relative; width: calc(23 * var(--u)); }
 .culture img { width: 100%; height: 100%; }
+/* Figma "bone rope" frame: children are placed relative to its top (y 5027). */
+.bone-rope { position: absolute; left: 0; top: calc(5027 * var(--u)); width: 100%; height: calc(1637 * var(--u)); pointer-events: none; }
 .rope { object-fit: cover; object-position: 0 50%; height: calc(88 * var(--u)); }
-.rope--a { left: calc(-1096 * var(--u)); top: calc(5650 * var(--u)); width: calc(2427 * var(--u)); transform: rotate(31.1deg); }
-.rope--b { left: calc(1116 * var(--u)); top: calc(5971 * var(--u)); width: calc(1481 * var(--u)); transform: rotate(154.24deg) scaleY(-1); }
-.bone-white { left: calc(878 * var(--u)); top: calc(5621 * var(--u)); width: calc(620 * var(--u)); height: calc(964 * var(--u)); transform: rotate(-21.65deg); object-fit: contain; }
+.rope--a { left: calc(-1090.7 * var(--u)); top: calc(620.5 * var(--u)); width: calc(2426.6 * var(--u)); transform: rotate(31.1deg); }
+.rope--b { left: calc(1120.6 * var(--u)); top: calc(942 * var(--u)); width: calc(1480.5 * var(--u)); transform: rotate(154.24deg) scaleY(-1); }
+.bone-white { left: calc(883.1 * var(--u)); top: calc(592.1 * var(--u)); width: calc(620.1 * var(--u)); height: calc(964.4 * var(--u)); transform: rotate(-21.65deg); object-fit: contain; }
 
 /* Join us ---------------------------------------------------------------- */
 .join-bg { overflow: hidden; }
@@ -214,7 +250,30 @@ img.a, .a > img { object-fit: cover; }
 .join-title { display: flex; flex-direction: column; color: var(--ink); font-size: calc(73 * var(--u)); line-height: calc(72 * var(--u)); white-space: nowrap; }
 .join-title span:first-child { font-size: calc(88 * var(--u)); line-height: calc(88 * var(--u)); }
 .join-title__gap { height: calc(88 * var(--u)); }
-.join-title span:nth-child(3) { line-height: calc(57 * var(--u)); }
+/* TV: the screen shows the MR.BONE skull drawn in changing symbols (main.js). */
+.tv > img { width: 100%; height: 100%; }
+.tv__screen {
+  position: absolute;
+  left: 27%;
+  top: 9.8%;
+  width: 47.8%;
+  height: 26.2%;
+  border-radius: 9% / 12%;
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 calc(4 * var(--u)) rgba(234, 230, 216, 0.5));
+}
+.tv::after {
+  content: '';
+  position: absolute;
+  left: 27%;
+  top: 9.8%;
+  width: 47.8%;
+  height: 26.2%;
+  border-radius: 9% / 12%;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 3px);
+  box-shadow: inset 0 0 calc(30 * var(--u)) rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
 .links {
   display: flex;
   flex-direction: column;
@@ -243,7 +302,7 @@ img.a, .a > img { object-fit: cover; }
 .links .links__sea { background: #d66222; border-color: #d66222; }
 .links .links__sea:hover { background: #e2732f; }
 .pug--mirror { transform: scaleY(-1); opacity: 0.3; -webkit-mask-image: linear-gradient(0deg, #000, transparent 70%); mask-image: linear-gradient(0deg, #000, transparent 70%); }
-.footer { border-top: 1px solid rgba(255, 255, 255, 0.3); }
+.footer-blur { object-fit: fill; }
 .footer p {
   position: absolute;
   right: calc(1662 * var(--u));
@@ -256,7 +315,7 @@ img.a, .a > img { object-fit: cover; }
 }
 .footer p a { margin-left: calc(14 * var(--u)); }
 .footer p a:hover { color: var(--orange); }
-.footer > img { position: absolute; left: calc(942 * var(--u)); top: 50%; width: calc(177 * var(--u)); transform: translateY(-50%); }
+.footer > img { position: absolute; left: calc(943 * var(--u)); top: 50%; width: calc(177 * var(--u)); height: calc(30 * var(--u)); object-fit: contain; transform: translateY(-50%); }
 
 /* Entrance --------------------------------------------------------------- */
 .js .hero-title span, .js .hero-copy, .js .tag, .js .hero-script, .js .cta:first-of-type { animation: rise 1s cubic-bezier(0.22, 1, 0.36, 1) both; }
@@ -269,6 +328,45 @@ img.a, .a > img { object-fit: cover; }
 .js .reveal { opacity: 0; translate: 0 30px; transition: opacity 0.9s, translate 0.9s cubic-bezier(0.22, 1, 0.36, 1); }
 .js .reveal.is-in { opacity: 1; translate: 0 0; }
 
+/* Script lines (Allison) are written in from left to right when they appear. */
+.js .script {
+  -webkit-mask-image: linear-gradient(90deg, #000 46%, transparent 54%);
+  mask-image: linear-gradient(90deg, #000 46%, transparent 54%);
+  -webkit-mask-size: 260% 100%;
+  mask-size: 260% 100%;
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  transition: -webkit-mask-position 1.9s cubic-bezier(0.55, 0.1, 0.35, 1), mask-position 1.9s cubic-bezier(0.55, 0.1, 0.35, 1);
+}
+.js .script.is-written { -webkit-mask-position: 0 0; mask-position: 0 0; }
+
+/* Side lights flicker like a faulty lamp; each on its own rhythm. */
+.light { animation: flicker 5.3s linear infinite; }
+.light--left { animation-duration: 7.1s; animation-delay: -2.4s; }
+@keyframes flicker {
+  0%, 100% { opacity: 0.4; }
+  2% { opacity: 0.1; }
+  3% { opacity: 0.38; }
+  5% { opacity: 0.06; }
+  7% { opacity: 0.4; }
+  38% { opacity: 0.4; }
+  39% { opacity: 0.16; }
+  40.5% { opacity: 0.4; }
+  64% { opacity: 0.37; }
+  65% { opacity: 0.03; }
+  66% { opacity: 0.32; }
+  67% { opacity: 0.05; }
+  69% { opacity: 0.4; }
+  86% { opacity: 0.4; }
+  87% { opacity: 0.22; }
+  88% { opacity: 0.4; }
+}
+
+/* Scroll and cursor parallax are applied from main.js. */
+.astro, .astro-2, .smoke, .cap-guy, .bone-rope { will-change: transform; }
+
 /* Phones: the MOB frame. Blocks flow in document order. -------------------- */
 @media (max-width: 1023px) {
   :root { --u: 1px; }
@@ -276,6 +374,8 @@ img.a, .a > img { object-fit: cover; }
   .stage { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 0 12px; width: 100%; height: auto; padding: 12px 12px 0; overflow: hidden; }
   .a { position: relative; left: auto; top: auto; width: 100%; height: auto; flex: 0 0 100%; }
   .deco, .socials, .lore, .tag, .strip--b, .pug--mirror, .rope { display: none; }
+  .lower, .bone-rope { display: contents; }
+  .crowd, .astro { max-width: none; }
 
   .header { position: sticky; top: 12px; z-index: 50; height: 56px; margin-bottom: 12px; }
   .header__logo { left: 16px; width: 120px; }
@@ -305,7 +405,7 @@ img.a, .a > img { object-fit: cover; }
   .lead + .copy { margin-top: 14px; }
 
   .poster { height: auto; margin-top: 40px; aspect-ratio: 983 / 986; }
-  .crowd { height: auto; margin: -38% -12px 0; flex-basis: calc(100% + 24px); }
+  .crowd { height: auto; margin: -48% -12px 0; flex: 0 0 calc(100% + 24px); -webkit-mask-image: linear-gradient(#000 55%, transparent 85%); mask-image: linear-gradient(#000 55%, transparent 85%); }
   .secure { margin-top: -30px; text-align: right; }
   .card { flex: 0 0 calc(50% - 6px); height: auto; aspect-ratio: 1; margin-top: 12px; }
   .card img { inset: 12px; width: calc(100% - 24px); height: calc(100% - 24px); }
@@ -349,6 +449,6 @@ img.a, .a > img { object-fit: cover; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  html { scroll-behavior: auto; }
   .js .reveal { opacity: 1; translate: none; }
+  .js .script { -webkit-mask-image: none; mask-image: none; }
 }
