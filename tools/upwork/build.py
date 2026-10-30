@@ -168,12 +168,13 @@ def build_case_js():
     label = 'case.js'
     text = re.sub(r"(['\"])assets/", rf"\1{SHARED}assets/", text)
     # Behance galleries belong to the personal profile (PandaWin's stays: it is the project's public showcase);
-    # Kowalski, Serenity and Azerux demos live in /milka-cv/.
+    # Kowalski, Serenity, Azerux and MR.BONE demos live in /milka-cv/.
     text, removed = re.subn(r"\n    visitUrl: 'https://www\.behance\.net/gallery/(?!257750803/)[^']*',", '', text)
-    assert removed == 2, f'{label}: Behance visit links {removed}'
+    assert removed == 1, f'{label}: Behance visit links {removed}'
     text = replace_once(text, "visitUrl: 'Kowalski%20%26%20Partners/'", f"visitUrl: '{SHARED}Kowalski%20%26%20Partners/'", label)
     text = replace_once(text, "visitUrl: 'serenity/'", f"visitUrl: '{SHARED}serenity/'", label)
     text = replace_once(text, "visitUrl: 'azerux/'", f"visitUrl: '{SHARED}azerux/'", label)
+    text = replace_once(text, "visitUrl: 'mrbone/'", f"visitUrl: '{SHARED}mrbone/'", label)
     text = replace_once(text, "'https://mlkdesign.github.io/milka-cv/');", f"'{BASE_URL}');", label)
     text = replace_once(text, '"navContact": "contact me"', '"navContact": "view CV"', label)
     text = replace_once(text, '"startProject": "let\'s work together"', '"startProject": "view my CV"', label)

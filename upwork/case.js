@@ -151,6 +151,7 @@ const CASE_PROJECTS = {
   },
   1: {
     image: '../milka-cv/assets/case-1.avif',
+    visitUrl: '../milka-cv/mrbone/',
     copy: {
       en: {
         pageTitle: 'MR.BONE — Jack Milka',

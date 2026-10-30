@@ -1,0 +1,12 @@
+<svg width="46.31" height="46.31" viewBox="0 0 46.31 46.31" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Frame 20">
+<g id="Vector">
+<path d="M36.81 14.09L8.83 42.06L4.24 37.47L32.21 9.5H7.56V3H43.31V38.75H36.81V14.09Z" fill="white"/>
+<mask id="stroke0_0_10" maskUnits="userSpaceOnUse" x="-0.75" y="0" width="48" height="47" fill="black">
+<rect fill="white" x="-0.75" width="48" height="47"/>
+<path d="M36.81 14.09L8.83 42.06L4.24 37.47L32.21 9.5H7.56V3H43.31V38.75H36.81V14.09Z"/>
+</mask>
+<path d="M36.81 14.09L8.83 42.06L4.24 37.47L32.21 9.5H7.56V3H43.31V38.75H36.81V14.09Z" stroke-width="6" stroke="white" mask="url(#stroke0_0_10)"/>
+</g>
+</g>
+</svg>
