@@ -206,8 +206,49 @@ if (stripRow) {
   stripRow.innerHTML = logos + logos;
 }
 
-// The form is part of the layout only.
-document.querySelector('.form')?.addEventListener('submit', (event) => event.preventDefault());
+// Demo form: no backend. The e-mail is checked, then the form clears and a "message sent" window opens.
+const form = document.querySelector('.form');
+if (form) {
+  const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const email = form.elements.email;
+  const error = document.createElement('span');
+  error.className = 'form__error';
+  error.id = 'form-email-error';
+  error.textContent = 'Enter a valid e-mail';
+  error.hidden = true;
+  email.closest('.form__cell').append(error);
+  email.setAttribute('aria-describedby', error.id);
+  const showError = (on) => {
+    email.classList.toggle('is-invalid', on);
+    email.setAttribute('aria-invalid', String(on));
+    error.hidden = !on;
+  };
+  email.addEventListener('input', () => { if (EMAIL.test(email.value.trim())) showError(false); });
+
+  const done = document.createElement('dialog');
+  done.className = 'done';
+  done.setAttribute('aria-labelledby', 'done-title');
+  done.innerHTML = `<button class="done__close" type="button" aria-label="Close">&times;</button>
+    <h2 class="done__title" id="done-title">Message <em>sent</em></h2>
+    <p class="done__text">Thank you for reaching out. Our team will reply within one business day.</p>
+    <button class="btn done__ok" type="button"><span class="btn__label">Back to the site</span></button>`;
+  document.body.append(done);
+  done.querySelectorAll('button').forEach((button) => button.addEventListener('click', () => done.close()));
+  done.addEventListener('click', (event) => { if (event.target === done) done.close(); });
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!EMAIL.test(email.value.trim())) {
+      showError(true);
+      email.focus();
+      return;
+    }
+    showError(false);
+    form.reset();
+    if (typeof done.showModal === 'function') done.showModal();
+    else done.setAttribute('open', '');
+  });
+}
 
 // Reveal ----------------------------------------------------------------------
 if (!reduceMotion && 'IntersectionObserver' in window) {

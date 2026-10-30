@@ -1139,7 +1139,7 @@ h1 {
 }
 
 .works {
-  --work-card-width: clamp(280px, 28vw, 480px);
+  --work-card-width: clamp(260px, 20vw, 340px);
   position: relative;
   z-index: 20;
   display: flex;

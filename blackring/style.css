@@ -321,6 +321,26 @@ img.a { max-width: none; }
 .form input::placeholder { color: var(--ink); opacity: 1; }
 .form input:focus { border-color: rgba(228, 75, 70, 0.7); }
 .btn--form { width: 100%; height: calc(64 * var(--u)); }
+/* Demo form: e-mail check and the "message sent" window (main.js). */
+.form__cell { position: relative; }
+.form input.is-invalid { border-color: var(--red); }
+.form__error { position: absolute; left: calc(8 * var(--u)); top: calc(100% + 4px); color: var(--red); font-size: 13px; white-space: nowrap; }
+.done {
+  width: min(520px, calc(100% - 32px));
+  padding: 48px 40px 40px;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  text-align: center;
+}
+.done[open] { animation: done-in 0.4s var(--ease); }
+.done::backdrop { background: rgba(5, 5, 5, 0.75); backdrop-filter: blur(6px); }
+.done__title { font-size: 34px; font-weight: 500; line-height: 1.1; text-transform: uppercase; }
+.done__text { margin-top: 14px; font-family: 'Raleway', sans-serif; font-size: 15px; opacity: 0.8; }
+.done__ok { justify-content: center; width: 100%; height: 56px; margin-top: 28px; padding: 0 24px; font-size: 16px; }
+.done__close { position: absolute; top: 12px; right: 14px; width: 36px; height: 36px; font-size: 26px; line-height: 1; opacity: 0.6; }
+.done__close:hover { opacity: 1; }
+@keyframes done-in { from { opacity: 0; transform: translateY(16px); } }
 
 /* Footer ------------------------------------------------------------------------- */
 .footer__ring { z-index: 2; transform: rotate(-44.52deg) scaleX(-1); object-fit: contain; pointer-events: none; }

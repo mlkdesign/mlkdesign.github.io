@@ -166,9 +166,126 @@ view?.addEventListener('click', () => {
   document.querySelector('.blog__grid')?.classList.toggle('is-list', list);
 });
 
-// The forms are part of the layout only: they are not connected to a backend.
+// Hero banner: the 3D logo and the background stay, the tagline, title and button change every 7 s
+// or on the arrows. The bar under the arrows is empty on the first slide, half on the second, full on the third.
+const heroInner = document.querySelector('.hero__inner');
+const heroPrev = document.querySelector('.hero__prev');
+const heroNext = document.querySelector('.hero__next');
+if (heroInner && heroPrev && heroNext) {
+  const slides = [
+    { tagline: 'Ensuring consistent on-line avaibility to prevent customer loss', title: 'Reliable <b>protection</b> against DDoS <b>attacks</b>', button: 'Join us' },
+    { tagline: 'L3–L4 and L7 filtering in our own scrubbing centres, invisible to your users', title: 'Filtering <b>attacks</b> at every network <b>layer</b>', button: 'Get protected' },
+    { tagline: 'Security engineers on duty around the clock, with a report after every incident', title: 'Expert <b>monitoring</b> around the <b>clock</b>', button: 'Get consult' },
+  ];
+  const tagline = heroInner.querySelector('.hero__tagline');
+  const title = heroInner.querySelector('.hero__title');
+  const button = heroInner.querySelector(':scope > .btn');
+  const bar = heroInner.querySelector('.hero__nav i');
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let current = 0;
+  let timer = 0;
+  const paint = () => {
+    tagline.textContent = slides[current].tagline;
+    title.innerHTML = slides[current].title;
+    button.querySelector('span').textContent = slides[current].button;
+  };
+  const sync = () => {
+    heroPrev.disabled = current === 0;
+    heroNext.disabled = current === slides.length - 1;
+    if (bar) bar.style.transform = `scaleX(${current / (slides.length - 1)})`;
+  };
+  const show = (index) => {
+    if (index === current) return;
+    current = index;
+    sync();
+    const parts = [tagline, title, button];
+    if (still) { paint(); return; }
+    // Script animations sit over the CSS intro animation, so the swap works before and after it.
+    const out = parts.map((part, i) => part.animate(
+      [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-12px)' }],
+      { duration: 260, delay: i * 50, easing: 'ease-in', fill: 'forwards' },
+    ));
+    out[out.length - 1].finished.then(() => {
+      paint();
+      parts.forEach((part, i) => {
+        const enter = part.animate(
+          [{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'none' }],
+          { duration: 520, delay: i * 70, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' },
+        );
+        out[i].cancel();
+        enter.finished.then(() => enter.cancel()).catch(() => {});
+      });
+    }).catch(() => {});
+  };
+  const restart = () => {
+    clearInterval(timer);
+    if (!still) timer = setInterval(() => show((current + 1) % slides.length), 7000);
+  };
+  heroPrev.addEventListener('click', () => { show(Math.max(0, current - 1)); restart(); });
+  heroNext.addEventListener('click', () => { show(Math.min(slides.length - 1, current + 1)); restart(); });
+  sync();
+  restart();
+}
+
+// Demo forms: no backend. The e-mail (and the consent box) are checked, then the form clears
+// and a "request sent" window opens.
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+let sent;
+const openSent = (subscribed) => {
+  if (!sent) {
+    sent = document.createElement('dialog');
+    sent.className = 'modal sent';
+    sent.setAttribute('aria-labelledby', 'sent-title');
+    sent.innerHTML = `<div class="sent__card">
+        <button class="modal__close" type="button" aria-label="Close" data-sent-close></button>
+        <span class="sent__icon" aria-hidden="true"></span>
+        <h2 class="sent__title" id="sent-title"></h2>
+        <p class="sent__text"></p>
+        <button class="btn btn--blue sent__ok" type="button" data-sent-close><span>Got it</span></button>
+      </div>`;
+    document.body.append(sent);
+    sent.querySelectorAll('[data-sent-close]').forEach((button) => button.addEventListener('click', () => sent.close()));
+    sent.addEventListener('click', (event) => { if (event.target === sent) sent.close(); });
+  }
+  sent.querySelector('.sent__title').innerHTML = subscribed ? 'You are <b>subscribed</b>' : 'Request <b>sent</b>';
+  sent.querySelector('.sent__text').textContent = subscribed
+    ? 'Thank you! Security news and Azerux updates will come to your inbox.'
+    : 'Thank you! Our security engineer will contact you within one business day.';
+  if (typeof sent.showModal === 'function') sent.showModal();
+  else sent.setAttribute('open', '');
+};
 document.querySelectorAll('.request').forEach((form) => {
-  form.addEventListener('submit', (event) => event.preventDefault());
+  form.noValidate = true;
+  const email = form.querySelector('input[type="email"]');
+  const consent = form.querySelector('.check input');
+  let error;
+  if (email) {
+    error = document.createElement('p');
+    error.className = 'form-error';
+    error.setAttribute('role', 'alert');
+    error.hidden = true;
+    (form.classList.contains('subscribe') ? form : email).after(error);
+    email.addEventListener('input', () => {
+      if (!EMAIL.test(email.value.trim())) return;
+      email.classList.remove('is-invalid');
+      error.hidden = true;
+    });
+  }
+  const fail = (field, message) => {
+    field.classList.add('is-invalid');
+    error.textContent = message;
+    error.hidden = false;
+    field.focus();
+  };
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (email && !EMAIL.test(email.value.trim())) return fail(email, 'Enter a valid e-mail, for example name@company.com');
+    if (consent && !consent.checked) return fail(consent, 'Please accept the Terms to continue');
+    if (error) error.hidden = true;
+    form.reset();
+    form.closest('dialog')?.close();
+    openSent(form.classList.contains('subscribe'));
+  });
 });
 
 // Consultation modal: buttons marked data-modal open the "Get in touch" form.

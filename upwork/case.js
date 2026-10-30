@@ -96,6 +96,9 @@ const CASE_PROJECTS = {
         finalTitle: 'Final Overview',
         finalText: 'The result is a complete, responsive design system that brings together complex casino functionality, a consistent user experience, and a unique visual identity.',
         backToWorks: 'back to selected works',
+        soonKicker: 'case study in progress',
+        soonTitle: 'coming soon',
+        soonText: 'The full PandaWin story, from the first sketches to the final screens, is being prepared. Meanwhile, have a look at the other projects below.',
         altDesktop: 'PandaWin desktop interface',
         altMobile1: 'PandaWin mobile interface, screen one',
         altMobile2: 'PandaWin mobile interface, screen two',
@@ -138,6 +141,9 @@ const CASE_PROJECTS = {
         finalTitle: 'Підсумок',
         finalText: 'Результат — цілісна адаптивна дизайн-система, що поєднує складний функціонал казино, послідовний користувацький досвід і унікальну візуальну айдентику.',
         backToWorks: 'назад до робіт',
+        soonKicker: 'кейс у роботі',
+        soonTitle: 'незабаром',
+        soonText: 'Повна історія PandaWin, від перших ескізів до фінальних екранів, готується. А поки подивіться інші проєкти нижче.',
         altDesktop: 'Десктопний інтерфейс PandaWin',
         altMobile1: 'Мобільний інтерфейс PandaWin, екран перший',
         altMobile2: 'Мобільний інтерфейс PandaWin, екран другий',
@@ -216,7 +222,7 @@ const CASE_PROJECTS = {
     },
   },
   4: {
-    image: '../milka-cv/assets/case-4.avif',
+    image: '../milka-cv/assets/serenity-case.jpg?v=20261031',
     visitUrl: '../milka-cv/serenity/',
     copy: {
       en: {
@@ -260,7 +266,7 @@ const CASE_PROJECTS = {
     },
   },
   6: {
-    image: '../milka-cv/assets/azerux/case.jpg',
+    image: '../milka-cv/assets/azerux/case.jpg?v=20261031',
     visitUrl: '../milka-cv/azerux/',
     copy: {
       en: {

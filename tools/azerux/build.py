@@ -18,7 +18,7 @@ DATA = Path(__file__).resolve().parent
 SERVICES = json.loads((DATA / 'services.json').read_text())
 LEGAL = json.loads((DATA / 'legal.json').read_text())
 
-VERSION = '20261030-7'
+VERSION = '20261031-1'
 CURRENT = ' aria-current="page"'
 
 # Home card copy and image for every service (the cards on the home page link to the service pages).
@@ -420,7 +420,7 @@ def build_home():
       <img class="hero__blob hero__blob--2" src="assets/logo-3d.webp" alt="" />
       <div class="hero__logo logo3d" data-logo3d><img src="assets/logo-3d.webp" alt="" width="821" height="871" fetchpriority="high" /></div>
       <div class="wrap hero__inner">
-        <div class="slider-nav hero__nav" aria-hidden="true"><img src="assets/arrow-left.svg" alt="" width="24" height="24" /><span><i></i></span><img src="assets/arrow-right.svg" alt="" width="24" height="24" /></div>
+        <div class="slider-nav hero__nav"><button class="hero__prev" type="button" aria-label="Previous slide"><img src="assets/arrow-left.svg" alt="" width="24" height="24" /></button><span><i></i></span><button class="hero__next" type="button" aria-label="Next slide"><img src="assets/arrow-right.svg" alt="" width="24" height="24" /></button></div>
         <p class="hero__tagline">Ensuring consistent on-line avaibility to prevent customer loss</p>
         <h1 class="hero__title">Reliable <b>protection</b> against DDoS <b>attacks</b></h1>
         {btn(r, "Join us", "#", modal=True)}

@@ -107,7 +107,7 @@ def head(r, title, description):
     <title>{e(title)}</title>
     <meta name="description" content="{e(description)}" />
     <link rel="preload" href="{r}assets/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="{r}style.css?v=20261030-8" />
+    <link rel="stylesheet" href="{r}style.css?v=20261031-1" />
     <script>document.documentElement.classList.add('js');</script>
   </head>
   <body>
@@ -165,7 +165,7 @@ def footer(r):
     <dialog class="modal" id="consult" aria-labelledby="consult-title">
       <button class="modal__close" type="button" aria-label="Close" data-modal-close>&times;</button>
 {request_form(r, '<span id="consult-title">Get a consultation from our specialist <em>within 24 hours</em></span>', form_id='consult-form')}    </dialog>
-    <script src="{r}main.js?v=20261030-6" defer></script>
+    <script src="{r}main.js?v=20261031-1" defer></script>
   </body>
 </html>
 '''

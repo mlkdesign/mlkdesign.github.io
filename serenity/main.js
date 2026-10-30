@@ -53,9 +53,58 @@ if (track) {
   updateThumb();
 }
 
-// The forms are part of the layout only: they are not connected to a backend.
+// Demo forms: no backend. The e-mail is checked, then the form clears and a "request sent" window opens.
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+let doneModal;
+const openDone = (form) => {
+  if (!doneModal) {
+    const mailbox = form.querySelector('.request__mailbox')?.getAttribute('src') || '';
+    doneModal = document.createElement('dialog');
+    doneModal.className = 'modal modal--done';
+    doneModal.setAttribute('aria-labelledby', 'done-title');
+    doneModal.innerHTML = `<button class="modal__close" type="button" aria-label="Close" data-modal-close>&times;</button>
+      <div class="request done">
+        <h2 class="request__title title-40" id="done-title">Your request <em>has been sent</em></h2>
+        <p class="request__lead">Thank you! Our specialist will contact you within 24 hours to discuss the details.</p>
+        <button class="btn btn--dark done__ok" type="button" data-modal-close>Great</button>
+        ${mailbox ? `<img class="request__mailbox" src="${mailbox}" alt="" />` : ''}
+      </div>`;
+    document.body.append(doneModal);
+    doneModal.querySelectorAll('[data-modal-close]').forEach((button) => button.addEventListener('click', () => doneModal.close()));
+    doneModal.addEventListener('click', (event) => { if (event.target === doneModal) doneModal.close(); });
+  }
+  if (typeof doneModal.showModal === 'function') doneModal.showModal();
+  else doneModal.setAttribute('open', '');
+};
+
 document.querySelectorAll('.request').forEach((form) => {
-  form.addEventListener('submit', (event) => event.preventDefault());
+  const email = form.elements.email;
+  if (!email) return;
+  const error = document.createElement('p');
+  error.className = 'request__error';
+  error.id = `${form.id || 'request'}-email-error`;
+  error.textContent = 'Enter a valid e-mail, for example name@company.com';
+  error.hidden = true;
+  email.closest('.request__row')?.after(error);
+  email.setAttribute('aria-describedby', error.id);
+  const showError = (on) => {
+    email.classList.toggle('is-invalid', on);
+    email.setAttribute('aria-invalid', String(on));
+    error.hidden = !on;
+  };
+  email.addEventListener('input', () => { if (EMAIL.test(email.value.trim())) showError(false); });
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!EMAIL.test(email.value.trim())) {
+      showError(true);
+      email.focus();
+      return;
+    }
+    showError(false);
+    form.reset();
+    form.closest('dialog')?.close();
+    openDone(form);
+  });
 });
 
 // Consultation modal: buttons marked data-modal open it instead of jumping to the page form.
