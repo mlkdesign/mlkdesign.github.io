@@ -360,6 +360,33 @@ html.js:not(.is-loaded) { overflow: hidden; }
 @keyframes stage-in { from { transform: translateY(14vh); } }
 .js:not(.is-ready) :is(.hero-title span, .hero-copy, .tag, .hero-script, .cta:first-of-type, .hero-bone) { animation-play-state: paused; }
 
+/* Top blur: the main site's frosted strip under the menu, reaching just past the header (above the page, under the menu). */
+.top-blur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: max(90px, calc(150 * var(--u)));
+  z-index: 39;
+  pointer-events: none;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  /* Progressive frosted glass: full blur at the top, none at the bottom edge */
+  mask-image: linear-gradient(to bottom, #000 0%, #000 30%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 30%, transparent 100%);
+  /* Slight tint of the page bg so content dissolves rather than just blurs */
+  background: linear-gradient(to bottom, rgba(5, 5, 5, 0.55), rgba(5, 5, 5, 0));
+}
+@media (max-width: 1023px) {
+  .top-blur {
+    height: calc(110 * var(--u));
+    z-index: 59;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: linear-gradient(to bottom, rgba(11, 11, 11, 0.68), rgba(11, 11, 11, 0));
+  }
+}
+
 /* Cursor light: a soft 200px glow around the mouse, lighter where it passes but never bright. */
 .cursor-light {
   position: fixed;
