@@ -285,6 +285,13 @@ a.case-back:focus-visible {
   height: 32px;
 }
 
+/* Both sites share this file; the studio stylesheet has no clipping on the masks, so the rolling
+   labels could show both lines at once while the hover animates. Clip them at the mask here. */
+.case-page :is(.nav-link-mask, .social-link-mask, .btn__mask) {
+  clip-path: inset(0);
+  contain: paint;
+}
+
 .case-visual {
   grid-column: 2;
   width: 100%;
