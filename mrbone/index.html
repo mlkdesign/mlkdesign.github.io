@@ -8,10 +8,24 @@
     <title>MR.BONE — NFT collection</title>
     <meta name="description" content="MR.BONE: a unique NFT collection with a story, built on the Ethereum blockchain." />
     <link rel="preload" href="assets/fonts/anton.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="style.css?v=20261030-5" />
-    <script>document.documentElement.classList.add('js');</script>
+    <link rel="stylesheet" href="style.css?v=20261030-6" />
+    <script>
+      document.documentElement.classList.add('js');
+      // If main.js never runs, the loading screen still gets out of the way.
+      setTimeout(function () { document.documentElement.classList.add('is-loaded', 'is-ready'); }, 8000);
+    </script>
   </head>
   <body>
+    <!-- Loading screen: the Figma "Download icons" take turns in the centre until the page has loaded,
+         then the screen lifts away (main.js). Shown only with JavaScript. -->
+    <div class="loader" aria-hidden="true">
+      <div class="loader__icons">
+        <svg viewBox="-9.8 -4.0 50 38" aria-hidden="true"><path d="M15.3311 8.89486e-10C33.819 8.89486e-10 30.5049 21.031 30.5049 24.6748C30.5047 27.5897 23.4767 28.4765 19.9629 28.5557C19.8179 28.7752 19.3357 29.6759 18.3662 29.9307C17.6447 30.1202 16.6532 29.8633 15.3311 29.8633C14.0091 29.8633 12.9886 30.1202 12.2275 29.9307C11.2051 29.6758 10.6507 28.7752 10.46 28.5557C2.85738 28.5557 0.530463 25.9686 0.317383 24.6748C-0.840601 16.4499 0.540948 0.00016777 15.3311 8.89486e-10ZM7.9834 15.3672C6.83694 15.3679 5.90724 17.2119 5.90723 19.4863C5.90725 21.7608 6.83695 23.6048 7.9834 23.6055C9.13014 23.6055 10.0595 21.7612 10.0596 19.4863C10.0596 17.2115 9.13015 15.3672 7.9834 15.3672ZM22.5986 15.3672C21.4521 15.3676 20.5215 17.2117 20.5215 19.4863C20.5215 21.7609 21.4521 23.605 22.5986 23.6055C23.7452 23.6051 24.6748 21.7609 24.6748 19.4863C24.6748 17.2117 23.7452 15.3676 22.5986 15.3672Z"/></svg>
+        <svg viewBox="34.0 -1.7 50 38" aria-hidden="true"><path d="M40.0962 10.7397C40.3409 9.56048 43.753 5.82638 45.4285 4.10672C46.5412 2.9362 56.9236 11.7801 59.1527 11.7801C61.3818 11.7801 68.8121 4.10672 71.1723 4.10672C73.5326 4.10672 76.6795 8.39863 76.6795 10.7397C76.6795 13.0807 68.8121 15.0316 68.8121 16.679C68.8121 18.3264 78.0345 22.4015 78.1656 23.7455C78.2967 25.0894 74.6253 30.2483 73.1392 30.2483C71.6531 30.2483 62.1248 22.4015 59.1527 22.4015C56.1806 22.4015 47.8324 29.7715 46.6523 30.2483C45.4722 30.7252 41.8882 25.5229 42.0193 23.7455C42.1504 21.968 50.0615 19.757 50.0615 17.416C50.0615 15.0749 39.7902 12.2137 40.0962 10.7397Z"/></svg>
+        <svg viewBox="78.4 -3.7 50 38" aria-hidden="true"><path d="M101.69 0.437082C105.681 -0.738447 114.73 -0.253658 118.997 11.0894C123.264 22.4331 112.962 28.3409 107.278 29.8765C100.468 30.5483 86.988 28.8106 87.5395 16.4879C88.0913 4.1657 97.2028 0.653051 101.69 0.437082ZM110.998 17.9273C108.561 17.9274 106.741 19.6553 106.136 20.5191C105.834 19.6553 104.779 17.9275 102.98 17.9273C101.181 17.9273 100.27 19.6552 100.04 20.5191C99.9193 19.6553 99.0243 17.9275 96.4125 17.9273C93.8003 17.9273 92.6874 20.9266 92.4574 22.4263C101.252 24.8447 111.191 23.434 115.062 22.4263C114.723 20.9267 113.436 17.9275 110.998 17.9273ZM96.9565 7.05915C95.9147 7.05918 95.0701 7.7841 95.0698 8.67829C95.0698 9.57271 95.9145 10.2984 96.9565 10.2984C97.9984 10.2983 98.8432 9.57269 98.8432 8.67829C98.8429 7.78413 97.9982 7.05921 96.9565 7.05915ZM110.237 7.05915C109.195 7.05915 108.35 7.78409 108.35 8.67829C108.35 9.57273 109.195 10.2984 110.237 10.2984C111.279 10.2982 112.123 9.57263 112.123 8.67829C112.123 7.78419 111.278 7.05932 110.237 7.05915Z"/></svg>
+        <svg viewBox="128.2 4.1 50 38" aria-hidden="true"><path d="M129.359 27.5081V22.2936C129.359 21.7906 129.549 21.3061 129.89 20.9366L139.397 10.643C139.776 10.2331 140.309 10 140.867 10H146.985C148.77 10 149.661 12.1618 148.394 13.4195L132.768 28.9276C131.506 30.1802 129.359 29.2862 129.359 27.5081Z"/><path d="M155.245 10.5805L132.805 32.8521C131.537 34.1099 132.428 36.2717 134.214 36.2717H168.538C169.066 36.2717 169.572 36.063 169.947 35.6912L176.409 29.277C176.788 28.9015 177.001 28.3905 177.001 27.8575V12C177.001 10.8954 176.105 10 175.001 10H156.654C156.126 10 155.62 10.2086 155.245 10.5805Z"/></svg>
+      </div>
+    </div>
     <!-- Desktop: every .a block is placed at its Figma coordinates (--x/--y/--w/--h, 1920-wide frame).
          Phones: the same blocks flow in document order, which follows the MOB frame. -->
     <main class="stage">
@@ -49,8 +63,8 @@
       <img class="a poster" src="assets/poster.webp" alt="MR.BONE mini vol.001 poster: the figure in a black hood and orange shirt in front of a fence" width="983" height="986" style="--x:459;--y:1647;--w:983;--h:986" loading="lazy" />
       <p class="a copy lore" style="--x:40;--y:2018;--w:380">In the desolate wastelands where humanity once thrived, a new breed of zombie has emerged—relentless hunters known as The Necrochasers. Unlike mindless hordes that aimlessly roam the ruins, these undead predators have purpose. Their hunger is not just for flesh; it’s for the skull of MR. BONE, a target borne out of his uncanny resistance and brilliance. The Necrochasers are remnants of a failed experimental project led by scientists who sought to conquer the zombie plague with cybernetic enhancements. Instead, their experiments birthed creatures with razor-sharp instincts, insatiable curiosity, and a singular mission: capture MR. BONE, the anomaly who survived death, retained intelligence, and, most dangerously, understands the origins of the plague itself. These zombie hunters possess heightened speed, tactical intelligence, and even rudimentary communication skills. Each one wears remnants of their human past—lab coats fused with decaying flesh, cybernetic limbs, and makeshift armor. Their grotesque appearance is a haunting reminder of humanity’s downfall, combining the chilling familiarity of human features with the deforming decay of undeath. But MR. BONE, with his quick wit and mechanical ingenuity, remains an elusive prey. He uses his environment—the twisted cityscapes, hidden alleyways, and broken skyscrapers—to set traps and escape paths. Every encounter with The Necrochasers is a deadly game of strategy, where MR. BONE’s survival depends on outsmarting these relentless hunters rather than overpowering them.</p>
 
-      <!-- Side lights (screen blend) flicker like a faulty lamp. -->
-      <img class="a deco light light--right" src="assets/light-right-a.webp" alt="" style="--x:454;--y:1600;--w:1466;--h:1632" loading="lazy" />
+      <!-- Side lights flicker like a faulty lamp. The poster light is the masked Figma "light" (three screen layers baked in). -->
+      <img class="a deco light light--right" src="assets/light-right-m.webp" alt="" style="--x:454;--y:1600;--w:1466;--h:1632" loading="lazy" />
       <img class="a deco light light--left" src="assets/light-left-a.webp" alt="" style="--x:-22;--y:3591;--w:1224;--h:1471" loading="lazy" />
 
       <!-- Everything from People down moves as one block: on scroll it slides up over the poster. -->
@@ -135,6 +149,6 @@
         <img class="a cap-guy" src="assets/cap-guy.webp" alt="MR.BONE seen from behind in a cap and vest" style="--x:1498;--y:7160;--w:499;--h:716" loading="lazy" />
       </div>
     </main>
-    <script src="main.js?v=20261030-5" defer></script>
+    <script src="main.js?v=20261030-6" defer></script>
   </body>
 </html>

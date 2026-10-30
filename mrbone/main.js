@@ -1,10 +1,54 @@
-// Menu, smooth scroll, parallax, text effects, the TV screen and the photo band. No dependencies.
+// Loading screen, menu, smooth scroll, parallax, text effects, the TV screen and the photo band. No dependencies.
+const root = document.documentElement;
 const header = document.querySelector('.header');
 const burger = document.querySelector('.burger');
 const stage = document.querySelector('.stage');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const desktop = window.matchMedia('(min-width: 1024px)');
 const finePointer = window.matchMedia('(pointer: fine)');
+
+// Loading screen ------------------------------------------------------------------
+// The icons take turns until the page, its fonts and at least 1.4 s have passed (7 s at most).
+// Then the screen lifts away, the landing rises from under it and the hero starts playing.
+const loader = document.querySelector('.loader');
+const readyCallbacks = [];
+const onReady = (callback) => (root.classList.contains('is-ready') ? callback() : readyCallbacks.push(callback));
+if (!loader || root.classList.contains('is-loaded')) {
+  loader?.remove();
+  root.classList.add('is-loaded', 'is-ready');
+} else {
+  if ('scrollRestoration' in history && !location.hash) {
+    history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+  }
+  const icons = [...loader.querySelectorAll('svg')];
+  let current = 0;
+  icons[0].classList.add('is-on');
+  const timer = setInterval(() => {
+    icons[current].classList.remove('is-on');
+    current = (current + 1) % icons.length;
+    icons[current].classList.add('is-on');
+  }, 160);
+  const finish = () => {
+    clearInterval(timer);
+    loader.remove();
+  };
+  const loaded = new Promise((resolve) => {
+    if (document.readyState === 'complete') resolve();
+    else window.addEventListener('load', resolve, { once: true });
+  });
+  const minimum = new Promise((resolve) => setTimeout(resolve, Math.max(0, 1400 - performance.now())));
+  const ceiling = new Promise((resolve) => setTimeout(resolve, 7000));
+  Promise.race([Promise.all([loaded, minimum, document.fonts?.ready]), ceiling]).then(() => {
+    root.classList.add('is-loaded');
+    if (reduceMotion) finish();
+    else setTimeout(finish, 1200);
+    setTimeout(() => {
+      root.classList.add('is-ready');
+      readyCallbacks.splice(0).forEach((callback) => callback());
+    }, reduceMotion ? 0 : 250);
+  });
+}
 
 burger?.addEventListener('click', () => {
   const open = header.classList.toggle('is-open');
@@ -14,6 +58,13 @@ header?.querySelectorAll('.header__nav a').forEach((link) => link.addEventListen
   header.classList.remove('is-open');
   burger?.setAttribute('aria-expanded', 'false');
 }));
+
+// Socials open to the exact width of their icon and name, so the square widens at an even pace.
+const socials = [...document.querySelectorAll('.socials a')];
+const measureSocials = () => socials.forEach((link) => link.style.setProperty('--open', `${link.scrollWidth}px`));
+measureSocials();
+document.fonts?.ready.then(measureSocials);
+window.addEventListener('resize', measureSocials);
 
 // One pixel of the 1920 frame, as the stylesheet computes it.
 const unit = () => (desktop.matches ? Math.min(1, window.innerWidth / 1920) : 1);
@@ -42,6 +93,7 @@ const scrollToY = (y) => {
 };
 if (!reduceMotion) {
   window.addEventListener('wheel', (event) => {
+    if (!root.classList.contains('is-loaded')) { event.preventDefault(); return; }
     if (!finePointer.matches || event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
     event.preventDefault();
     const scale = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
@@ -62,7 +114,8 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => link.addEventListene
 
 // Parallax --------------------------------------------------------------------
 // Scroll: People and everything below it slide up over the poster; the bone on the rope, the boy in
-// the footer and the moons drift. Cursor: the big moon moves most, the small moon less, the blue bone least.
+// the footer and the moons drift. Cursor: the big moon moves most, the small moon less, the blue bone least;
+// the bone on the rope follows it too.
 const boneRope = document.querySelector('.bone-rope');
 const capGuy = document.querySelector('.cap-guy');
 const depthItems = [...document.querySelectorAll('[data-depth]')];
@@ -87,11 +140,15 @@ const render = () => {
   const progress = clamp((y + view - peopleTop) / view, 0, 1);
   stage.style.setProperty('--lift', `${(260 * u * (1 - progress)).toFixed(1)}px`);
 
-  if (boneRope) boneRope.style.transform = `translate3d(0, ${clamp(-0.18 * (y + view / 2 - (top + 5845 * u)), -300 * u, 300 * u).toFixed(1)}px, 0)`;
   if (capGuy) capGuy.style.transform = `translate3d(0, ${Math.min(-0.3 * (y - maxScroll()), 400 * u).toFixed(1)}px, 0)`;
 
   pointer.cx = lerp(pointer.cx, pointer.x, 0.08);
   pointer.cy = lerp(pointer.cy, pointer.y, 0.08);
+  // The bone on the rope drifts on scroll and follows the cursor a little.
+  if (boneRope) {
+    const ropeDrift = clamp(-0.18 * (y + view / 2 - (top + 5845 * u)), -300 * u, 300 * u);
+    boneRope.style.transform = `translate3d(${(pointer.cx * 18 * u).toFixed(2)}px, ${(ropeDrift + pointer.cy * 18 * u).toFixed(2)}px, 0)`;
+  }
   depthItems.forEach((element) => {
     const depth = Number(element.dataset.depth) * u;
     const drift = clamp(Number(element.dataset.scroll || 0) * (y + view / 2 - (top + Number(element.dataset.center || 0) * u)), -200 * u, 200 * u);
@@ -125,14 +182,22 @@ const textNodes = (element) => {
   while (walker.nextNode()) if (walker.currentNode.data.trim()) nodes.push(walker.currentNode);
   return nodes;
 };
-const shuffle = (element) => {
-  const nodes = textNodes(element);
-  const originals = nodes.map((node) => node.data);
+// A new shuffle on the same element replaces the running one and still settles on the real text.
+const shuffles = new WeakMap();
+const shuffle = (element, duration = 650) => {
+  if (!element) return;
+  if (!shuffles.has(element)) {
+    const nodes = textNodes(element);
+    shuffles.set(element, { nodes, originals: nodes.map((node) => node.data), run: 0 });
+  }
+  const state = shuffles.get(element);
+  const { nodes, originals } = state;
+  const run = ++state.run;
   const total = originals.reduce((sum, text) => sum + text.length, 0);
-  const duration = 650;
   const start = performance.now();
   element.style.whiteSpace = 'nowrap';
   const frame = (now) => {
+    if (run !== state.run) return;
     const t = (now - start) / duration;
     let index = 0;
     nodes.forEach((node, n) => {
@@ -183,19 +248,71 @@ if (!reduceMotion && 'IntersectionObserver' in window) {
   }, { rootMargin: '0px 0px -10% 0px' });
   document.querySelectorAll('.poster, .title-xl, .title-md, .card, .sea-card, .stats, .links, .lead, .lead + .copy, .join-title, .tv')
     .forEach((element) => element.classList.add('reveal'));
-  document.querySelectorAll('.reveal, .script:not(.hero-script)').forEach((element) => observer.observe(element));
-  // The hero plays on load.
-  shuffle(document.querySelector('.hero-title'));
-  setTimeout(() => document.querySelector('.hero-script')?.classList.add('is-written'), 350);
+  // The hero plays, and the rest starts revealing, once the loading screen lifts.
+  onReady(() => {
+    document.querySelectorAll('.reveal, .script:not(.hero-script)').forEach((element) => observer.observe(element));
+    shuffle(document.querySelector('.hero-title'));
+    setTimeout(() => document.querySelector('.hero-script')?.classList.add('is-written'), 350);
+  });
 } else {
   document.querySelectorAll('.script').forEach((element) => element.classList.add('is-written'));
 }
 
-// Photo band ------------------------------------------------------------------
-// Each row holds its photos twice so the CSS animation can loop without a seam.
-document.querySelectorAll('.strip__row').forEach((row) => {
-  [...row.children].forEach((child) => row.append(child.cloneNode(true)));
+// Buttons: the logo turns (CSS) and the label shuffles on the way in and on the way out.
+document.querySelectorAll('.cta').forEach((button) => {
+  const label = button.querySelector('span');
+  if (reduceMotion || !label) return;
+  button.addEventListener('pointerenter', () => shuffle(label, 420));
+  button.addEventListener('pointerleave', () => shuffle(label, 420));
 });
+
+// Photo band ------------------------------------------------------------------
+// Each row holds its photos twice and slides by half its width, so it loops without a seam.
+// Pointing at a photo frames it (CSS) and slows the row to a stop; leaving lets it pick up speed again.
+const rows = [...document.querySelectorAll('.strip__row')].map((row) => {
+  [...row.querySelectorAll(':scope > img')].forEach((photo) => {
+    const cell = document.createElement('span');
+    cell.className = 'strip__cell';
+    photo.replaceWith(cell);
+    cell.append(photo);
+  });
+  [...row.children].forEach((child) => row.append(child.cloneNode(true)));
+  const band = { row, offset: 0, speed: 1, target: 1, visible: false };
+  row.parentElement.addEventListener('pointerenter', (event) => { if (event.pointerType === 'mouse') band.target = 0; });
+  row.parentElement.addEventListener('pointerleave', () => { band.target = 1; });
+  return band;
+});
+if (rows.length && !reduceMotion) {
+  let lastTime = 0;
+  let moving = false;
+  const step = (now) => {
+    const dt = Math.min(now - lastTime, 50);
+    lastTime = now;
+    rows.forEach((band) => {
+      band.speed = lerp(band.speed, band.target, 1 - 0.93 ** (dt / 16.7));
+      // The full loop (half the row) takes 60 s, as the CSS fallback does.
+      const half = band.row.scrollWidth / 2;
+      band.offset = (band.offset + (band.speed * half * dt) / 60000) % half;
+      band.row.style.transform = `translate3d(${(-band.offset).toFixed(2)}px, 0, 0)`;
+    });
+    moving = rows.some((band) => band.visible);
+    if (moving) requestAnimationFrame(step);
+  };
+  const observer = 'IntersectionObserver' in window && new IntersectionObserver((entries) => {
+    entries.forEach((entry) => { rows.find((band) => band.row.parentElement === entry.target).visible = entry.isIntersecting; });
+    if (!moving && rows.some((band) => band.visible)) {
+      moving = true;
+      lastTime = performance.now();
+      requestAnimationFrame(step);
+    }
+  });
+  rows.forEach((band) => {
+    band.row.style.animation = 'none';
+    if (observer) observer.observe(band.row.parentElement);
+    else band.visible = true;
+  });
+  if (!observer) { moving = true; lastTime = performance.now(); requestAnimationFrame(step); }
+}
 
 // TV screen ------------------------------------------------------------------
 // The MR.BONE skull is drawn in symbols that keep changing, like a terminal in The Matrix.
