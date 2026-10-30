@@ -406,10 +406,12 @@ const applyCaseLanguage = () => {
     const value = strings[image.dataset.caseI18nAlt];
     if (value) image.alt = value;
   });
-  const visitLink = document.querySelector('[data-case-visit]');
-  if (visitLink && activeProject.visitUrl) visitLink.href = activeProject.visitUrl;
-  else visitLink?.remove();
-  if (activeProject.visitUrl === null) visitLink?.remove();
+  // The offer and the link beside the CTA both open the project's site in a new tab.
+  document.querySelectorAll('[data-case-visit]').forEach((visitLink) => {
+    if (activeProject.visitUrl === null) visitLink.remove();
+    else if (activeProject.visitUrl) visitLink.href = activeProject.visitUrl;
+    else visitLink.remove();
+  });
 };
 
 applyCaseLanguage();

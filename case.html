@@ -29,7 +29,7 @@
 
     <link rel="preload" href="assets/fonts/NotoSans-300.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="style.css?v=20261029-email" />
-    <link rel="stylesheet" href="case.css?v=20261029-new-form" />
+    <link rel="stylesheet" href="case.css?v=20261030-visit" />
   </head>
   <body class="case-page">
     <div class="page-transition is-covered" aria-hidden="true">
@@ -173,12 +173,23 @@
                 </div>
               </dl>
 
-              <button class="case-start corner-frame" type="button" data-open-form>
-                <span class="btn__mask">
-                  <span class="btn__line" data-case-i18n="startProject">let&#x27;s work together</span>
-                  <span class="btn__line" data-case-i18n="startProject">let&#x27;s work together</span>
-                </span>
-              </button>
+              <div class="case-actions">
+                <button class="case-start corner-frame" type="button" data-open-form>
+                  <span class="btn__mask">
+                    <span class="btn__line" data-case-i18n="startProject">let&#x27;s work together</span>
+                    <span class="btn__line" data-case-i18n="startProject">let&#x27;s work together</span>
+                  </span>
+                </button>
+                <a class="case-visit" href="assets/case-5.avif" target="_blank" rel="noopener noreferrer" data-case-visit>
+                  <span class="nav-link-mask">
+                    <span class="nav-link-line" data-case-i18n="visitSite">visit this site</span>
+                    <span class="nav-link-line" data-case-i18n="visitSite">visit this site</span>
+                  </span>
+                  <svg class="case-visit__icon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M5 1.5H1.5v9h9V7M7 1.5h3.5V5M10.5 1.5 5 7" stroke="currentColor" />
+                  </svg>
+                </a>
+              </div>
             </div>
           </aside>
 
@@ -421,6 +432,6 @@
     </div>
 
     <script src="analytics.js?v=20261028-ga4"></script>
-    <script type="module" src="case.js?v=20261030-serenity"></script>
+    <script type="module" src="case.js?v=20261030-visit"></script>
   </body>
 </html>

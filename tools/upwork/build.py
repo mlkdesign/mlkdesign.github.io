@@ -180,8 +180,8 @@ def build_case_js():
     text = replace_once(text, '"offerDescription": "Let’s build something just as strong for you."', '"offerDescription": "My CV covers experience, skills and selected work."', label)
     text = replace_once(text, '"finalButton": "get in touch"', '"finalButton": "view CV"', label)
     # Without a public site to show, drop the "visit this site" button instead of opening the image.
-    text = replace_once(text, '  if (visitLink) visitLink.href = activeProject.visitUrl || activeProject.image;',
-                        '  if (visitLink && activeProject.visitUrl) visitLink.href = activeProject.visitUrl;\n  else visitLink?.remove();', label)
+    text = replace_once(text, '    else visitLink.href = activeProject.visitUrl || activeProject.image;',
+                        '    else if (activeProject.visitUrl) visitLink.href = activeProject.visitUrl;\n    else visitLink.remove();', label)
     text = replace_once(text, "  const storedLanguage = localStorage.getItem(languagePreferenceKey);\n  if (storedLanguage === 'uk' || storedLanguage === 'en') {",
                         "  const storedLanguage = 'en'; // Upwork edition is English only.\n  if (storedLanguage === 'uk' || storedLanguage === 'en') {", label)
     text = drop_contact_strings(text, label)

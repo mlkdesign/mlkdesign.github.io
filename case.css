@@ -143,15 +143,15 @@ a.case-back:focus-visible {
   --case-copy-delay: 0.6s;
 }
 
-.case-info__copy.has-sequence > .case-start {
+.case-info__copy.has-sequence > .case-actions {
   --case-copy-delay: 0.8s;
 }
 
-.case-info__copy.has-sequence > :is(.case-kicker, .case-title, .case-description, .case-meta, .case-start) {
+.case-info__copy.has-sequence > :is(.case-kicker, .case-title, .case-description, .case-meta, .case-actions) {
   opacity: 0;
 }
 
-.case-info__copy.has-sequence.is-sequence-visible > :is(.case-kicker, .case-title, .case-description, .case-meta, .case-start) {
+.case-info__copy.has-sequence.is-sequence-visible > :is(.case-kicker, .case-title, .case-description, .case-meta, .case-actions) {
   animation: case-copy-block-in 0.7s var(--ease) both;
   animation-delay: var(--case-copy-delay);
 }
@@ -256,7 +256,6 @@ a.case-back:focus-visible {
   justify-content: center;
   width: 210px;
   height: 64px;
-  margin-top: clamp(2rem, 5vh, 3rem);
   padding: 0;
   border: 0;
   color: rgba(244, 239, 227, 0.6);
@@ -271,6 +270,57 @@ a.case-back:focus-visible {
 .case-start:hover .btn__line,
 .case-start:focus-visible .btn__line {
   transform: translateY(calc(-100% - 5px));
+}
+
+/* "visit this site": a plain text link beside the CTA, opening the project in a new tab. */
+.case-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 32px;
+  margin-top: clamp(2rem, 5vh, 3rem);
+}
+
+.case-visit {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 32px;
+  color: rgba(244, 239, 227, 0.6);
+  font: 300 0.82rem/1 var(--font);
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  transition: color 0.3s var(--ease);
+}
+
+.case-visit:hover,
+.case-visit:focus-visible {
+  color: var(--text);
+}
+
+.case-visit .nav-link-line {
+  transition: transform 0.3s ease-in-out;
+}
+
+.case-visit:hover .nav-link-line,
+.case-visit:focus-visible .nav-link-line {
+  transform: translateY(-105%);
+}
+
+.case-visit:hover .nav-link-line:last-child,
+.case-visit:focus-visible .nav-link-line:last-child {
+  transform: translateY(calc(-105% - 5px));
+}
+
+.case-visit__icon {
+  display: block;
+  flex: none;
+  transition: transform 0.3s var(--ease);
+}
+
+.case-visit:hover .case-visit__icon,
+.case-visit:focus-visible .case-visit__icon {
+  transform: translate(2px, -2px);
 }
 
 .case-visual {
@@ -447,8 +497,8 @@ a.case-offer__button {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .case-info__copy.has-sequence > :is(.case-kicker, .case-title, .case-description, .case-meta, .case-start),
-  .case-info__copy.has-sequence.is-sequence-visible > :is(.case-kicker, .case-title, .case-description, .case-meta, .case-start) {
+  .case-info__copy.has-sequence > :is(.case-kicker, .case-title, .case-description, .case-meta, .case-actions),
+  .case-info__copy.has-sequence.is-sequence-visible > :is(.case-kicker, .case-title, .case-description, .case-meta, .case-actions) {
     opacity: 1;
     transform: none;
     animation: none;
@@ -516,10 +566,20 @@ a.case-offer__button {
     row-gap: 0.75rem;
   }
 
+  .case-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .case-start {
     width: 100%;
     max-width: none;
     align-self: stretch;
+  }
+
+  .case-visit {
+    justify-content: center;
+    height: 48px;
   }
 
   .case-visual {
