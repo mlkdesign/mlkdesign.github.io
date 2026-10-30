@@ -1042,6 +1042,8 @@ b, strong { font-weight: 500; }
   .header.is-open .header__tools { display: flex; flex-wrap: wrap; order: 6; width: 100%; margin-top: 36px; padding-bottom: 40px; }
   .header.is-open .header__phone span { display: inline; }
   .hero__logo { left: 30%; width: 70vw; top: 60px; }
+  .hero__tagline { grid-column: 1 / -1; grid-row: 2; max-width: 360px; margin-top: 20px; }
+  .hero__nav { grid-row: 1; }
   .solution__more { display: none; }
   .solutions__grid, .solutions__grid--five { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .solution { min-height: 400px; }
