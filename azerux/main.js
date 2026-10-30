@@ -114,8 +114,8 @@ if (track) {
     const max = track.scrollWidth - track.clientWidth;
     if (prev) prev.disabled = track.scrollLeft <= 1;
     if (next) next.disabled = track.scrollLeft >= max - 1;
-    // The bar fills with the share of cards seen so far.
-    if (bar) bar.style.transform = `scaleX(${track.scrollWidth ? Math.min(1, (track.scrollLeft + track.clientWidth) / track.scrollWidth) : 1})`;
+    // The bar fills from empty at the start to full at the end.
+    if (bar) bar.style.transform = `scaleX(${max > 0 ? Math.min(1, track.scrollLeft / max) : 1})`;
   };
   track.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);
@@ -193,28 +193,31 @@ if (latestGrid && posts.length >= 4) {
 
 const blogGrid = document.querySelector('.blog__grid');
 if (blogGrid && posts.length) {
-  const state = { category: 'All', query: '', newestFirst: true, page: 1 };
+  // No pages: the grid shows 6 cards and adds the next 6 whenever its end comes into view.
+  const state = { category: 'All', query: '', newestFirst: true, shown: 0 };
   const perPage = 6;
-  const pager = document.querySelector('.pager');
+  const more = document.querySelector('.blog__more');
   const chips = [...document.querySelectorAll('.chip')];
-  const renderBlog = (scroll = false) => {
+  let found = [];
+  const loadMore = () => {
+    if (state.shown >= found.length) return;
+    const next = found.slice(state.shown, state.shown + perPage);
+    state.shown += next.length;
+    blogGrid.insertAdjacentHTML('beforeend', next.map((post) => postCard(post)).join(''));
+    // Still at the end (a tall screen or a short batch): keep filling until the end is out of view.
+    requestAnimationFrame(() => {
+      if (more && more.getBoundingClientRect().top < innerHeight + 300) loadMore();
+    });
+  };
+  const renderBlog = () => {
     const query = state.query.trim().toLowerCase();
-    const found = posts
+    found = posts
       .filter((post) => state.category === 'All' || post.cat === state.category)
       .filter((post) => !query || `${post.title} ${post.excerpt}`.toLowerCase().includes(query));
     if (!state.newestFirst) found.reverse();
-    const pages = Math.max(1, Math.ceil(found.length / perPage));
-    state.page = Math.min(state.page, pages);
-    const shown = found.slice((state.page - 1) * perPage, state.page * perPage);
-    blogGrid.innerHTML = shown.length ? shown.map((post) => postCard(post)).join('') : '<p class="blog__empty">No articles match your search.</p>';
-    if (pager) {
-      const link = (page, label, attrs = '') => `<a href="#" data-page="${page}"${attrs}>${label}</a>`;
-      pager.hidden = pages < 2;
-      pager.innerHTML = link(Math.max(1, state.page - 1), '‹', ' aria-label="Previous page"')
-        + Array.from({ length: pages }, (_, index) => link(index + 1, index + 1, index + 1 === state.page ? ' aria-current="page"' : '')).join('')
-        + link(Math.min(pages, state.page + 1), '›', ' aria-label="Next page"');
-    }
-    if (scroll) blogGrid.closest('.blog')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    state.shown = 0;
+    blogGrid.innerHTML = found.length ? '' : '<p class="blog__empty">No articles match your search.</p>';
+    loadMore();
   };
   chips.forEach((chip) => chip.addEventListener('click', () => {
     chips.forEach((other) => {
@@ -222,25 +225,19 @@ if (blogGrid && posts.length) {
       other.setAttribute('aria-pressed', String(other === chip));
     });
     state.category = chip.textContent.trim();
-    state.page = 1;
     renderBlog();
   }));
   document.querySelector('.search input')?.addEventListener('input', (event) => {
     state.query = event.target.value;
-    state.page = 1;
     renderBlog();
   });
   document.querySelector('.sort select')?.addEventListener('change', (event) => {
     state.newestFirst = event.target.selectedIndex === 0;
     renderBlog();
   });
-  pager?.addEventListener('click', (event) => {
-    const link = event.target.closest('[data-page]');
-    if (!link) return;
-    event.preventDefault();
-    state.page = Number(link.dataset.page);
-    renderBlog(true);
-  });
+  if (more) new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) loadMore();
+  }, { rootMargin: '0px 0px 300px 0px' }).observe(more);
   renderBlog();
 }
 

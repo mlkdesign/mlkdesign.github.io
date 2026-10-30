@@ -295,7 +295,7 @@ def touch_card(r, form_id='touch-form', modal=False):
     tag = 'div' if modal else 'section'
     attrs = '' if modal else ' id="get-in-touch"'
     return f'''    <{tag} class="touch"{attrs}>
-      <div class="touch__art"><img class="touch__shadow" src="{r}assets/hacker-shadow.webp" alt="" loading="lazy" /><img class="touch__img" src="{r}assets/hacker.webp" alt="" width="614" height="564" loading="lazy" /></div>
+      <div class="touch__art"><img class="touch__shadow" src="{r}assets/hacker-shadow-m.webp" alt="" loading="lazy" /><img class="touch__img" src="{r}assets/hacker.webp" alt="" width="614" height="564" loading="lazy" /></div>
       <div class="touch__body">
         <h2>Get in Touch with Us!</h2>
         <p>We're here to help! Whether you have questions about our services, need support, or want to discuss how we can assist with your security needs, don't hesitate to reach out. Fill out the form below or contact us directly, and one of our experts will get back to you as soon as possible.</p>
