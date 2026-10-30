@@ -172,6 +172,34 @@ window.addEventListener('pointermove', (event) => {
 }, { passive: true });
 requestRender();
 
+// Cursor light: follows the mouse with a little lag and fades out when the mouse leaves the window.
+const cursorLight = document.querySelector('.cursor-light');
+if (cursorLight && !reduceMotion) {
+  const light = { x: 0, y: 0, cx: 0, cy: 0, running: false };
+  const follow = () => {
+    light.cx = lerp(light.cx, light.x, 0.18);
+    light.cy = lerp(light.cy, light.y, 0.18);
+    cursorLight.style.transform = `translate3d(${light.cx.toFixed(1)}px, ${light.cy.toFixed(1)}px, 0)`;
+    light.running = Math.abs(light.cx - light.x) > 0.3 || Math.abs(light.cy - light.y) > 0.3;
+    if (light.running) requestAnimationFrame(follow);
+  };
+  window.addEventListener('pointermove', (event) => {
+    if (event.pointerType !== 'mouse') return;
+    light.x = event.clientX;
+    light.y = event.clientY;
+    if (!cursorLight.classList.contains('is-on')) {
+      light.cx = light.x;
+      light.cy = light.y;
+      cursorLight.classList.add('is-on');
+    }
+    if (!light.running) {
+      light.running = true;
+      requestAnimationFrame(follow);
+    }
+  }, { passive: true });
+  document.documentElement.addEventListener('pointerleave', () => cursorLight.classList.remove('is-on'));
+}
+
 // Text effects ------------------------------------------------------------------
 // Headings shuffle their letters for a moment before settling.
 // Narrow glyphs only, and no wrapping while it runs, so a line never spills onto the next one.

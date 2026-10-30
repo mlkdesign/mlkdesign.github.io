@@ -167,12 +167,13 @@ def build_case_js():
     text = (ROOT / 'case.js').read_text()
     label = 'case.js'
     text = re.sub(r"(['\"])assets/", rf"\1{SHARED}assets/", text)
-    # Kowalski, Serenity, Azerux, MR.BONE and Storm Traffic demos live in /milka-cv/.
+    # Kowalski, Serenity, Azerux, MR.BONE, Storm Traffic and Black Ring demos live in /milka-cv/.
     text = replace_once(text, "visitUrl: 'Kowalski%20%26%20Partners/'", f"visitUrl: '{SHARED}Kowalski%20%26%20Partners/'", label)
     text = replace_once(text, "visitUrl: 'serenity/'", f"visitUrl: '{SHARED}serenity/'", label)
     text = replace_once(text, "visitUrl: 'azerux/'", f"visitUrl: '{SHARED}azerux/'", label)
     text = replace_once(text, "visitUrl: 'mrbone/'", f"visitUrl: '{SHARED}mrbone/'", label)
     text = replace_once(text, "visitUrl: 'storm-traffic/'", f"visitUrl: '{SHARED}storm-traffic/'", label)
+    text = replace_once(text, "visitUrl: 'blackring/'", f"visitUrl: '{SHARED}blackring/'", label)
     text = replace_once(text, "'https://mlkdesign.github.io/milka-cv/');", f"'{BASE_URL}');", label)
     text = replace_once(text, '"navContact": "contact me"', '"navContact": "view CV"', label)
     text = replace_once(text, '"startProject": "let\'s work together"', '"startProject": "view my CV"', label)

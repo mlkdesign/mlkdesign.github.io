@@ -194,7 +194,7 @@ const CASE_PROJECTS = {
   },
   3: {
     image: 'assets/case-3.avif',
-    visitUrl: 'https://blackring.partners',
+    visitUrl: 'blackring/',
     copy: {
       en: {
         pageTitle: 'Black Ring — Jack Milka',
