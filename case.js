@@ -409,9 +409,11 @@ const applyCaseLanguage = () => {
     const value = strings[image.dataset.caseI18nAlt];
     if (value) image.alt = value;
   });
-  const visitLink = document.querySelector('[data-case-visit]');
-  if (visitLink) visitLink.href = activeProject.visitUrl || activeProject.image;
-  if (activeProject.visitUrl === null) visitLink?.remove();
+  // The offer and the link beside the CTA both open the project's site in a new tab.
+  document.querySelectorAll('[data-case-visit]').forEach((visitLink) => {
+    if (activeProject.visitUrl === null) visitLink.remove();
+    else visitLink.href = activeProject.visitUrl || activeProject.image;
+  });
 };
 
 applyCaseLanguage();
