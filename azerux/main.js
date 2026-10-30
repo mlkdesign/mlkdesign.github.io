@@ -101,7 +101,7 @@ document.querySelectorAll('.faq__box').forEach((box) => {
   });
 });
 
-// "Companies that trust us" slider: arrows scroll a card at a time, the bar follows the position.
+// "Companies that trust us" slider: arrows scroll a card at a time and switch off at either end; the bar fills as it scrolls.
 const track = document.querySelector('.trust__track');
 if (track) {
   const prev = document.querySelector('.trust__prev');
@@ -114,7 +114,8 @@ if (track) {
     const max = track.scrollWidth - track.clientWidth;
     if (prev) prev.disabled = track.scrollLeft <= 1;
     if (next) next.disabled = track.scrollLeft >= max - 1;
-    if (bar) bar.style.transform = `translateX(${max > 0 ? (track.scrollLeft / max) * 100 : 0}%)`;
+    // The bar fills with the share of cards seen so far.
+    if (bar) bar.style.transform = `scaleX(${track.scrollWidth ? Math.min(1, (track.scrollLeft + track.clientWidth) / track.scrollWidth) : 1})`;
   };
   track.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);
@@ -140,15 +141,7 @@ document.querySelectorAll('.periods').forEach((group) => {
   });
 });
 
-// Blog: category chips and the grid/list switch.
-document.querySelectorAll('.chip').forEach((chip, _, chips) => {
-  chip.addEventListener('click', () => {
-    chips.forEach((other) => {
-      other.classList.toggle('is-active', other === chip);
-      other.setAttribute('aria-pressed', String(other === chip));
-    });
-  });
-});
+// Blog: the grid/list switch (categories, search and pages are under "Blog posts" below).
 const view = document.querySelector('.blog__view');
 view?.addEventListener('click', () => {
   const list = view.getAttribute('aria-pressed') !== 'true';
@@ -176,6 +169,102 @@ if (modal && typeof modal.showModal === 'function') {
   modal.addEventListener('click', (event) => {
     if (event.target === modal) modal.close();
   });
+}
+
+// Blog posts (posts.js) ----------------------------------------------------------
+// The home page shows the four newest, the blog lists them by category with search, sorting and pages,
+// and the article page shows the post named in ?id= with three related ones.
+const posts = (window.AZERUX_POSTS || []).slice().sort((a, b) => `${b.date} ${b.time}`.localeCompare(`${a.date} ${a.time}`));
+const escapeHtml = (text) => String(text).replace(/[&<>"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[char]));
+const postUrl = (post) => `article.html?id=${encodeURIComponent(post.id)}`;
+const metaIcon = (name) => `<img src="assets/icon-${name}.svg" alt="" width="10" height="10" />`;
+const postMeta = (post) => `<ul class="meta"><li>${metaIcon('date')}${post.date.split('-').reverse().join('.')}</li><li>${metaIcon('clock')}${post.time}</li><li>${metaIcon('views')}${post.views}</li></ul>`;
+const postCard = (post, kind = '') => {
+  const url = postUrl(post);
+  const more = kind === 'row' ? '' : `<a class="btn btn--line" href="${url}"><span>Learn more</span><img src="assets/arrow-white.svg" alt="" width="16" height="16" /></a>`;
+  return `<article class="post${kind ? ` post--${kind}` : ''}"><a class="post__img" href="${url}" tabindex="-1"><img src="${post.img}" alt="" loading="lazy" /></a>`
+    + `<div class="post__body">${postMeta(post)}<h3><a href="${url}">${escapeHtml(post.title)}</a></h3><p>${escapeHtml(post.excerpt)}</p>${more}</div></article>`;
+};
+
+const latestGrid = document.querySelector('.latest__grid');
+if (latestGrid && posts.length >= 4) {
+  latestGrid.innerHTML = postCard(posts[0], 'big') + `<div class="latest__list">${posts.slice(1, 4).map((post) => postCard(post, 'row')).join('')}</div>`;
+}
+
+const blogGrid = document.querySelector('.blog__grid');
+if (blogGrid && posts.length) {
+  const state = { category: 'All', query: '', newestFirst: true, page: 1 };
+  const perPage = 6;
+  const pager = document.querySelector('.pager');
+  const chips = [...document.querySelectorAll('.chip')];
+  const renderBlog = (scroll = false) => {
+    const query = state.query.trim().toLowerCase();
+    const found = posts
+      .filter((post) => state.category === 'All' || post.cat === state.category)
+      .filter((post) => !query || `${post.title} ${post.excerpt}`.toLowerCase().includes(query));
+    if (!state.newestFirst) found.reverse();
+    const pages = Math.max(1, Math.ceil(found.length / perPage));
+    state.page = Math.min(state.page, pages);
+    const shown = found.slice((state.page - 1) * perPage, state.page * perPage);
+    blogGrid.innerHTML = shown.length ? shown.map((post) => postCard(post)).join('') : '<p class="blog__empty">No articles match your search.</p>';
+    if (pager) {
+      const link = (page, label, attrs = '') => `<a href="#" data-page="${page}"${attrs}>${label}</a>`;
+      pager.hidden = pages < 2;
+      pager.innerHTML = link(Math.max(1, state.page - 1), '‹', ' aria-label="Previous page"')
+        + Array.from({ length: pages }, (_, index) => link(index + 1, index + 1, index + 1 === state.page ? ' aria-current="page"' : '')).join('')
+        + link(Math.min(pages, state.page + 1), '›', ' aria-label="Next page"');
+    }
+    if (scroll) blogGrid.closest('.blog')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  chips.forEach((chip) => chip.addEventListener('click', () => {
+    chips.forEach((other) => {
+      other.classList.toggle('is-active', other === chip);
+      other.setAttribute('aria-pressed', String(other === chip));
+    });
+    state.category = chip.textContent.trim();
+    state.page = 1;
+    renderBlog();
+  }));
+  document.querySelector('.search input')?.addEventListener('input', (event) => {
+    state.query = event.target.value;
+    state.page = 1;
+    renderBlog();
+  });
+  document.querySelector('.sort select')?.addEventListener('change', (event) => {
+    state.newestFirst = event.target.selectedIndex === 0;
+    renderBlog();
+  });
+  pager?.addEventListener('click', (event) => {
+    const link = event.target.closest('[data-page]');
+    if (!link) return;
+    event.preventDefault();
+    state.page = Number(link.dataset.page);
+    renderBlog(true);
+  });
+  renderBlog();
+}
+
+const articleBody = document.querySelector('.article__content');
+if (articleBody && posts.length) {
+  const id = new URLSearchParams(location.search).get('id');
+  const post = posts.find((item) => item.id === id) || posts.find((item) => item.id === 'we-are-launching') || posts[0];
+  const [intro, ...rest] = post.body;
+  const block = (part) => {
+    if (Array.isArray(part)) return `<ol>${part.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ol>`;
+    if (part.startsWith('## ')) return `<h2>${escapeHtml(part.slice(3))}</h2>`;
+    return `<p>${escapeHtml(part)}</p>`;
+  };
+  articleBody.innerHTML = `<h1>${escapeHtml(post.title)}</h1>${block(intro)}`
+    + `<img class="article__banner" src="${post.banner || post.img}" width="1280" height="500" alt="" />${rest.map(block).join('')}`;
+  const topMeta = document.querySelector('.article__top .meta');
+  if (topMeta) topMeta.outerHTML = postMeta(post);
+  document.title = `${post.title} — Azerux`;
+  const related = document.querySelector('.related__grid');
+  if (related) {
+    const others = posts.filter((item) => item !== post);
+    const picks = [...others.filter((item) => item.cat === post.cat), ...others.filter((item) => item.cat !== post.cat)].slice(0, 3);
+    related.innerHTML = picks.map((item) => postCard(item, 'small')).join('');
+  }
 }
 
 // Blocks fade up as they enter the viewport; siblings are staggered.

@@ -1202,6 +1202,13 @@ if (formModal) {
     };
     window.addEventListener('scroll', scheduleFooterOverlap, { passive: true });
     window.addEventListener('resize', scheduleFooterOverlap);
+    // A case opened in a background tab is measured before its images load, while the page is still short;
+    // measure again whenever the page changes height and when the tab comes to the front.
+    window.addEventListener('load', scheduleFooterOverlap);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') updateFooterOverlap();
+    });
+    if ('ResizeObserver' in window) new ResizeObserver(scheduleFooterOverlap).observe(document.body);
     updateFooterOverlap();
   }
 }

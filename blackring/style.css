@@ -223,7 +223,8 @@ img.a { max-width: none; }
 .row__text { font-size: max(11px, calc(16 * var(--u))); }
 
 /* About ---------------------------------------------------------------------- */
-.orbit { pointer-events: none; }
+/* The ring and sphere pass over the Our Mission card. */
+.orbit { z-index: 3; pointer-events: none; }
 .orbit__layer { position: absolute; left: calc(306 * var(--u)); top: calc(306 * var(--u)); max-width: none; transform: translate(-50%, -50%) rotate(-44deg); }
 .orbit__back, .orbit__front { width: calc(750.8 * var(--u)); height: calc(290 * var(--u)); }
 .orbit__sphere { width: calc(352 * var(--u)); height: calc(352 * var(--u)); }
