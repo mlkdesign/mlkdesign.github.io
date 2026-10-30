@@ -82,7 +82,8 @@ def head(r, title, description):
     <title>{e(title)}</title>
     <meta name="description" content="{e(description)}" />
     <link rel="preload" href="{r}assets/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="{r}style.css?v=20261030" />
+    <link rel="stylesheet" href="{r}style.css?v=20261030-2" />
+    <script>document.documentElement.classList.add('js');</script>
   </head>
   <body>
 '''
@@ -98,7 +99,7 @@ def header(r, active=None):
         <nav class="nav" aria-label="Main">
 {links}
         </nav>
-        <a class="btn btn--green header__chat" href="#request"><img src="{r}assets/icon-phone.svg" alt="" width="24" height="24" />Chat with a specialist</a>
+        <a class="btn btn--green header__chat" href="#request" data-modal><img src="{r}assets/icon-phone.svg" alt="" width="24" height="24" />Chat with a specialist</a>
         <button class="burger" type="button" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
       </div>
     </header>
@@ -136,16 +137,19 @@ def footer(r):
       </div>
       <p class="footer__bar">2022 Website developed and maintained.</p>
     </footer>
-    <script src="{r}main.js?v=20261030" defer></script>
+    <dialog class="modal" id="consult" aria-labelledby="consult-title">
+      <button class="modal__close" type="button" aria-label="Close" data-modal-close>&times;</button>
+{request_form(r, '<span id="consult-title">Get a consultation from our specialist <em>within 24 hours</em></span>', form_id='consult-form')}    </dialog>
+    <script src="{r}main.js?v=20261030-2" defer></script>
   </body>
 </html>
 '''
 
 
-def request_form(r, title_html, lead=None, variant=''):
+def request_form(r, title_html, lead=None, variant='', form_id='request'):
     lead_html = f'\n          <p class="request__lead">{lead}</p>' if lead else ''
     tall = ' request--tall' if lead else ''
-    return f'''        <form class="request{tall}{variant}" id="request" action="#" novalidate>
+    return f'''        <form class="request{tall}{variant}" id="{form_id}" action="#" novalidate>
           <h2 class="request__title title-40">{title_html}</h2>{lead_html}
           <div class="request__row">
             <input class="request__field" type="email" name="email" placeholder="E-mail" aria-label="E-mail" autocomplete="email" />
@@ -225,7 +229,7 @@ def build_home():
     r = ''
     offers = [(f'services/{slug}.html', label) for slug, label in SERVICES] + [('#request', 'Individual request')]
     rows = '\n'.join(f'''            <li>
-              <a class="offer-row{" is-active" if i == 1 else ""}" href="{href}">
+              <a class="offer-row{" is-active" if i == 1 else ""}" href="{href}"{" data-modal" if href == "#request" else ""}>
                 <span>{e(label)}</span>
                 <span class="arrow-btn" aria-hidden="true"><img class="arrow-btn__off" src="assets/arrow.svg" alt="" width="59" height="60" /><img class="arrow-btn__on" src="assets/arrow-active.svg" alt="" width="59" height="60" /></span>
               </a>
@@ -514,7 +518,7 @@ def build_service(index, slug, label):
           <ul class="service-menu__list">
 {menu}
           </ul>
-          <a class="glass service-menu__request" href="#request"><img class="glass__dot" src="{r}assets/dot.svg" alt="" width="16" height="16" /><img src="{r}assets/icon-chat.svg" alt="" width="42" height="42" />Individual request</a>
+          <a class="glass service-menu__request" href="#request" data-modal><img class="glass__dot" src="{r}assets/dot.svg" alt="" width="16" height="16" /><img src="{r}assets/icon-chat.svg" alt="" width="42" height="42" />Individual request</a>
         </aside>
         <article class="service-card">
           <div class="service-card__head">
@@ -596,7 +600,7 @@ def build_companies():
                 <div><dt>Accounts:</dt><dd>Many</dd></div>
                 <div><dt>Assets:</dt><dd>Even more</dd></div>
               </dl>
-              <div class="company__price">{price}<a class="arrow-btn arrow-btn--active" href="#request" aria-label="Ask about {e(name)}"><img src="assets/arrow-active.svg" alt="" width="59" height="60" /></a></div>
+              <div class="company__price">{price}<a class="arrow-btn arrow-btn--active" href="#request" data-modal aria-label="Ask about {e(name)}"><img src="assets/arrow-active.svg" alt="" width="59" height="60" /></a></div>
             </div>
           </article>''' for img, name, price in cards)
     hero = '''      <section class="landing-hero">
@@ -624,7 +628,7 @@ def build_companies():
           <div class="companies__grid">
 {items}
           </div>
-          <div class="companies__more"><a class="btn btn--green" href="#request">See more</a></div>
+          <div class="companies__more"><a class="btn btn--green" href="#request" data-modal>See more</a></div>
         </div>
       </section>
 '''
@@ -644,12 +648,14 @@ def article_page(path, title, hero_img, description, body, with_articles):
         <img src="{r}assets/{hero_img}" alt="" width="1600" height="600" />
         <div class="wrap"><h1>{e(title)}</h1></div>
       </section>
+      <div class="sheet">
       <article class="wrap article">
 {body}
       </article>
       <div class="wrap" style="margin-top: 70px">
 {request_form(r, SERVICE_FORM[0], SERVICE_FORM[1])}      </div>
 {article_track(r) if with_articles else ''}      <div style="height: 70px"></div>
+      </div>
     </main>
 '''
     html += footer(r)
@@ -778,6 +784,7 @@ def build_country(slug, name, image):
           <h1>Commercial offer for company registration<span>in {e(n)}</span></h1>
         </div>
       </section>
+      <div class="sheet sheet--light">
 
       <section class="wrap country-section">
         <h2 class="title-48">General information</h2>
@@ -890,6 +897,7 @@ def build_country(slug, name, image):
 {request_form(r, 'Get a consultation from our specialist:', variant=' request--dark')}      </div>
       <div class="country-reg">
 {registration(r)}      </div>
+      </div>
     </main>
 '''
     html += footer(r)

@@ -8,7 +8,8 @@
     <title>Opening accounts — Serenity Consultancy Services</title>
     <meta name="description" content="Opening accounts: Serenity Consultancy Services solutions and services." />
     <link rel="preload" href="../assets/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="../style.css?v=20261030" />
+    <link rel="stylesheet" href="../style.css?v=20261030-2" />
+    <script>document.documentElement.classList.add('js');</script>
   </head>
   <body>
     <header class="header">
@@ -22,7 +23,7 @@
           <a href="../index.html#articles">Articles</a>
           <a href="../services/company-registration.html" aria-current="page">Solutions and services</a>
         </nav>
-        <a class="btn btn--green header__chat" href="#request"><img src="../assets/icon-phone.svg" alt="" width="24" height="24" />Chat with a specialist</a>
+        <a class="btn btn--green header__chat" href="#request" data-modal><img src="../assets/icon-phone.svg" alt="" width="24" height="24" />Chat with a specialist</a>
         <button class="burger" type="button" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
       </div>
     </header>
@@ -42,7 +43,7 @@
             <li><a class="service-menu__item" href="fintech.html"><span>Fintech</span><span class="arrow-btn" aria-hidden="true"><img src="../assets/arrow.svg" alt="" width="59" height="60" /></span></a></li>
             <li><a class="service-menu__item" href="foreign-trade.html"><span>Foreign trade support</span><span class="arrow-btn" aria-hidden="true"><img src="../assets/arrow.svg" alt="" width="59" height="60" /></span></a></li>
           </ul>
-          <a class="glass service-menu__request" href="#request"><img class="glass__dot" src="../assets/dot.svg" alt="" width="16" height="16" /><img src="../assets/icon-chat.svg" alt="" width="42" height="42" />Individual request</a>
+          <a class="glass service-menu__request" href="#request" data-modal><img class="glass__dot" src="../assets/dot.svg" alt="" width="16" height="16" /><img src="../assets/icon-chat.svg" alt="" width="42" height="42" />Individual request</a>
         </aside>
         <article class="service-card">
           <div class="service-card__head">
@@ -128,6 +129,21 @@
       </div>
       <p class="footer__bar">2022 Website developed and maintained.</p>
     </footer>
-    <script src="../main.js?v=20261030" defer></script>
+    <dialog class="modal" id="consult" aria-labelledby="consult-title">
+      <button class="modal__close" type="button" aria-label="Close" data-modal-close>&times;</button>
+        <form class="request" id="consult-form" action="#" novalidate>
+          <h2 class="request__title title-40"><span id="consult-title">Get a consultation from our specialist <em>within 24 hours</em></span></h2>
+          <div class="request__row">
+            <input class="request__field" type="email" name="email" placeholder="E-mail" aria-label="E-mail" autocomplete="email" />
+            <input class="request__field" type="text" name="name" placeholder="Your name" aria-label="Your name" autocomplete="name" />
+          </div>
+          <div class="request__message">
+            <input type="text" name="message" placeholder="Brief description" aria-label="Brief description" />
+            <button class="btn btn--dark" type="submit">Send</button>
+          </div>
+          <img class="request__mailbox" src="../assets/mailbox.webp" alt="" loading="lazy" />
+        </form>
+    </dialog>
+    <script src="../main.js?v=20261030-2" defer></script>
   </body>
 </html>
