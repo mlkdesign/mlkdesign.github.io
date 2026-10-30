@@ -18,7 +18,7 @@ DATA = Path(__file__).resolve().parent
 SERVICES = json.loads((DATA / 'services.json').read_text())
 LEGAL = json.loads((DATA / 'legal.json').read_text())
 
-VERSION = '20261030-3'
+VERSION = '20261030-7'
 CURRENT = ' aria-current="page"'
 
 # Home card copy and image for every service (the cards on the home page link to the service pages).
