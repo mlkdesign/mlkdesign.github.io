@@ -527,6 +527,9 @@ const caseReady = new Promise((resolve) => {
 const caseCopy = document.querySelector('.case-info__copy');
 if (caseCopy) {
   caseCopy.classList.add('has-sequence');
+  caseCopy.addEventListener('animationend', (event) => {
+    if (event.target.classList.contains('case-actions')) caseCopy.classList.add('is-sequence-done');
+  });
   caseReady.then(() => {
     requestAnimationFrame(() => caseCopy.classList.add('is-sequence-visible'));
   });
