@@ -475,17 +475,17 @@ textarea {
   position: absolute;
   top: 196px;
   left: calc(50% - 800px + 669px);
+  z-index: 2;
   width: 872px;
   height: 468px;
   pointer-events: none;
 }
 
-.home-hero__map img {
+.home-hero__layer {
   position: absolute;
   left: -60px;
   top: 15px;
   width: 932px;
-  max-width: none;
   height: 453px;
 }
 
@@ -1181,25 +1181,72 @@ textarea {
 
 .service-map {
   position: relative;
-  height: 661px;
-  overflow: hidden;
 }
 
-.service-map > img {
-  width: 1360px;
+/* ---------- Interactive map: country dots grow into name pills ---------- */
+.map-layer {
+  position: relative;
+}
+
+.map-layer > img {
+  width: 100%;
   max-width: none;
-  height: 661px;
+  height: 100%;
 }
 
-.service-map__label {
+.map-dots {
   position: absolute;
-  left: 249px;
-  top: 251px;
-  padding: 10px 20px;
-  border: 1px solid var(--line);
+  inset: 0;
+}
+
+.map-dot {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 8px;
+  height: 8px;
+  padding: 0 4px;
+  overflow: hidden;
   border-radius: 20px;
   background: var(--green);
   color: var(--bg);
+  font-size: 14px;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: auto;
+  transform: translate(-50%, -50%);
+  transition: max-width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    padding 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease;
+}
+
+/* Larger invisible hit area around the 8px dot. */
+.map-dot::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+}
+
+.map-dot span {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.map-dot:hover,
+.map-dot:focus-visible {
+  z-index: 2;
+  max-width: 320px;
+  height: 34px;
+  padding: 0 16px;
+  outline: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.map-dot:hover span,
+.map-dot:focus-visible span {
+  opacity: 1;
+  transition-delay: 0.1s;
 }
 
 .process {
@@ -1840,19 +1887,6 @@ textarea {
     width: 100%;
   }
 
-  .service-map {
-    height: auto;
-  }
-
-  .service-map > img {
-    width: 100%;
-    height: auto;
-  }
-
-  .service-map__label {
-    left: 18%;
-    top: 38%;
-  }
 
   .process__grid,
   .companies__grid {
@@ -1961,7 +1995,7 @@ textarea {
     height: 252px;
   }
 
-  .home-hero__map img {
+  .home-hero__layer {
     left: 33px;
     top: -8px;
     width: 475px;

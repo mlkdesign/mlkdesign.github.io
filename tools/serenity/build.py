@@ -7,6 +7,7 @@ two articles and one country template rendered for every jurisdiction listed on 
 
 Run from the repository root:  python3 tools/serenity/build.py
 """
+import json
 from html import escape
 from pathlib import Path
 
@@ -53,6 +54,19 @@ COUNTRIES = [
      ('nevis', 'Nevis', None), ('seychelles', 'Seychelles', 'seychelles'), ('bulgaria', 'Bulgaria', 'bulgaria'),
      ('denmark', 'Denmark', None), ('macedonia', 'Macedonia', None), ('cyprus', 'Cyprus', 'cyprus'), ('malaysia', 'Malaysia', None)],
 ]
+# Map dots carry the Russian layer names from Figma; tools/serenity/map-dots.json holds their positions (% of the map).
+MAP_DOTS = json.loads((Path(__file__).with_name('map-dots.json')).read_text())
+DOT_SLUGS = {
+    'США': 'usa', 'Нидерланды': 'netherlands', 'Россия': 'russia', 'Латвия': 'latvia', 'Эстония': 'estonia', 'Литва': 'lithuania',
+    'Дания': 'denmark', 'Казахстан': 'kazakhstan', 'Киргизия': 'kyrgyzstan', 'Австралия': 'australia', 'Китай': 'china',
+    'Гонконг': 'hong-kong', 'Сингапур': 'singapore', 'Малайзия': 'malaysia', 'Маврикий': 'mauritius', 'Сейшелы': 'seychelles',
+    'ОАЭ': 'uae', 'Турция': 'turkey', 'Кипр': 'cyprus', 'Болгария': 'bulgaria', 'Македония': 'macedonia', 'Италия': 'italy',
+    'Мальта': 'malta', 'Португалия': 'portugal', 'Гибраалтар': 'gibraltar', 'Египет': 'egypt', 'Армения': 'armenia',
+    'Грузия': 'georgia', 'Венгрия': 'hungary', 'Англия': 'england', 'Ирландия': 'ireland', 'Шотландия': 'scotland',
+    'Норвегия': 'norway', 'СВГСентВинсентиГренадины': 'saint-vincent', 'Белиз': 'belize', 'Чили': 'chile',
+    'Колумбия': 'colombia', 'Кюрасао': 'curacao', 'Невис': 'nevis',
+}
+
 # Short form used inside sentences ("register a company in …").
 IN_NAME = {'saint-vincent': 'Saint Vincent and the Grenadines', 'uae': 'the UAE', 'usa': 'the USA', 'netherlands': 'the Netherlands'}
 
@@ -65,6 +79,17 @@ ARTICLE_CARDS = [
 
 
 CURRENT = ' aria-current="page"'
+
+
+def map_dots(key, r):
+    """Country dots over a map image: each grows into a name pill on hover/focus and links to the country page."""
+    names = {slug: name for column in COUNTRIES for slug, name, _ in column}
+    dots = []
+    for dot in MAP_DOTS[key]:
+        slug = DOT_SLUGS[dot['ru']]
+        dots.append(f'<a class="map-dot" href="{r}countries/{slug}.html" style="left: {dot["x"]}%; top: {dot["y"]}%">'
+                    f'<span>{e(names[slug])}</span></a>')
+    return '<nav class="map-dots" aria-label="Jurisdictions on the map">' + ''.join(dots) + '</nav>'
 
 
 def e(text):
@@ -82,7 +107,7 @@ def head(r, title, description):
     <title>{e(title)}</title>
     <meta name="description" content="{e(description)}" />
     <link rel="preload" href="{r}assets/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="{r}style.css?v=20261030-2" />
+    <link rel="stylesheet" href="{r}style.css?v=20261030-3" />
     <script>document.documentElement.classList.add('js');</script>
   </head>
   <body>
@@ -253,7 +278,7 @@ def build_home():
     html += f'''    <main>
       <section class="home-hero">
         <img class="glow" src="assets/glow.svg" alt="" style="left: calc(50% + 240px); top: -415px" />
-        <div class="home-hero__map" aria-hidden="true"><img src="assets/hero-map.svg" alt="" width="932" height="453" /></div>
+        <div class="home-hero__map"><div class="map-layer home-hero__layer"><img src="assets/hero-map.svg" alt="" width="932" height="453" />{map_dots('hero-map', r)}</div></div>
         <div class="wrap home-hero__text">
           <h1 class="home-hero__title">Company registration<br />all over <span class="green">the world</span></h1>
           <p class="home-hero__subtitle">Legal consulting 24/7</p>
@@ -499,8 +524,7 @@ def build_service(index, slug, label):
     extras = []
     if slug == 'company-registration':
         extras.append(f'''      <section class="wrap service-map" aria-label="Jurisdictions on the map">
-        <img src="{r}assets/service-map.svg" alt="World map with our jurisdictions" width="1360" height="661" loading="lazy" />
-        <span class="service-map__label">USA</span>
+        <div class="map-layer"><img src="{r}assets/service-map.svg" alt="World map with our jurisdictions" width="1360" height="661" loading="lazy" />{map_dots('service-map', r)}</div>
       </section>
 ''')
     if slug in ('crypto-licensing', 'betting-gambling', 'bank-accounts'):
