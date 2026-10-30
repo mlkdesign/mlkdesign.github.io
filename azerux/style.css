@@ -432,7 +432,7 @@ b, strong { font-weight: 500; }
 .faq__a h3 { font-size: clamp(22px, 0.9rem + 0.9vw, 31px); font-weight: 400; text-transform: uppercase; }
 .faq__a p { font-size: clamp(16px, 0.8rem + 0.4vw, 20px); line-height: 1.5; }
 .faq__a p a { text-decoration: underline; text-underline-offset: 3px; }
-.faq__a .btn { align-self: flex-end; margin-top: auto; }
+.faq__a .btn { flex: none; align-self: flex-end; margin-top: auto; }
 .faq--narrow .faq__box { width: min(1280px, 100%); margin-inline: auto; }
 
 /* Benefits --------------------------------------------------------------- */
@@ -522,6 +522,8 @@ b, strong { font-weight: 500; }
 }
 .touch__art { position: relative; align-self: start; }
 .touch__img { position: relative; width: 100%; }
+/* The Figma shadow multiplies the card below the phone. The file is that multiply worked out as a dark
+   translucent layer, so it looks the same in browsers that skip the blend here (Safari). */
 .touch__shadow { position: absolute; left: 36%; bottom: -1%; width: 73%; mix-blend-mode: multiply; }
 .touch__body { position: relative; z-index: 2; padding-top: 32px; }
 .touch__body h2 { font-size: clamp(22px, 0.9rem + 0.9vw, 31px); font-weight: 400; text-transform: uppercase; }
@@ -618,7 +620,7 @@ b, strong { font-weight: 500; }
 .post p { font-size: 16px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .post .btn { width: 218px; height: 51px; padding: 0 27px; align-self: flex-end; border-color: transparent; }
 .post:hover .btn, .post .btn:focus-visible { border-color: var(--white); }
-.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 0; padding: 0; list-style: none; font-size: 16px; }
+.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; padding: 0; list-style: none; font-size: 16px; }
 .meta li { display: inline-flex; align-items: center; gap: 10px; }
 .meta li + li::before { content: ''; width: 1px; height: 19px; margin: 0 10px 0 0; background: var(--line-strong); }
 .post--big { min-height: 601px; }
@@ -962,14 +964,10 @@ b, strong { font-weight: 500; }
 .blog__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .blog__grid.is-list { grid-template-columns: minmax(0, 1fr); }
 .blog__empty { grid-column: 1 / -1; padding: 60px 0; text-align: center; opacity: 0.6; }
-.pager[hidden] { display: none; }
 .blog__grid .post__img { aspect-ratio: 595 / 316; }
 .blog__grid .post__body > .btn { position: absolute; right: 0; bottom: 0; }
 .blog__grid .meta { order: 3; margin-top: 10px; min-height: 51px; }
-.pager { display: flex; justify-content: center; gap: 10px; margin-top: 40px; }
-.pager a { display: grid; place-items: center; min-width: 34px; height: 34px; border-radius: 6px; font-weight: 400; color: rgba(255, 255, 255, 0.6); }
-.pager a:hover { color: var(--white); background: var(--glass); }
-.pager a[aria-current] { background: var(--blue); color: var(--white); }
+.blog__more { height: 1px; }
 
 /* Article ---------------------------------------------------------------- */
 .article { padding: 20px 0 40px; }
@@ -1206,11 +1204,11 @@ b, strong { font-weight: 500; }
 [data-theme="light"] .header.is-scrolled { background: rgba(238, 241, 250, 0.92); }
 [data-theme="light"] .header.is-open { background: var(--bg); }
 [data-theme="light"] .nav__link, [data-theme="light"] .nav__menu a, [data-theme="light"] .switch__btn,
-[data-theme="light"] .faq__q, [data-theme="light"] .chip, [data-theme="light"] .periods__btn, [data-theme="light"] .pager a { color: rgba(18, 18, 18, 0.5); }
+[data-theme="light"] .faq__q, [data-theme="light"] .chip, [data-theme="light"] .periods__btn { color: rgba(18, 18, 18, 0.5); }
 [data-theme="light"] .nav__link:hover, [data-theme="light"] .nav__link[aria-current], [data-theme="light"] .nav__drop:hover > .nav__link,
 [data-theme="light"] .nav__link[aria-expanded="true"], [data-theme="light"] .nav__menu a:hover, [data-theme="light"] .switch__btn:hover,
 [data-theme="light"] .faq__q:hover, [data-theme="light"] .faq__item.is-open .faq__q, [data-theme="light"] .chip:hover,
-[data-theme="light"] .periods__btn:hover, [data-theme="light"] .pager a:hover, [data-theme="light"] .header.is-open .nav__link { color: var(--ink); }
+[data-theme="light"] .periods__btn:hover, [data-theme="light"] .header.is-open .nav__link { color: var(--ink); }
 [data-theme="light"] .nav__menu { background: rgba(255, 255, 255, 0.92); border-color: var(--line); box-shadow: 0 20px 50px rgba(43, 119, 246, 0.12); }
 [data-theme="light"] .lang, [data-theme="light"] .theme { background: rgba(255, 255, 255, 0.7); }
 [data-theme="light"] .theme img { background: var(--white); }
@@ -1228,7 +1226,7 @@ b, strong { font-weight: 500; }
 [data-theme="light"] .solution { background: linear-gradient(180deg, rgba(43, 119, 246, 0) 0%, rgba(43, 119, 246, 0.25) 100%), rgba(255, 255, 255, 0.55); }
 [data-theme="light"] .solution:hover, [data-theme="light"] .solution:focus-visible { color: var(--white); }
 [data-theme="light"] .solution__bg { opacity: 0.12; mix-blend-mode: multiply; }
-:is(.achievements, .cta, .trial, .btn--blue, .plan--blue .plan__price, .plan--orange .plan__price, .plan__top, .badge, .chip.is-active, .pager a[aria-current]) { color: var(--white); }
+:is(.achievements, .cta, .trial, .btn--blue, .plan--blue .plan__price, .plan--orange .plan__price, .plan__top, .badge, .chip.is-active) { color: var(--white); }
 [data-theme="light"] .faq__box { background: radial-gradient(40% 70% at 100% 100%, rgba(43, 119, 246, 0.3), transparent 70%), rgba(255, 255, 255, 0.5); }
 [data-theme="light"] .faq__item.is-open .faq__q { border-color: rgba(18, 18, 18, 0.6); }
 [data-theme="light"] .faq__q i { background: var(--white) url('assets/arrow-dark.svg') center / 16px no-repeat; box-shadow: 0 6px 20px rgba(43, 119, 246, 0.15); }
