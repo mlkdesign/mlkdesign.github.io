@@ -1,0 +1,190 @@
+// Menu, tabs, FAQ, sliders, plan periods, blog controls and the consultation modal. No dependencies.
+const header = document.querySelector('.header');
+const burger = document.querySelector('.burger');
+const desktop = window.matchMedia('(min-width: 1281px)');
+
+const updateHeader = () => header?.classList.toggle('is-scrolled', window.scrollY > 10);
+window.addEventListener('scroll', updateHeader, { passive: true });
+updateHeader();
+
+const closeMenu = () => {
+  header?.classList.remove('is-open');
+  burger?.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+};
+
+burger?.addEventListener('click', () => {
+  const open = header.classList.toggle('is-open');
+  burger.setAttribute('aria-expanded', String(open));
+  document.body.style.overflow = open ? 'hidden' : '';
+});
+
+header?.querySelectorAll('.nav a').forEach((link) => link.addEventListener('click', closeMenu));
+
+// Dropdowns open on hover on desktop; the button toggles them for touch and keyboard.
+header?.querySelectorAll('.nav__drop').forEach((drop) => {
+  const button = drop.querySelector('button');
+  button.addEventListener('click', () => {
+    const open = !drop.classList.contains('is-open');
+    header.querySelectorAll('.nav__drop.is-open').forEach((other) => {
+      other.classList.remove('is-open');
+      other.querySelector('button').setAttribute('aria-expanded', 'false');
+    });
+    drop.classList.toggle('is-open', open);
+    button.setAttribute('aria-expanded', String(open));
+  });
+});
+document.addEventListener('click', (event) => {
+  if (!desktop.matches || event.target.closest('.nav__drop')) return;
+  header?.querySelectorAll('.nav__drop.is-open').forEach((drop) => {
+    drop.classList.remove('is-open');
+    drop.querySelector('button').setAttribute('aria-expanded', 'false');
+  });
+});
+
+// Solutions: Services / DDoS Attack Protection tabs; on phones only three cards show until "See all".
+const tabs = [...document.querySelectorAll('.switch__btn')];
+const seeAll = document.querySelector('.solutions__all');
+const panels = tabs.map((tab) => document.getElementById(tab.getAttribute('aria-controls')));
+panels.forEach((panel) => panel?.classList.add('is-collapsed'));
+const syncSeeAll = () => {
+  const panel = panels.find((p) => p && !p.hidden);
+  if (seeAll) seeAll.hidden = !panel || !panel.classList.contains('is-collapsed') || panel.children.length <= 3;
+};
+tabs.forEach((tab, index) => {
+  tab.addEventListener('click', () => {
+    tabs.forEach((other, i) => {
+      other.classList.toggle('is-active', i === index);
+      other.setAttribute('aria-selected', String(i === index));
+      if (panels[i]) panels[i].hidden = i !== index;
+    });
+    syncSeeAll();
+  });
+});
+seeAll?.addEventListener('click', () => {
+  panels.forEach((panel) => panel?.classList.remove('is-collapsed'));
+  syncSeeAll();
+});
+syncSeeAll();
+
+// FAQ: one question open at a time (desktop shows its answer on the right, phones expand it in place).
+document.querySelectorAll('.faq__box').forEach((box) => {
+  const items = [...box.querySelectorAll('.faq__item')];
+  items.forEach((item) => {
+    item.querySelector('.faq__q').addEventListener('click', () => {
+      const wasOpen = item.classList.contains('is-open');
+      items.forEach((other) => {
+        other.classList.remove('is-open');
+        other.querySelector('.faq__q').setAttribute('aria-expanded', 'false');
+      });
+      // On desktop one answer always stays visible; on phones a second tap folds it.
+      const open = desktop.matches || window.innerWidth > 767 || !wasOpen;
+      item.classList.toggle('is-open', open);
+      item.querySelector('.faq__q').setAttribute('aria-expanded', String(open));
+    });
+  });
+});
+
+// "Companies that trust us" slider: arrows scroll a card at a time, the bar follows the position.
+const track = document.querySelector('.trust__track');
+if (track) {
+  const prev = document.querySelector('.trust__prev');
+  const next = document.querySelector('.trust__next');
+  const bar = document.querySelector('.trust__nav i');
+  const step = () => (track.querySelector('.trust-card')?.offsetWidth || 312) + 10;
+  prev?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+  next?.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+  const update = () => {
+    const max = track.scrollWidth - track.clientWidth;
+    if (prev) prev.disabled = track.scrollLeft <= 1;
+    if (next) next.disabled = track.scrollLeft >= max - 1;
+    if (bar) bar.style.transform = `translateX(${max > 0 ? (track.scrollLeft / max) * 100 : 0}%)`;
+  };
+  track.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+}
+
+// Service plans: the billing period applies its discount to every price.
+document.querySelectorAll('.periods').forEach((group) => {
+  const buttons = [...group.querySelectorAll('.periods__btn')];
+  const plans = group.closest('.plans');
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      buttons.forEach((other) => {
+        other.classList.toggle('is-active', other === button);
+        other.setAttribute('aria-pressed', String(other === button));
+      });
+      const discount = Number(button.dataset.discount) / 100;
+      plans.querySelectorAll('.plan__price strong').forEach((price) => {
+        price.textContent = `$ ${Math.round(Number(price.dataset.base) * (1 - discount))}`;
+      });
+      plans.querySelectorAll('.plan__period').forEach((period) => { period.textContent = button.dataset.label; });
+    });
+  });
+});
+
+// Blog: category chips and the grid/list switch.
+document.querySelectorAll('.chip').forEach((chip, _, chips) => {
+  chip.addEventListener('click', () => {
+    chips.forEach((other) => {
+      other.classList.toggle('is-active', other === chip);
+      other.setAttribute('aria-pressed', String(other === chip));
+    });
+  });
+});
+const view = document.querySelector('.blog__view');
+view?.addEventListener('click', () => {
+  const list = view.getAttribute('aria-pressed') !== 'true';
+  view.setAttribute('aria-pressed', String(list));
+  view.setAttribute('aria-label', list ? 'Show as a grid' : 'Show as a list');
+  document.querySelector('.blog__grid')?.classList.toggle('is-list', list);
+});
+
+// The forms are part of the layout only: they are not connected to a backend.
+document.querySelectorAll('.request').forEach((form) => {
+  form.addEventListener('submit', (event) => event.preventDefault());
+});
+
+// Consultation modal: buttons marked data-modal open the "Get in touch" form.
+const modal = document.querySelector('#consult');
+if (modal && typeof modal.showModal === 'function') {
+  document.querySelectorAll('[data-modal]').forEach((trigger) => {
+    trigger.addEventListener('click', (event) => {
+      event.preventDefault();
+      closeMenu();
+      modal.showModal();
+    });
+  });
+  modal.querySelector('[data-modal-close]')?.addEventListener('click', () => modal.close());
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) modal.close();
+  });
+}
+
+// Blocks fade up as they enter the viewport; siblings are staggered.
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const revealTargets = [
+  'main .title', '.eyebrow', '.lead', '.switch', '.solution', '.stat', '.faq__box', '.benefit', '.benefits__logo', '.trust-card',
+  'main > .wrap > .touch', '.post', '.socials__item', '.partners__logos li', '.page-hero__inner > *', '.service__intro', '.service__h',
+  '.why-card', '.features', '.closing', '.cta__inner > *', '.why-use__label', '.problem', '.periods', '.plan', '.trial', '.how__diagram',
+  '.article .wrap > *', '.legal .wrap > *', '.footer__grid > *',
+].join(',');
+
+if (!reduceMotion && 'IntersectionObserver' in window) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-in');
+      observer.unobserve(entry.target);
+    });
+  }, { rootMargin: '0px 0px -8% 0px' });
+
+  document.querySelectorAll(revealTargets).forEach((element) => {
+    if (element.closest('.modal, .reveal, .hero')) return;
+    const siblings = [...element.parentElement.children].filter((child) => child.matches(revealTargets));
+    element.style.setProperty('--reveal-delay', `${Math.min(siblings.indexOf(element), 6) * 0.08}s`);
+    element.classList.add('reveal');
+    observer.observe(element);
+  });
+}
