@@ -303,12 +303,14 @@ body.is-page-transitioning {
   background: linear-gradient(to bottom, rgba(5, 5, 5, 0.55), rgba(5, 5, 5, 0));
 }
 
+/* The grain layer only needs a margin for its jitter: at 120% instead of 200% of the screen
+   it is 2.8 times less to keep on the GPU, with the same grain on screen. */
 .noise {
   position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
   z-index: 9997;
   pointer-events: none;
   background: url("assets/noise.png") repeat;
@@ -1885,16 +1887,6 @@ input[type="reset"]::-moz-focus-inner {
   background: #fff;
 }
 
-.form-modal__image {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: left bottom;
-}
-
 .form-modal__media .float {
   position: absolute;
   z-index: 1;
@@ -2039,31 +2031,6 @@ input[type="reset"]::-moz-focus-inner {
   color: #0a0a0a;
 }
 
-.form-modal__socials {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 1rem 1.5rem;
-  width: 100%;
-  margin-top: 3rem;
-}
-
-.form-modal__socials .social-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  color: #0a0a0a;
-}
-
-.form-modal__socials .social-link:focus-visible {
-  outline: 2px solid #0a0a0a !important;
-  outline-offset: 3px;
-}
-
-.form-modal__socials .social-link:active {
-  opacity: 0.4;
-}
-
 .social-link__icon {
   display: block;
   flex: 0 0 auto;
@@ -2081,9 +2048,10 @@ body.form-open {
   transition: opacity 0.7s var(--ease), filter 0.7s var(--ease);
 }
 
+/* "none", not blur(0): a zero blur still keeps a filter layer on every faded-in element. */
 [data-fade].is-in {
   opacity: 1;
-  filter: blur(0);
+  filter: none;
 }
 
 a:not([data-fade]):not(.contact-cta__button):not(.work-card__link),
@@ -2121,7 +2089,6 @@ a[data-fade].is-in:focus-visible {
     opacity: 1;
     transform: none;
   }
-
 
   .work-card {
     transition: none;
@@ -2639,14 +2606,6 @@ a[href]:is(:hover, :focus-visible):not(:active) {
     display: none;
   }
 
-  .form-modal__image {
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    object-position: left bottom;
-  }
-
   .form-modal__media .float {
     will-change: auto;
   }
@@ -2704,11 +2663,6 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   .request-btn.sp-box:not(:disabled):focus-within,
   .request-btn.sp-box:not(:disabled):focus-visible {
     color: rgba(10, 10, 10, 0.45);
-  }
-
-  .form-modal__socials {
-    justify-content: flex-start;
-    margin-top: 3.5rem;
   }
 }
 
