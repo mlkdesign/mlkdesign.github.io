@@ -2321,6 +2321,65 @@ textarea {
   transform: none;
 }
 
+/* ---------- Home first screen: intro on page load (CSS only, so nothing flashes before JS runs) ---------- */
+@keyframes intro-up {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+}
+
+@keyframes intro-down {
+  from {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+}
+
+@keyframes intro-map {
+  from {
+    opacity: 0;
+    scale: 0.94;
+  }
+}
+
+@keyframes intro-dot {
+  from {
+    opacity: 0;
+    scale: 0;
+  }
+}
+
+.js .header {
+  animation: intro-down 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.js .home-hero__text > * {
+  animation: intro-up 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.js .home-hero__title {
+  animation-delay: 0.15s;
+}
+
+.js .home-hero__subtitle {
+  animation-delay: 0.3s;
+}
+
+.js .home-hero__text > .btn {
+  animation-delay: 0.45s;
+}
+
+.js .home-hero__layer > img {
+  animation: intro-map 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both;
+}
+
+/* Dots pop in one after another once the map has faded in. */
+.js .home-hero .map-dot {
+  animation: intro-dot 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+  animation-delay: calc(0.7s + var(--i, 0) * 0.035s);
+}
+
 /* ---------- Article and country heroes: content slides over the photo ---------- */
 .article-hero,
 .country-hero {
@@ -2352,6 +2411,13 @@ textarea {
   .js .reveal {
     opacity: 1;
     transform: none;
+  }
+
+  .js .header,
+  .js .home-hero__text > *,
+  .js .home-hero__layer > img,
+  .js .home-hero .map-dot {
+    animation: none;
   }
 
   * {
