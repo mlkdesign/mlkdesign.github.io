@@ -44,7 +44,8 @@ img.a { max-width: none; }
 .lower { position: absolute; inset: 0; z-index: 21; pointer-events: none; transform: translate3d(0, var(--lift, 0px), 0); }
 .lower > * { pointer-events: auto; }
 .lower > .deco { pointer-events: none; }
-/* The light images carry their brightness as transparency, so normal blending lightens like "screen" in every browser. */
+/* The light images carry their brightness as transparency, so normal blending lightens like "screen" in every browser.
+   They are black and white: neutral light, no blue cast. */
 .light { z-index: 22; translate: 0 var(--lift, 0px); object-fit: fill; }
 .light--right { transform: scaleX(-1); }
 .join-bg, .join-bg + .fade-top { z-index: 1; }
@@ -439,6 +440,8 @@ html.js:not(.is-loaded) { overflow: hidden; }
 .light--left { animation-duration: 7.1s; animation-delay: -2.4s; }
 /* Inside .lower already, so it rides the lift with the block; it sits over the boy to light him. */
 .light--foot { z-index: 33; translate: none; animation-duration: 6.2s; animation-delay: -1.1s; }
+/* Half as bright as the side lights: filter opacity stacks with the flicker, which animates opacity. */
+.light--foot { filter: opacity(0.5); }
 @keyframes flicker {
   0%, 100% { opacity: 1; }
   2% { opacity: 0.25; }

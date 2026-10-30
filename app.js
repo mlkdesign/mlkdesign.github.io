@@ -1754,9 +1754,11 @@ if (
     const incomingX = -outgoingX;
     const swapElement = (element, update, delay) => {
       if (!element) return;
+      // Fade to and from the element's own resting opacity: links rest dimmed, so a full 1 would flash and then drop.
+      const restOpacity = getComputedStyle(element).opacity;
       const exitAnimation = element.animate(
         [
-          { opacity: 1, transform: 'translate3d(0, 0, 0)' },
+          { opacity: restOpacity, transform: 'translate3d(0, 0, 0)' },
           { opacity: 0, transform: `translate3d(${outgoingX}px, 0, 0)` },
         ],
         { duration: 180, delay, easing: 'ease-in', fill: 'forwards' },
@@ -1768,7 +1770,7 @@ if (
         const enterAnimation = element.animate(
           [
             { opacity: 0, transform: `translate3d(${incomingX}px, 0, 0)` },
-            { opacity: 1, transform: 'translate3d(0, 0, 0)' },
+            { opacity: restOpacity, transform: 'translate3d(0, 0, 0)' },
           ],
           { duration: 450, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
         );
@@ -1976,9 +1978,9 @@ const workCards = Array.from(worksSection?.querySelectorAll('.work-card') || [])
 const worksPrev = worksSection?.querySelector('.works-arrow--prev');
 const worksNext = worksSection?.querySelector('.works-arrow--next');
 
-const WORK_CARD_WIDTH = 350;
 const WORK_CARD_GAP = 15;
-const WORK_SLIDE_STEP = WORK_CARD_WIDTH + WORK_CARD_GAP;
+// One card per click; the cards follow the screen height, so the step is measured.
+const workSlideStep = () => (workCards[0]?.offsetWidth || 350) + WORK_CARD_GAP;
 
 const renderWorksControls = () => {
   if (!worksViewport) return;
@@ -1999,14 +2001,14 @@ const measureWorks = () => {
 
 worksPrev?.addEventListener('click', () => {
   worksViewport?.scrollBy({
-    left: -WORK_SLIDE_STEP,
+    left: -workSlideStep(),
     behavior: prefersReducedMotion ? 'auto' : 'smooth',
   });
 });
 
 worksNext?.addEventListener('click', () => {
   worksViewport?.scrollBy({
-    left: WORK_SLIDE_STEP,
+    left: workSlideStep(),
     behavior: prefersReducedMotion ? 'auto' : 'smooth',
   });
 });

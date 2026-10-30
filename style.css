@@ -1430,8 +1430,9 @@ h1 {
 
 .work-card {
   position: relative;
-  flex: 0 0 350px;
-  width: 350px;
+  /* As tall as the screen allows, and as wide as the cover's own 735:881 proportion at that height. */
+  flex: none;
+  aspect-ratio: 735 / 881;
   height: max(400px, calc(100vh - 430px));
   height: max(400px, calc(100svh - 430px));
   overflow: hidden;
