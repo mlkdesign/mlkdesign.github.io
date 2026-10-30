@@ -18,7 +18,7 @@ DATA = Path(__file__).resolve().parent
 SERVICES = json.loads((DATA / 'services.json').read_text())
 LEGAL = json.loads((DATA / 'legal.json').read_text())
 
-VERSION = '20261030-2'
+VERSION = '20261030-3'
 CURRENT = ' aria-current="page"'
 
 # Home card copy and image for every service (the cards on the home page link to the service pages).
@@ -136,7 +136,7 @@ def head(r, title, description):
     <link rel="icon" href="{r}assets/logo-mark.svg" type="image/svg+xml" />
     <link rel="preload" href="{r}assets/fonts/ibm-plex-sans.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="{r}style.css?v={VERSION}" />
-    <script>document.documentElement.classList.add('js');</script>
+    <script>document.documentElement.classList.add('js');try{{if(localStorage.getItem('azerux-theme')==='light')document.documentElement.dataset.theme='light'}}catch(e){{}}</script>
   </head>
   <body>
 '''
@@ -180,7 +180,7 @@ def header(r, active=None):
         <div class="header__tools">
           <a class="header__phone" href="tel:+380661234567"><img src="{r}assets/icon-phone.svg" alt="" width="10" height="10" /><span>+38 (066) 123-45-67</span></a>
           <span class="lang"><img src="{r}assets/flag-uk.svg" alt="" width="16" height="16" />Eng{chevron}</span>
-          <span class="theme" aria-hidden="true"><img src="{r}assets/icon-moon.svg" alt="" width="16" height="16" /></span>
+          <button class="theme" type="button" aria-pressed="false" aria-label="Light theme"><img class="theme__moon" src="{r}assets/icon-moon.svg" alt="" width="16" height="16" /><img class="theme__sun" src="{r}assets/icon-sun.svg" alt="" width="16" height="16" /></button>
           <a class="btn btn--line btn--sm" href="#" data-modal>Sign in</a>
           <a class="btn btn--blue btn--sm" href="#" data-modal>Log in</a>
         </div>

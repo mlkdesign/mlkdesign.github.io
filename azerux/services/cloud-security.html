@@ -9,8 +9,8 @@
     <meta name="description" content="Protect Your Cloud Environment with Comprehensive Security" />
     <link rel="icon" href="../assets/logo-mark.svg" type="image/svg+xml" />
     <link rel="preload" href="../assets/fonts/ibm-plex-sans.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="../style.css?v=20261030-2" />
-    <script>document.documentElement.classList.add('js');</script>
+    <link rel="stylesheet" href="../style.css?v=20261030-3" />
+    <script>document.documentElement.classList.add('js');try{if(localStorage.getItem('azerux-theme')==='light')document.documentElement.dataset.theme='light'}catch(e){}</script>
   </head>
   <body>
     <header class="header">
@@ -41,7 +41,7 @@
         <div class="header__tools">
           <a class="header__phone" href="tel:+380661234567"><img src="../assets/icon-phone.svg" alt="" width="10" height="10" /><span>+38 (066) 123-45-67</span></a>
           <span class="lang"><img src="../assets/flag-uk.svg" alt="" width="16" height="16" />Eng<img src="../assets/chevron.svg" alt="" width="16" height="16" /></span>
-          <span class="theme" aria-hidden="true"><img src="../assets/icon-moon.svg" alt="" width="16" height="16" /></span>
+          <button class="theme" type="button" aria-pressed="false" aria-label="Light theme"><img class="theme__moon" src="../assets/icon-moon.svg" alt="" width="16" height="16" /><img class="theme__sun" src="../assets/icon-sun.svg" alt="" width="16" height="16" /></button>
           <a class="btn btn--line btn--sm" href="#" data-modal>Sign in</a>
           <a class="btn btn--blue btn--sm" href="#" data-modal>Log in</a>
         </div>
@@ -216,6 +216,6 @@
     </div>
 
   </dialog>
-  <script src="../main.js?v=20261030-2" defer></script>
+  <script src="../main.js?v=20261030-3" defer></script>
   </body>
 </html>

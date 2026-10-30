@@ -21,6 +21,22 @@ burger?.addEventListener('click', () => {
 
 header?.querySelectorAll('.nav a').forEach((link) => link.addEventListener('click', closeMenu));
 
+// Theme: dark by default (the main design); the sun/moon button switches and remembers the choice.
+const themeButton = document.querySelector('.theme');
+const syncTheme = () => {
+  const light = document.documentElement.dataset.theme === 'light';
+  themeButton?.setAttribute('aria-pressed', String(light));
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#e3e8f7' : '#121212');
+};
+themeButton?.addEventListener('click', () => {
+  const light = document.documentElement.dataset.theme !== 'light';
+  if (light) document.documentElement.dataset.theme = 'light';
+  else delete document.documentElement.dataset.theme;
+  try { localStorage.setItem('azerux-theme', light ? 'light' : 'dark'); } catch (error) { /* private mode: the choice lasts for this page only */ }
+  syncTheme();
+});
+syncTheme();
+
 // Dropdowns open on hover on desktop; the button toggles them for touch and keyboard.
 header?.querySelectorAll('.nav__drop').forEach((drop) => {
   const button = drop.querySelector('button');
