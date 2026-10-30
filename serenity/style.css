@@ -863,6 +863,24 @@ textarea {
   cursor: pointer;
 }
 
+/* Slider arrows: green when there is somewhere to scroll, faded outline arrow when not (state set in main.js). */
+.articles__nav .arrow-btn {
+  transition: background-color 0.25s ease, opacity 0.25s ease, border-radius 0.25s ease;
+}
+
+.articles__nav .arrow-btn:disabled {
+  cursor: default;
+}
+
+.articles__nav .arrow-btn .arrow-btn__on,
+.articles__nav .arrow-btn--active .arrow-btn__off {
+  display: none;
+}
+
+.articles__nav .arrow-btn--active .arrow-btn__on {
+  display: block;
+}
+
 .articles__prev img {
   transform: rotate(180deg);
 }
