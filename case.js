@@ -150,7 +150,7 @@ const CASE_PROJECTS = {
   },
   1: {
     image: 'assets/case-1.avif',
-    visitUrl: 'https://www.behance.net/gallery/218243837/NFT-Collection-Landing-Page-MRBONE',
+    visitUrl: 'mrbone/',
     copy: {
       en: {
         pageTitle: 'MR.BONE — MLK.STUDIO',
