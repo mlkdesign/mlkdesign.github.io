@@ -270,7 +270,7 @@ img.a, .a > img { object-fit: cover; }
 .js .reveal.is-in { opacity: 1; translate: 0 0; }
 
 /* Phones: the MOB frame. Blocks flow in document order. -------------------- */
-@media (max-width: 900px) {
+@media (max-width: 1023px) {
   :root { --u: 1px; }
   body { font-size: 12px; }
   .stage { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 0 12px; width: 100%; height: auto; padding: 12px 12px 0; overflow: hidden; }
