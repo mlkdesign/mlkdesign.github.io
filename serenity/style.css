@@ -39,6 +39,8 @@
 html {
   background: var(--bg);
   scroll-behavior: smooth;
+  /* Anchor jumps land below the fixed menu. */
+  scroll-padding-top: 100px;
 }
 
 body {
@@ -187,11 +189,21 @@ textarea {
 
 /* ---------- Header ---------- */
 .header {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 20;
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.3s ease, border-color 0.3s ease, -webkit-backdrop-filter 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+/* Once the page scrolls, the menu gets a dark bar that blurs the content underneath. */
+.header.is-scrolled {
+  border-bottom-color: var(--line);
+  background: rgba(21, 20, 24, 0.72);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
 }
 
 .header__inner {
