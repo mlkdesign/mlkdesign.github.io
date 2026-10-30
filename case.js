@@ -492,17 +492,6 @@ if (pointerFine && cursorDot && cursorEllipse) {
 
 let lenis = null;
 let lenisFrame = 0;
-let scrollIdleTimer = 0;
-
-const markCaseScrolling = () => {
-  document.body.classList.add('is-scrolling');
-  clearTimeout(scrollIdleTimer);
-  scrollIdleTimer = window.setTimeout(() => {
-    document.body.classList.remove('is-scrolling');
-    scrollIdleTimer = 0;
-  }, 120);
-};
-
 const renderLenis = (time) => {
   if (!lenis) {
     lenisFrame = 0;
@@ -521,16 +510,12 @@ const setCaseScrollMode = () => {
       wheelMultiplier: 0.3,
       syncTouch: false,
     });
-    lenis.on('scroll', markCaseScrolling);
     lenisFrame = requestAnimationFrame(renderLenis);
   } else if (!shouldSmooth && lenis) {
     cancelAnimationFrame(lenisFrame);
     lenisFrame = 0;
     lenis.destroy();
     lenis = null;
-    clearTimeout(scrollIdleTimer);
-    scrollIdleTimer = 0;
-    document.body.classList.remove('is-scrolling');
   }
 };
 
@@ -1222,11 +1207,17 @@ if (formModal) {
   const closingBlock = document.querySelector('.contact-cta');
   const coveringSurface = closingBlock?.previousElementSibling;
   if (closingBlock && coveringSurface) {
+    // The variable is written on the panels themselves and only when it changes: written on <html>
+    // it made the browser restyle the whole page on every scroll frame.
+    const floatingPanels = document.querySelectorAll('.cookie-banner, .case-offer');
     let footerFrame = 0;
+    let lastOverlap = -1;
     const updateFooterOverlap = () => {
       footerFrame = 0;
-      const overlap = Math.max(0, window.innerHeight - coveringSurface.getBoundingClientRect().bottom);
-      document.documentElement.style.setProperty('--footer-overlap', `${Math.round(overlap)}px`);
+      const overlap = Math.round(Math.max(0, window.innerHeight - coveringSurface.getBoundingClientRect().bottom));
+      if (overlap === lastOverlap) return;
+      lastOverlap = overlap;
+      floatingPanels.forEach((panel) => panel.style.setProperty('--footer-overlap', `${overlap}px`));
     };
     const scheduleFooterOverlap = () => {
       if (!footerFrame) footerFrame = requestAnimationFrame(updateFooterOverlap);

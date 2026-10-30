@@ -1036,7 +1036,8 @@ const initialRendererHeight = rendererHeight();
 
 const createHeroRenderer = () => {
   try {
-    return new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    // No MSAA: the scene is one full-screen plane, so antialiasing only cost GPU time.
+    return new THREE.WebGLRenderer({ antialias: false, alpha: true });
   } catch (error) {
     console.warn('WebGL is unavailable; using the static hero fallback.', error);
     const canvas = document.createElement('canvas');
@@ -1188,7 +1189,9 @@ let webglReady = false;
 let heroRenderFrame = 0;
 let desktopScrollActive = false;
 
-const renderLoop = () => {
+let lastHeroFrameTime = 0;
+
+const renderLoop = (now) => {
   heroRenderFrame = 0;
   if (!webglReady || !heroInView || desktopScrollActive) return;
 
@@ -1204,7 +1207,9 @@ const renderLoop = () => {
   uniforms.uMouse.value.set(smoothedMouse.x, smoothedMouse.y);
   uniforms.uParallax.value.set((0.5 - smoothedMouse.x) * 30, (0.5 - smoothedMouse.y) * 30);
   uniforms.uMouseInfluence.value = influence;
-  uniforms.uTime.value += 0.016;
+  // Real elapsed time (capped after a pause), so the drift runs at the same speed on 60, 120 and 144 Hz screens.
+  uniforms.uTime.value += Math.min(0.05, Math.max(0, (now - lastHeroFrameTime) / 1000));
+  lastHeroFrameTime = now;
 
   renderer.render(scene, camera);
   heroRenderFrame = requestAnimationFrame(renderLoop);
@@ -2365,14 +2370,12 @@ const finishDesktopScrollEffects = () => {
   clearTimeout(desktopScrollIdleTimer);
   desktopScrollIdleTimer = 0;
   desktopScrollActive = false;
-  document.body.classList.remove('is-scrolling');
   startHeroRender();
 };
 
 const markDesktopScrolling = () => {
   if (mqMobile.matches) return;
   desktopScrollActive = true;
-  document.body.classList.add('is-scrolling');
   cancelAnimationFrame(heroRenderFrame);
   heroRenderFrame = 0;
   clearTimeout(desktopScrollIdleTimer);
@@ -2937,12 +2940,18 @@ measureWorks();
 {
   const closingBlock = document.querySelector('.contact-cta');
   const coveringSurface = closingBlock?.previousElementSibling;
-  if (closingBlock && coveringSurface) {
+  if (closingBlock && coveringSurface && document.querySelector('.cookie-banner, .case-offer')) {
+    // The variable is written on the panels themselves and only when it changes: written on <html>
+    // it made the browser restyle the whole page on every scroll frame.
+    const floatingPanels = document.querySelectorAll('.cookie-banner, .case-offer');
     let footerFrame = 0;
+    let lastOverlap = -1;
     const updateFooterOverlap = () => {
       footerFrame = 0;
-      const overlap = Math.max(0, window.innerHeight - coveringSurface.getBoundingClientRect().bottom);
-      document.documentElement.style.setProperty('--footer-overlap', `${Math.round(overlap)}px`);
+      const overlap = Math.round(Math.max(0, window.innerHeight - coveringSurface.getBoundingClientRect().bottom));
+      if (overlap === lastOverlap) return;
+      lastOverlap = overlap;
+      floatingPanels.forEach((panel) => panel.style.setProperty('--footer-overlap', `${overlap}px`));
     };
     const scheduleFooterOverlap = () => {
       if (!footerFrame) footerFrame = requestAnimationFrame(updateFooterOverlap);

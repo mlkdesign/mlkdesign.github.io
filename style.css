@@ -303,12 +303,14 @@ body.is-page-transitioning {
   background: linear-gradient(to bottom, rgba(5, 5, 5, 0.55), rgba(5, 5, 5, 0));
 }
 
+/* The grain layer only needs a margin for its jitter: at 120% instead of 200% of the screen
+   it is 2.8 times less to keep on the GPU, with the same grain on screen. */
 .noise {
   position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
   z-index: 9997;
   pointer-events: none;
   background: url("assets/noise.png") repeat;
@@ -1766,176 +1768,6 @@ h1 {
   transform: translateY(calc(-100% - 5px));
 }
 
-.cookie-banner {
-  position: fixed;
-  right: 15px;
-  bottom: 15px;
-  width: 50%;
-  z-index: 9998;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: stretch;
-  gap: 30px;
-  padding: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.1);
-  -webkit-backdrop-filter: blur(32px);
-  backdrop-filter: blur(32px);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translate3d(0, calc(100% + 30px), 0);
-  transition:
-    transform 0.65s var(--ease),
-    opacity 0.45s var(--ease),
-    visibility 0s linear 0.65s;
-}
-
-.cookie-banner.is-visible {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: translate3d(0, 0, 0);
-  transition-delay: 0s;
-}
-
-.cookie-banner__copy {
-  min-width: 0;
-}
-
-.cookie-banner__title {
-  margin: 0;
-  color: var(--text);
-  font-family: var(--font);
-  font-size: 26px;
-  font-weight: 300;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-}
-
-.cookie-banner__description {
-  max-width: 58rem;
-  margin: 0.65rem 0 0;
-  color: var(--text-soft);
-  font-size: 0.88rem;
-  font-weight: 300;
-  line-height: 1.45;
-}
-
-.cookie-banner__actions {
-  display: flex;
-  align-items: center;
-  align-self: end;
-  justify-self: end;
-  gap: 10px;
-}
-
-.cookie-banner__button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 112px;
-  height: 40px;
-  min-height: 40px;
-  padding: 0.5rem 1.2rem;
-  border-radius: 0;
-  color: #fff;
-  font: 300 0.82rem/1 var(--font);
-  letter-spacing: 0.12em;
-  text-transform: lowercase;
-  transition:
-    color 0.3s var(--ease),
-    border-color 0.3s var(--ease),
-    background-color 0.3s var(--ease);
-}
-
-.cookie-banner__button--accept {
-  border: 2px solid transparent;
-  background: var(--accent);
-  color: #fff;
-}
-
-.cookie-banner__button--accept:hover,
-.cookie-banner__button--accept:focus-visible {
-  background: color-mix(in srgb, var(--accent) 86%, #000);
-  color: #fff;
-}
-
-.cookie-banner__button--decline {
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: transparent;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.cookie-banner__button--decline:hover,
-.cookie-banner__button--decline:focus-visible {
-  border-color: #fff;
-  color: #fff;
-}
-
-.cookie-banner__button:hover .nav-link-line,
-.cookie-banner__button:focus-visible .nav-link-line {
-  transform: translateY(-105%);
-}
-
-.cookie-banner__button:hover .nav-link-line:last-child,
-.cookie-banner__button:focus-visible .nav-link-line:last-child {
-  transform: translateY(calc(-105% - 5px));
-}
-
-.cookie-banner__close {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  opacity: 0.6;
-  transition: opacity 0.3s var(--ease);
-}
-
-.cookie-banner__close img {
-  display: block;
-  width: 16px;
-  height: 16px;
-  filter: brightness(0) invert(1);
-  transform: rotate(0deg);
-  transition: transform 0.35s var(--ease);
-}
-
-.cookie-banner__close:hover,
-.cookie-banner__close:focus-visible {
-  opacity: 1;
-}
-
-.cookie-banner__close:hover img,
-.cookie-banner__close:focus-visible img {
-  transform: rotate(90deg);
-}
-
-@media (max-width: 800px) {
-  .cookie-banner {
-    left: 15px;
-    width: auto;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 15px;
-  }
-
-  .cookie-banner__actions {
-    width: 100%;
-  }
-
-  .cookie-banner__button {
-    flex: 1 1 0;
-    min-width: 0;
-  }
-}
-
 /* Pointer interaction must never leave a browser focus ring on controls. */
 :where(a, button, [role="button"], input[type="button"], input[type="submit"], input[type="reset"]):focus,
 :where(a, button, [role="button"], input[type="button"], input[type="submit"], input[type="reset"]):focus-visible {
@@ -1948,13 +1780,6 @@ input[type="button"]::-moz-focus-inner,
 input[type="submit"]::-moz-focus-inner,
 input[type="reset"]::-moz-focus-inner {
   border: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cookie-banner {
-    transform: none;
-    transition: none;
-  }
 }
 
 .form-modal {
@@ -2073,16 +1898,6 @@ input[type="reset"]::-moz-focus-inner {
   min-height: 0;
   overflow: visible;
   background: #fff;
-}
-
-.form-modal__image {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: left bottom;
 }
 
 .form-modal__media .float {
@@ -2229,31 +2044,6 @@ input[type="reset"]::-moz-focus-inner {
   color: #0a0a0a;
 }
 
-.form-modal__socials {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 1rem 1.5rem;
-  width: 100%;
-  margin-top: 3rem;
-}
-
-.form-modal__socials .social-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  color: #0a0a0a;
-}
-
-.form-modal__socials .social-link:focus-visible {
-  outline: 2px solid #0a0a0a !important;
-  outline-offset: 3px;
-}
-
-.form-modal__socials .social-link:active {
-  opacity: 0.4;
-}
-
 .social-link__icon {
   display: block;
   flex: 0 0 auto;
@@ -2271,9 +2061,10 @@ body.form-open {
   transition: opacity 0.7s var(--ease), filter 0.7s var(--ease);
 }
 
+/* "none", not blur(0): a zero blur still keeps a filter layer on every faded-in element. */
 [data-fade].is-in {
   opacity: 1;
-  filter: blur(0);
+  filter: none;
 }
 
 a:not([data-fade]):not(.contact-cta__button):not(.work-card__link),
@@ -2925,14 +2716,6 @@ a[href]:is(:hover, :focus-visible):not(:active) {
     display: none;
   }
 
-  .form-modal__image {
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    object-position: left bottom;
-  }
-
   .form-modal__media .float {
     will-change: auto;
   }
@@ -2990,11 +2773,6 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   .request-btn.sp-box:not(:disabled):focus-within,
   .request-btn.sp-box:not(:disabled):focus-visible {
     color: rgba(10, 10, 10, 0.45);
-  }
-
-  .form-modal__socials {
-    justify-content: flex-start;
-    margin-top: 3.5rem;
   }
 }
 
@@ -3224,9 +3002,4 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   .contact-tile:nth-child(5) { grid-area: 3 / 3; }
   .contact-tile:nth-child(6) { grid-area: 4 / 2; }
   .contact-tile:nth-child(7) { grid-area: 5 / 1; }
-}
-
-/* Keeps the cookie banner inside the dark area while the orange closing block is on screen (set by JS). */
-.cookie-banner {
-  bottom: calc(15px + var(--footer-overlap, 0px));
 }
