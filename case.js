@@ -172,7 +172,7 @@ const CASE_PROJECTS = {
   },
   2: {
     image: 'assets/case-2.avif',
-    visitUrl: 'https://www.behance.net/gallery/213949479/LANDING-PAGE-Storm-traffic',
+    visitUrl: 'storm-traffic/',
     copy: {
       en: {
         pageTitle: 'Storm Traffic — Jack Milka',

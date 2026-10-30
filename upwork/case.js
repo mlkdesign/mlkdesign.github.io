@@ -173,6 +173,7 @@ const CASE_PROJECTS = {
   },
   2: {
     image: '../milka-cv/assets/case-2.avif',
+    visitUrl: '../milka-cv/storm-traffic/',
     copy: {
       en: {
         pageTitle: 'Storm Traffic — Jack Milka',

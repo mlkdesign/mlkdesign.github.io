@@ -60,8 +60,8 @@ jobs:
           # Forward the earlier /milka-cv/upwork/ address to the new location.
           mkdir -p _site/milka-cv/upwork
           printf '%s\n' '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>Jack Milka</title><link rel="canonical" href="https://mlkdesign.github.io/upwork/"><meta http-equiv="refresh" content="0; url=/upwork/"></head><body><a href="/upwork/">mlkdesign.github.io/upwork</a></body></html>' > _site/milka-cv/upwork/index.html
-          # Deployment metadata is not public site content.
-          rm -rf _site/.github _site/.claude _site/milka-cv/.github _site/milka-cv/.claude
+          # Deployment metadata and build sources are not public site content.
+          rm -rf _site/.github _site/.claude _site/milka-cv/.github _site/milka-cv/.claude _site/milka-cv/tools
           touch _site/.nojekyll
 
       - name: Configure Pages

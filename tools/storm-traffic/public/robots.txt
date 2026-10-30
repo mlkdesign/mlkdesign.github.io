@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://storm-traffic-studio.milka19051995.chatgpt.site/sitemap.xml
