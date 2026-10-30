@@ -107,7 +107,7 @@ def head(r, title, description):
     <title>{e(title)}</title>
     <meta name="description" content="{e(description)}" />
     <link rel="preload" href="{r}assets/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="{r}style.css?v=20261030-6" />
+    <link rel="stylesheet" href="{r}style.css?v=20261030-7" />
     <script>document.documentElement.classList.add('js');</script>
   </head>
   <body>
@@ -280,7 +280,7 @@ def build_home():
         <img class="glow" src="assets/glow.svg" alt="" style="left: calc(50% + 240px); top: -415px" />
         <div class="home-hero__map"><div class="map-layer home-hero__layer"><img src="assets/hero-map.svg" alt="" width="932" height="453" />{map_dots('hero-map', r)}</div></div>
         <div class="wrap home-hero__text">
-          <h1 class="home-hero__title">Company registration<br />all over <span class="green">the world</span></h1>
+          <h1 class="home-hero__title">Company registration<br /><span class="home-hero__accent">all over </span><span class="green">the world</span></h1>
           <p class="home-hero__subtitle">Legal consulting 24/7</p>
           <a class="btn btn--green" href="#">Our Telegram channel</a>
         </div>
