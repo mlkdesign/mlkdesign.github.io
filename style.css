@@ -1430,11 +1430,11 @@ h1 {
 
 .work-card {
   position: relative;
-  /* As tall as the screen allows, and as wide as the cover's own 735:881 proportion at that height. */
+  /* Half the free screen height (never under 400px), and as wide as the cover's own 735:881 proportion at that height. */
   flex: none;
   aspect-ratio: 735 / 881;
-  height: max(400px, calc(100vh - 430px));
-  height: max(400px, calc(100svh - 430px));
+  height: max(400px, calc((100vh - 430px) / 2));
+  height: max(400px, calc((100svh - 430px) / 2));
   overflow: hidden;
   border: 0;
   outline: 0;
@@ -2796,8 +2796,8 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   }
 
   .work-card {
-    height: max(400px, calc(100vh - 360px));
-    height: max(400px, calc(100svh - 360px));
+    height: max(400px, calc((100vh - 360px) / 2));
+    height: max(400px, calc((100svh - 360px) / 2));
   }
 
   .works-bottom {
