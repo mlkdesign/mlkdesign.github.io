@@ -260,8 +260,7 @@ const CASE_PROJECTS = {
   },
   6: {
     image: 'assets/azerux/case.jpg',
-    // No public site yet: the "visit this site" button is removed.
-    visitUrl: null,
+    visitUrl: 'azerux/',
     copy: {
       en: {
         pageTitle: 'Azerux — Jack Milka',
