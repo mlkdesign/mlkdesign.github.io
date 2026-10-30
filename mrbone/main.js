@@ -103,6 +103,13 @@ if (!reduceMotion) {
 window.addEventListener('scroll', () => {
   if (!scroller.active) scroller.target = scroller.current = window.scrollY;
 }, { passive: true });
+// The header logo reloads the page and starts it again from the top, loading screen included.
+document.querySelector('.header__logo')?.addEventListener('click', (event) => {
+  event.preventDefault();
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+  window.location.replace(window.location.pathname + window.location.search);
+});
 document.querySelectorAll('a[href^="#"]').forEach((link) => link.addEventListener('click', (event) => {
   const target = document.querySelector(link.getAttribute('href'));
   if (!target) return;
@@ -440,7 +447,7 @@ if (screen) {
   const draw = (now) => {
     if (!running) return;
     requestAnimationFrame(draw);
-    if (now - last < 50) return;
+    if (now - last < 28) return;
     last = now;
     // Every 9 s the logo is written again, top to bottom.
     const elapsed = (now - cycleStart) / 1000;
@@ -461,7 +468,7 @@ if (screen) {
           char = RAMP[1 + Math.floor(Math.random() * (RAMP.length - 1))];
           alpha = level > 0.05 ? 1 : 0.35;
         } else if (level > 0.05) {
-          if (Math.random() < 0.08) chars[i] = randomChar(level);
+          if (Math.random() < 0.16) chars[i] = randomChar(level);
           char = chars[i];
           alpha = 0.45 + level * 0.55;
         } else {
