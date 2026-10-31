@@ -107,7 +107,7 @@ def head(r, title, description):
     <title>{e(title)}</title>
     <meta name="description" content="{e(description)}" />
     <link rel="preload" href="{r}assets/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="{r}style.css?v=20261031-1" />
+    <link rel="stylesheet" href="{r}style.css?v=20261031-2" />
     <script>document.documentElement.classList.add('js');</script>
   </head>
   <body>

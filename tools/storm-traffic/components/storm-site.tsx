@@ -11,12 +11,13 @@ const asset = (id: string, name: string) => A[`${id}_${name}`];
 // Copy marks the emphasised words of a line with **…**, as in the design.
 const emphasis = (text: string) =>
   text.split("**").map((part, i) => (i % 2 ? <strong key={i}>{part}</strong> : part));
+// Menu links in the order the blocks appear on the page (labels in lib/content.ts follow the same order).
 const hrefs = [
   "#home",
   "#about",
   "#offer",
-  "#partners",
   "#vacancies",
+  "#partners",
   "#contacts",
 ];
 function Art({
@@ -446,7 +447,7 @@ export default function StormSite({
               <Title small={t.current}>{t.vacancies}</Title>
               {jobCards(true)}
               <a className="button centered" href="/#vacancies">
-                {t.nav[4]}
+                {t.nav[3]}
               </a>
             </section>
             <section className="steps section-pad textured" id="steps">
@@ -717,7 +718,7 @@ export default function StormSite({
               <p>{t.partnersMore}</p>
             </div>
           </div>
-          <div className="partner-marquee" aria-label={t.nav[3]}>
+          <div className="partner-marquee" aria-label={t.nav[4]}>
             {[0, 1].map((repeat) => (
               <div
                 className="partner-track"
