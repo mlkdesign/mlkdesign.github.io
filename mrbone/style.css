@@ -655,7 +655,7 @@ html.js:not(.is-loaded) { overflow: hidden; }
   .js .script .script__ink path { stroke-dashoffset: 0; }
 }
 
-/* WD Awards nominee badge: a white tab on the right edge, 150px above the bottom; on hover it slides out. */
+/* WD Awards nominee badge: a white tab on the right edge, 50px under the menu; on hover it slides out and back. */
 @font-face {
   font-family: 'WD Oswald';
   src: url('assets/fonts/wd-oswald.woff2') format('woff2');
@@ -666,7 +666,8 @@ html.js:not(.is-loaded) { overflow: hidden; }
 .wd-badge {
   position: fixed;
   right: 0;
-  bottom: 150px;
+  /* The menu bar ends 120 frame px from the top (80 on phones). */
+  top: calc(120 * var(--u) + 50px);
   /* Above the page and its lights, under the menu, the loading screen and the grain. */
   z-index: 55;
   display: flex;
@@ -678,7 +679,8 @@ html.js:not(.is-loaded) { overflow: hidden; }
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
   /* Only the 70px tab shows until hover; the text panel waits off the right edge. */
   transform: translateX(150px);
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  /* The same gentle ease both ways: it slides out on hover and glides back when the cursor leaves. */
+  transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .wd-badge:hover,
@@ -735,6 +737,12 @@ html.js:not(.is-loaded) { overflow: hidden; }
 .wd-badge__date {
   font: 600 11px/1 'WD Oswald', 'Oswald', 'Arial Narrow', sans-serif;
   letter-spacing: 0.06em;
+}
+
+@media (max-width: 1023px) {
+  .wd-badge {
+    top: calc(80 * var(--u) + 50px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
