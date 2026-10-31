@@ -3005,7 +3005,7 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   .contact-tile:nth-child(7) { grid-area: 5 / 1; }
 }
 
-/* WD Awards nominee badge: a white tab on the right edge, 150px above the bottom; on hover it slides out. */
+/* WD Awards nominee badge: a white tab on the right edge, 50px under the menu; on hover it slides out and back. */
 @font-face {
   font-family: 'WD Oswald';
   src: url('assets/fonts/wd-oswald.woff2') format('woff2');
@@ -3016,7 +3016,8 @@ a[href]:is(:hover, :focus-visible):not(:active) {
 .wd-badge {
   position: fixed;
   right: 0;
-  bottom: 150px;
+  /* The menu bar ends 44px from the top (38px on phones). */
+  top: calc(env(safe-area-inset-top, 0px) + 94px);
   /* Above the page, under the header, the request form and the intro overlays. */
   z-index: 95;
   display: flex;
@@ -3028,7 +3029,9 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
   /* Only the 70px tab shows until hover; the text panel waits off the right edge. */
   transform: translateX(150px);
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  /* The same gentle ease both ways: it slides out on hover and glides back when the cursor leaves.
+     Important, like the opacity: the site-wide link rule would otherwise replace the slide with its opacity fade. */
+  transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1) !important;
   /* Links rest dimmed site-wide; the badge stays solid. */
   opacity: 1 !important;
 }
@@ -3089,8 +3092,14 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   letter-spacing: 0.06em;
 }
 
+@media (max-width: 800px) {
+  .wd-badge {
+    top: calc(env(safe-area-inset-top, 0px) + 88px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .wd-badge {
-    transition: none;
+    transition: none !important;
   }
 }
