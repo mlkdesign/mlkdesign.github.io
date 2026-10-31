@@ -1141,7 +1141,8 @@ h1 {
 }
 
 .works {
-  --work-card-width: clamp(260px, 20vw, 340px);
+  /* As before up to 14-inch laptops (about 1700px wide); on bigger monitors it grows to 1.5x by 2200px. */
+  --work-card-width: clamp(260px, max(20vw, 34vw - 238px), 510px);
   position: relative;
   z-index: 20;
   display: flex;

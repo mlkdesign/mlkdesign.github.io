@@ -67,7 +67,7 @@ document.fonts?.ready.then(measureSocials);
 window.addEventListener('resize', measureSocials);
 
 // One pixel of the 1920 frame, as the stylesheet computes it.
-const unit = () => (desktop.matches ? Math.min(1, window.innerWidth / 1920) : 1);
+const unit = () => (desktop.matches ? window.innerWidth / 1920 : 1);
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const lerp = (from, to, amount) => from + (to - from) * amount;
 
