@@ -7,8 +7,10 @@
   --ink: #eae6d8;
   --orange: #d66120;
   --slate: #191b21;
-  /* One pixel of the 1920 frame, never larger than 1px. */
-  --u: min(1px, calc(100vw / 1920));
+  /* One pixel of the 1920 frame: on wider screens the whole page grows to fill the width. */
+  --u: calc(100vw / 1920);
+  /* Body copy, buttons and captions grow with it only a little past 1920, so they stay readable, not huge. */
+  --t: min(var(--u), 1.08px);
   --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
@@ -81,23 +83,23 @@ img.a { max-width: none; }
 .title-xl { color: var(--ink); font-size: calc(88 * var(--u)); line-height: calc(96 * var(--u)); }
 .title-md { color: var(--ink); font-size: calc(48 * var(--u)); line-height: calc(55 * var(--u)); }
 .copy {
-  font-size: max(10px, calc(15 * var(--u)));
+  font-size: max(10px, calc(15 * var(--t)));
   line-height: 1.4;
-  letter-spacing: calc(1.5 * var(--u));
+  letter-spacing: calc(1.5 * var(--t));
   text-transform: uppercase;
   text-align: justify;
 }
 .copy b { font-weight: 500; }
 .lore { opacity: 0.2; }
-.lead { font-family: var(--sans); font-weight: 500; font-size: max(12px, calc(18 * var(--u))); line-height: 1.4; letter-spacing: calc(1.8 * var(--u)); text-transform: uppercase; }
+.lead { font-family: var(--sans); font-weight: 500; font-size: max(12px, calc(18 * var(--t))); line-height: 1.4; letter-spacing: calc(1.8 * var(--t)); text-transform: uppercase; }
 .script { font-family: 'Allison', cursive; font-weight: 400; line-height: 1.4; white-space: nowrap; }
 .script--md { color: #d66222; font-size: calc(136 * var(--u)); }
 .moon { color: var(--ink); }
 .tag {
   padding: 0 calc(15 * var(--u));
-  font-size: max(10px, calc(15 * var(--u)));
+  font-size: max(10px, calc(15 * var(--t)));
   font-weight: 100;
-  letter-spacing: calc(1.5 * var(--u));
+  letter-spacing: calc(1.5 * var(--t));
   text-transform: uppercase;
   background:
     linear-gradient(#fff, #fff) 0 0 / 2px 2px no-repeat, linear-gradient(#fff, #fff) 100% 0 / 2px 2px no-repeat,
@@ -119,8 +121,8 @@ img.a { max-width: none; }
   width: calc(407 * var(--u));
   display: flex;
   justify-content: space-between;
-  font-size: max(10px, calc(14 * var(--u)));
-  letter-spacing: calc(1.96 * var(--u));
+  font-size: max(10px, calc(14 * var(--t)));
+  letter-spacing: calc(1.96 * var(--t));
   text-transform: uppercase;
 }
 .header__nav a { transition: color 0.2s; }
@@ -140,8 +142,8 @@ img.a { max-width: none; }
 .socials span {
   flex: none;
   padding-right: calc(26 * var(--u));
-  font-size: max(10px, calc(14 * var(--u)));
-  letter-spacing: calc(1.96 * var(--u));
+  font-size: max(10px, calc(14 * var(--t)));
+  letter-spacing: calc(1.96 * var(--t));
   text-transform: uppercase;
   white-space: nowrap;
   opacity: 0;
@@ -187,8 +189,8 @@ img.a { max-width: none; }
   display: flex;
   align-items: center;
   padding-left: calc(30 * var(--u));
-  font-size: max(11px, calc(16 * var(--u)));
-  letter-spacing: calc(0.8 * var(--u));
+  font-size: max(11px, calc(16 * var(--t)));
+  letter-spacing: calc(0.8 * var(--t));
   background: url('assets/btn-shape.svg') center / 100% 100% no-repeat;
   transition: filter 0.2s, transform 0.2s, scale 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -216,9 +218,9 @@ img.a { max-width: none; }
 .sea-card {
   display: block;
   background: url('assets/card-shape.svg') center / 100% 100% no-repeat;
-  font-size: max(11px, calc(16 * var(--u)));
-  line-height: calc(20 * var(--u));
-  letter-spacing: calc(0.8 * var(--u));
+  font-size: max(11px, calc(16 * var(--t)));
+  line-height: calc(20 * var(--t));
+  letter-spacing: calc(0.8 * var(--t));
 }
 .sea-card img { position: absolute; top: calc(20 * var(--u)); right: calc(20 * var(--u)); width: calc(44 * var(--u)); height: calc(44 * var(--u)); transition: transform 0.25s; }
 .sea-card:hover img { transform: translate(3px, -3px); }
@@ -237,7 +239,7 @@ img.a { max-width: none; }
 .stats div { display: flex; flex-direction: column-reverse; }
 .stats dd { color: #d66222; font-size: calc(88 * var(--u)); line-height: calc(96 * var(--u)); }
 .stats small { font-size: calc(48 * var(--u)); }
-.stats dt { margin-top: calc(4 * var(--u)); font-size: max(10px, calc(15 * var(--u))); letter-spacing: calc(1.5 * var(--u)); text-transform: uppercase; }
+.stats dt { margin-top: calc(4 * var(--u)); font-size: max(10px, calc(15 * var(--t))); letter-spacing: calc(1.5 * var(--t)); text-transform: uppercase; }
 
 /* Why own ---------------------------------------------------------------- */
 .strip { overflow: hidden; }
@@ -310,9 +312,9 @@ img.a { max-width: none; }
   justify-content: space-between;
   height: calc(100 * var(--u));
   padding: 0 calc(19 * var(--u));
-  font-size: max(11px, calc(16 * var(--u)));
-  line-height: calc(20 * var(--u));
-  letter-spacing: calc(0.8 * var(--u));
+  font-size: max(11px, calc(16 * var(--t)));
+  line-height: calc(20 * var(--t));
+  letter-spacing: calc(0.8 * var(--t));
   background: rgba(255, 255, 255, 0.07);
   border: 1px solid rgba(255, 255, 255, 0.3);
   transition: background-color 0.2s, border-color 0.2s;
@@ -328,8 +330,8 @@ img.a { max-width: none; }
   right: calc(1662 * var(--u));
   top: 50%;
   transform: translateY(-50%);
-  font-size: max(10px, calc(15 * var(--u)));
-  letter-spacing: calc(1.5 * var(--u));
+  font-size: max(10px, calc(15 * var(--t)));
+  letter-spacing: calc(1.5 * var(--t));
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -471,7 +473,7 @@ html.js:not(.is-loaded) { overflow: hidden; }
 .m-only, .m-br { display: none; }
 .flip-y { transform: scaleY(-1); }
 @media (max-width: 1023px) {
-  :root { --u: min(calc(100vw / 402), 1.6px); }
+  :root { --u: min(calc(100vw / 402), 1.6px); --t: var(--u); }
   .stage { width: calc(402 * var(--u)); height: calc(8382 * var(--u)); }
   .a {
     left: calc(var(--mx) * var(--u));
