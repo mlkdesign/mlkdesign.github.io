@@ -654,3 +654,91 @@ html.js:not(.is-loaded) { overflow: hidden; }
   .js .reveal { opacity: 1; translate: none; }
   .js .script .script__ink path { stroke-dashoffset: 0; }
 }
+
+/* WD Awards nominee badge: a white tab on the right edge, 150px above the bottom; on hover it slides out. */
+@font-face {
+  font-family: 'WD Oswald';
+  src: url('assets/fonts/wd-oswald.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+
+.wd-badge {
+  position: fixed;
+  right: 0;
+  bottom: 150px;
+  /* Above the page and its lights, under the menu, the loading screen and the grain. */
+  z-index: 55;
+  display: flex;
+  width: 220px;
+  height: 150px;
+  color: #59394a;
+  background: #fff;
+  text-decoration: none;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+  /* Only the 70px tab shows until hover; the text panel waits off the right edge. */
+  transform: translateX(150px);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wd-badge:hover,
+.wd-badge:focus-visible {
+  transform: none;
+}
+
+.wd-badge:focus-visible {
+  outline: 2px solid #59394a;
+  outline-offset: -4px;
+}
+
+.wd-badge__tab {
+  flex: 0 0 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0 14px;
+}
+
+.wd-badge__logo {
+  display: block;
+  width: 38px;
+  height: auto;
+  fill: currentColor;
+}
+
+.wd-badge__vertical {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font: 600 17px/1 'WD Oswald', 'Oswald', 'Arial Narrow', sans-serif;
+  letter-spacing: 0.14em;
+}
+
+.wd-badge__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 16px 0 6px;
+}
+
+.wd-badge__title {
+  font: 600 29px/0.98 'WD Oswald', 'Oswald', 'Arial Narrow', sans-serif;
+  text-transform: uppercase;
+}
+
+.wd-badge__title span {
+  display: block;
+}
+
+.wd-badge__date {
+  font: 600 11px/1 'WD Oswald', 'Oswald', 'Arial Narrow', sans-serif;
+  letter-spacing: 0.06em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wd-badge {
+    transition: none;
+  }
+}
