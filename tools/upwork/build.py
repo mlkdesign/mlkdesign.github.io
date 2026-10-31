@@ -24,6 +24,13 @@ BASE_URL = 'https://mlkdesign.github.io/upwork/'
 SHARED = '../milka-cv/'  # personal site, relative to /upwork/
 CV = 'Jack-Milka-CV.pdf'
 CV_LINK = f'href="{CV}" target="_blank" rel="noopener"'
+CLARITY = '''  <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "z63mgu0wkw");
+    </script>'''
 
 # Anything matching these must not survive in the generated edition.
 FORBIDDEN = [
@@ -97,6 +104,8 @@ def common_html(text, page, label):
     # opacity for links must not show it before its entrance animation starts.
     text = replace_once(text, '</head>', '  <style>.nav-menu .book { margin-left: auto; } a.case-start { text-decoration: none; }'
                         ' .case-info__copy.has-sequence:not(.is-sequence-visible) > a.case-start { opacity: 0; }</style>\n  </head>', label)
+    # Microsoft Clarity for this edition (its own project, separate from the studio's); see the privacy policy.
+    text = replace_once(text, '</head>', CLARITY + '\n  </head>', label)
 
     # English only, no contact routes.
     text = remove_elements(text, r'<div class="language-switcher"', 'div', f'{label} language switcher')
