@@ -112,6 +112,29 @@ body::before {
   overflow: hidden;
 }
 
+/* iOS 26 Safari shows only the page itself under its status bar and toolbar, never fixed layers.
+   While the white loader is up the document background is white (it fills the status bar area above the page),
+   and on phones the loader is part of the page, one full screen tall, so it reaches under the bottom toolbar too.
+   The page cannot be scrolled meanwhile, so the loader stays put. */
+html:has(.stair-reveal:not(.is-open)) {
+  background-color: #fff;
+}
+
+@media (max-width: 800px) {
+  html:has(.stair-reveal),
+  html:has(.stair-reveal) body {
+    overflow: hidden;
+  }
+
+  .stair-reveal {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 100vh;
+    height: 100lvh;
+    touch-action: none;
+  }
+}
+
 .stair-reveal__layer {
   position: absolute;
   inset: 0;
