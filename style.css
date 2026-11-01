@@ -116,7 +116,10 @@ body::before {
    While the white loader is up the document background is white (it fills the status bar area above the page),
    and on phones the loader is part of the page, one full screen tall, so it reaches under the bottom toolbar too.
    The page cannot be scrolled meanwhile, so the loader stays put. */
-html:has(.stair-reveal:not(.is-open)) {
+html:has(.stair-reveal:not(.is-open)),
+html:has(.stair-reveal:not(.is-open)) body,
+html:has(.stair-reveal:not(.is-open)) .page-surface {
+  /* Safari fills the area above the page (behind the status bar) with the body background. */
   background-color: #fff;
 }
 
@@ -355,7 +358,8 @@ body.is-page-transitioning {
 /* iOS 26 Safari tints its status bar and toolbar with the pinned (fixed or sticky) element it finds at the centre
    of each screen edge, 4px in: here the stacked service cards and the sticky orange footer. These two invisible
    shields are always the topmost thing at those two points and carry no colour, so Safari finds nothing to tint
-   with and the page shows edge to edge under both bars. They are a few pixels and nearly invisible to taps. */
+   with and the page shows edge to edge under both bars. They are a few pixels and nearly invisible to taps.
+   Only the bottom one is left: at the top a solid strip (.status-tint) gives the status bar its colour. */
 .edge-shield {
   position: fixed;
   left: 40%;
@@ -365,12 +369,35 @@ body.is-page-transitioning {
   opacity: 0;
 }
 
-.edge-shield--top {
-  top: 0;
-}
-
 .edge-shield--bottom {
   bottom: 0;
+}
+
+/* Phones, top of the screen: iOS 26 Safari fills its status bar with the plain colour of the pinned element at the
+   top edge and re-reads it on every change (it never draws the site's own fixed layers, such as the blur, there).
+   This 12px strip is that element: white while the loader is up, the page colour after it, so the status bar is
+   solid black instead of showing the page sharp behind the clock. Open overlays above it colour the bar themselves. */
+.status-tint {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .status-tint {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    height: 12px;
+    background-color: var(--bg);
+    /* Takes taps, so it is surely the thing found at the top edge; 12px is above the menu buttons. */
+    pointer-events: auto;
+  }
+
+  html:has(.stair-reveal) .status-tint {
+    background-color: #fff;
+  }
 }
 
 @keyframes grain {
