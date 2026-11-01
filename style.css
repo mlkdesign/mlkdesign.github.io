@@ -112,32 +112,6 @@ body::before {
   overflow: hidden;
 }
 
-/* iOS 26 Safari shows only the page itself under its status bar and toolbar, never fixed layers.
-   While the white loader is up the document background is white (it fills the status bar area above the page),
-   and on phones the loader is part of the page, one full screen tall, so it reaches under the bottom toolbar too.
-   The page cannot be scrolled meanwhile, so the loader stays put. */
-html:has(.stair-reveal:not(.is-open)),
-html:has(.stair-reveal:not(.is-open)) body,
-html:has(.stair-reveal:not(.is-open)) .page-surface {
-  /* Safari fills the area above the page (behind the status bar) with the body background. */
-  background-color: #fff;
-}
-
-@media (max-width: 800px) {
-  html:has(.stair-reveal),
-  html:has(.stair-reveal) body {
-    overflow: hidden;
-  }
-
-  .stair-reveal {
-    position: absolute;
-    inset: 0 0 auto;
-    height: 100vh;
-    height: 100lvh;
-    touch-action: none;
-  }
-}
-
 .stair-reveal__layer {
   position: absolute;
   inset: 0;
@@ -375,8 +349,9 @@ body.is-page-transitioning {
 
 /* Phones, top of the screen: iOS 26 Safari fills its status bar with the plain colour of the pinned element at the
    top edge and re-reads it on every change (it never draws the site's own fixed layers, such as the blur, there).
-   This 12px strip is that element: white while the loader is up, the page colour after it, so the status bar is
-   solid black instead of showing the page sharp behind the clock. Open overlays above it colour the bar themselves. */
+   This 12px strip is that element, always the page colour (the loading screen included), so the status bar stays solid
+   black and the page goes into the blur under the menu instead of showing sharp behind the clock. Open overlays above
+   it colour the bar themselves. */
 .status-tint {
   display: none;
 }
@@ -393,10 +368,6 @@ body.is-page-transitioning {
     background-color: var(--bg);
     /* Takes taps, so it is surely the thing found at the top edge; 12px is above the menu buttons. */
     pointer-events: auto;
-  }
-
-  html:has(.stair-reveal) .status-tint {
-    background-color: #fff;
   }
 }
 
