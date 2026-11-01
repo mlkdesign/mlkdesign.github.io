@@ -509,3 +509,25 @@ if (screen) {
     }).observe(screen);
   }
 }
+
+// WD Awards badge on touch screens: the first tap slides it out, a second tap opens the award page,
+// and a tap anywhere else or a scroll slides it back. Mouse users get the same on hover (CSS).
+{
+  const badge = document.querySelector('.wd-badge');
+  const touchScreen = window.matchMedia('(hover: none)');
+  if (badge) {
+    const closeBadge = () => badge.classList.remove('is-open');
+    badge.addEventListener('click', (event) => {
+      if (!touchScreen.matches || badge.classList.contains('is-open')) {
+        closeBadge();
+        return;
+      }
+      event.preventDefault();
+      badge.classList.add('is-open');
+    });
+    document.addEventListener('pointerdown', (event) => {
+      if (!badge.contains(event.target)) closeBadge();
+    }, { passive: true });
+    window.addEventListener('scroll', closeBadge, { passive: true });
+  }
+}

@@ -683,8 +683,16 @@ html.js:not(.is-loaded) { overflow: hidden; }
   transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-.wd-badge:hover,
-.wd-badge:focus-visible {
+/* Mouse: open on hover. Touch screens open and close it with taps instead (the site script adds is-open),
+   so a sticky touch "hover" never keeps it out. */
+@media (hover: hover) {
+  .wd-badge:hover {
+    transform: none;
+  }
+}
+
+.wd-badge:focus-visible,
+.wd-badge.is-open {
   transform: none;
 }
 
@@ -740,8 +748,11 @@ html.js:not(.is-loaded) { overflow: hidden; }
 }
 
 @media (max-width: 1023px) {
+  /* Phones: 30% smaller, still pinned to the right edge under the menu. */
   .wd-badge {
     top: calc(80 * var(--u) + 50px);
+    transform-origin: 100% 0;
+    scale: 0.7;
   }
 }
 
