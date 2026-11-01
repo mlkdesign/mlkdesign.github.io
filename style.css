@@ -316,8 +316,7 @@ body.is-page-transitioning {
   pointer-events: none;
   opacity: 0.12;
   animation: grain 0.9s steps(1) infinite;
-  /* iOS 26 Safari colours its status bar and toolbar from the pinned layer at the screen edge, sampling it once.
-     A hidden, click-through pinned box is skipped, so the box is hidden and the grain is drawn by its ::before. */
+  /* Hidden box, visible grain (its ::before): Safari skips hidden pinned boxes when it picks the colour of its bars. */
   visibility: hidden;
 }
 
@@ -329,13 +328,17 @@ body.is-page-transitioning {
   background: url("assets/noise.png") repeat;
 }
 
-/* iOS 26 Safari tints its status bar and toolbar with the pinned (fixed or sticky) element it finds at the centre
-   of each screen edge, 4px in: here the stacked service cards and the sticky orange footer. These two invisible
-   shields are always the topmost thing at those two points and carry no colour, so Safari finds nothing to tint
-   with and the page shows edge to edge under both bars. They are a few pixels and nearly invisible to taps.
-   Only the bottom one is left: at the top a solid strip (.status-tint) gives the status bar its colour. */
+/* iOS 26 Safari bars. Safari colours its status bar and toolbar from the pinned (fixed or sticky) element it finds
+   at the centre of each screen edge, 4px in, and never draws the page's own fixed layers under them.
+   - Bottom: an invisible shield is the topmost thing there and has no colour, so Safari tints nothing and the page
+     shows under the toolbar (no black from the stacked service cards, no orange from the sticky footer).
+   - Top, on phones: a 12px strip in the page colour is the element found there, so the status bar is solid page
+     colour at all times, loading screen included, and the page goes into the blur under the menu.
+     Lighten blending makes the strip itself invisible over the white loader and over the dark page alike;
+     Safari still reads its background colour. */
 .edge-shield {
   position: fixed;
+  bottom: 0;
   left: 40%;
   right: 40%;
   z-index: 2147483647;
@@ -343,15 +346,6 @@ body.is-page-transitioning {
   opacity: 0;
 }
 
-.edge-shield--bottom {
-  bottom: 0;
-}
-
-/* Phones, top of the screen: iOS 26 Safari fills its status bar with the plain colour of the pinned element at the
-   top edge and re-reads it on every change (it never draws the site's own fixed layers, such as the blur, there).
-   This 12px strip is that element, always the page colour (the loading screen included), so the status bar stays solid
-   black and the page goes into the blur under the menu instead of showing sharp behind the clock. Open overlays above
-   it colour the bar themselves. */
 .status-tint {
   display: none;
 }
@@ -366,11 +360,8 @@ body.is-page-transitioning {
     z-index: 9999;
     height: 12px;
     background-color: var(--bg);
-    /* Safari ignores the element's own opacity when it reads the colour (anything from 0.1 up counts), so at 0.1 the
-       status bar is still solid page colour while the strip itself is all but invisible: the top of the page keeps
-       its full height above the menu. */
-    opacity: 0.1;
-    /* Takes taps, so it is surely the thing found at the top edge; 12px is above the menu buttons. */
+    mix-blend-mode: lighten;
+    /* Takes taps, so it is surely what Safari finds at the top edge; the menu buttons start below it. */
     pointer-events: auto;
   }
 }
