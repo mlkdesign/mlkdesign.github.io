@@ -366,6 +366,10 @@ body.is-page-transitioning {
     z-index: 9999;
     height: 12px;
     background-color: var(--bg);
+    /* Safari ignores the element's own opacity when it reads the colour (anything from 0.1 up counts), so at 0.1 the
+       status bar is still solid page colour while the strip itself is all but invisible: the top of the page keeps
+       its full height above the menu. */
+    opacity: 0.1;
     /* Takes taps, so it is surely the thing found at the top edge; 12px is above the menu buttons. */
     pointer-events: auto;
   }
