@@ -197,12 +197,11 @@ a.case-back:focus-visible {
   letter-spacing: -0.03em;
 }
 
+/* The title stays on its own layer for good: when it gave the layer up after the blur, Safari left the blur's halo
+   unrepainted, a soft glow beside the title that only a reload cleared. */
 .case-title[data-reveal] {
   filter: blur(var(--reveal-blur));
   transition: filter var(--reveal-duration) var(--reveal-ease);
-}
-
-.case-title[data-reveal].is-revealing {
   will-change: filter;
 }
 
@@ -213,7 +212,7 @@ a.case-back:focus-visible {
 .case-title[data-reveal].is-visible.is-revealed {
   filter: none;
   transition: none;
-  will-change: auto;
+  will-change: filter;
 }
 
 .case-description {
