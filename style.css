@@ -291,16 +291,17 @@ body.is-page-transitioning {
   top: 0;
   left: 0;
   right: 0;
-  height: 90px;
+  /* Taller by the status bar (the safe area; 0 on desktop), so the page under the iPhone clock is blurred too. */
+  height: calc(env(safe-area-inset-top, 0px) + 90px);
   z-index: 90;
   pointer-events: none;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  /* Progressive frosted glass: full blur at the top, none at the bottom edge */
-  mask-image: linear-gradient(to bottom, #000 0%, #000 30%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 30%, transparent 100%);
+  /* Progressive frosted glass: full blur through the status bar, none at the bottom edge */
+  mask-image: linear-gradient(to bottom, #000 0, #000 calc(env(safe-area-inset-top, 0px) + 27px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 calc(env(safe-area-inset-top, 0px) + 27px), transparent 100%);
   /* Slight tint of the page bg so content dissolves rather than just blurs */
-  background: linear-gradient(to bottom, rgba(5, 5, 5, 0.55), rgba(5, 5, 5, 0));
+  background: linear-gradient(to bottom, rgba(5, 5, 5, 0.55) env(safe-area-inset-top, 0px), rgba(5, 5, 5, 0));
 }
 
 /* The grain layer only needs a margin for its jitter: at 120% instead of 200% of the screen
@@ -328,22 +329,25 @@ body.is-page-transitioning {
   background: url("assets/noise.png") repeat;
 }
 
-/* A plain strip behind the iOS status bar (the safe area; 0px tall elsewhere). Safari paints the bar with its colour
-   and re-reads it on every change: white while the white loading screen is up, the page background after it.
-   It sits under the page transition and the mobile menu, which colour the bar themselves while they are open. */
-.safe-top {
+/* iOS 26 Safari tints its status bar and toolbar with the pinned (fixed or sticky) element it finds at the centre
+   of each screen edge, 4px in: here the stacked service cards and the sticky orange footer. These two invisible
+   shields are always the topmost thing at those two points and carry no colour, so Safari finds nothing to tint
+   with and the page shows edge to edge under both bars. They are a few pixels and nearly invisible to taps. */
+.edge-shield {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-  height: env(safe-area-inset-top, 0px);
-  background-color: var(--bg);
-  pointer-events: none;
+  left: 40%;
+  right: 40%;
+  z-index: 2147483647;
+  height: 8px;
+  opacity: 0;
 }
 
-html:has(.stair-reveal) .safe-top {
-  background-color: #fff;
+.edge-shield--top {
+  top: 0;
+}
+
+.edge-shield--bottom {
+  bottom: 0;
 }
 
 @keyframes grain {
@@ -2340,7 +2344,7 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   .top-blur {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    background: linear-gradient(to bottom, rgba(11, 11, 11, 0.68), rgba(11, 11, 11, 0));
+    background: linear-gradient(to bottom, rgba(11, 11, 11, 0.68) env(safe-area-inset-top, 0px), rgba(11, 11, 11, 0));
   }
 
   .site-header {

@@ -2,15 +2,6 @@ import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 import Lenis from 'https://unpkg.com/lenis@1.3.4/dist/lenis.mjs';
 import Matter from 'https://esm.sh/matter-js@0.20.0';
 
-// iOS 26 Safari takes its status bar colour from the pinned element at the top edge (theme-color no longer counts):
-// .safe-top is that element, a plain strip behind the status bar (see style.css).
-{
-  const safeTop = document.createElement('div');
-  safeTop.className = 'safe-top';
-  safeTop.setAttribute('aria-hidden', 'true');
-  document.body.prepend(safeTop);
-}
-
 // ---------------------------------------------------------------------------
 // Viewport state.
 // stableVh is intentionally NOT updated on height-only resizes: mobile Safari
