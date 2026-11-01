@@ -313,9 +313,37 @@ body.is-page-transitioning {
   height: 120%;
   z-index: 9997;
   pointer-events: none;
-  background: url("assets/noise.png") repeat;
   opacity: 0.12;
   animation: grain 0.9s steps(1) infinite;
+  /* iOS 26 Safari colours its status bar and toolbar from the pinned layer at the screen edge, sampling it once.
+     A hidden, click-through pinned box is skipped, so the box is hidden and the grain is drawn by its ::before. */
+  visibility: hidden;
+}
+
+.noise::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  visibility: visible;
+  background: url("assets/noise.png") repeat;
+}
+
+/* A plain strip behind the iOS status bar (the safe area; 0px tall elsewhere). Safari paints the bar with its colour
+   and re-reads it on every change: white while the white loading screen is up, the page background after it.
+   It sits under the page transition and the mobile menu, which colour the bar themselves while they are open. */
+.safe-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  height: env(safe-area-inset-top, 0px);
+  background-color: var(--bg);
+  pointer-events: none;
+}
+
+html:has(.stair-reveal) .safe-top {
+  background-color: #fff;
 }
 
 @keyframes grain {
