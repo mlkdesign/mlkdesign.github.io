@@ -3036,8 +3036,16 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   opacity: 1 !important;
 }
 
-.wd-badge:hover,
-.wd-badge:focus-visible {
+/* Mouse: open on hover. Touch screens open and close it with taps instead (the site script adds is-open),
+   so a sticky touch "hover" never keeps it out. */
+@media (hover: hover) {
+  .wd-badge:hover {
+    transform: none;
+  }
+}
+
+.wd-badge:focus-visible,
+.wd-badge.is-open {
   transform: none;
 }
 
@@ -3093,8 +3101,11 @@ a[href]:is(:hover, :focus-visible):not(:active) {
 }
 
 @media (max-width: 800px) {
+  /* Phones: 30% smaller, still pinned to the right edge under the menu. */
   .wd-badge {
     top: calc(env(safe-area-inset-top, 0px) + 88px);
+    transform-origin: 100% 0;
+    scale: 0.7;
   }
 }
 
