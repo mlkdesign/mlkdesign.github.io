@@ -1,14 +1,5 @@
 import Lenis from 'https://unpkg.com/lenis@1.3.4/dist/lenis.mjs';
 
-// iOS 26 Safari takes its status bar colour from the pinned element at the top edge (theme-color no longer counts):
-// .safe-top is that element, a plain strip behind the status bar (see style.css).
-{
-  const safeTop = document.createElement('div');
-  safeTop.className = 'safe-top';
-  safeTop.setAttribute('aria-hidden', 'true');
-  document.body.prepend(safeTop);
-}
-
 const MOBILE_BREAKPOINT = 800;
 const mqMobile = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
 const pointerFine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
