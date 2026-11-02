@@ -328,6 +328,9 @@ const CASE_TRANSLATIONS = {
     "projectRequest": "Project request",
     "close": "Close",
     "socialMedia": "Social media",
+    "privacyPolicy": "Privacy Policy",
+    "legalInformation": "Legal Information",
+    "cookieSettings": "Cookie Settings",
     "finalButton": "get in touch"
   },
   "uk": {
@@ -363,6 +366,9 @@ const CASE_TRANSLATIONS = {
     "projectRequest": "Заявка на проєкт",
     "close": "Закрити",
     "socialMedia": "Соціальні мережі",
+    "privacyPolicy": "Політика конфіденційності",
+    "legalInformation": "Юридична інформація",
+    "cookieSettings": "Налаштування cookie",
     "finalButton": "зв’язатися"
   }
 };

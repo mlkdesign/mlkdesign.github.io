@@ -1566,28 +1566,30 @@ h1 {
   grid-row: 1;
 }
 
-.contact-cta__cookies {
-  order: -1;
-  appearance: none;
-  flex: 0 0 auto;
-  padding: 12px 0;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font-family: var(--font);
-  font-size: 0.75rem;
-  font-weight: 300;
-  line-height: 1.5;
+/* Privacy Policy, Legal Information and Cookie Settings in one row under the closing call to action. */
+.contact-cta__legal {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  font-size: 0.72rem;
   letter-spacing: 0.08em;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
-  cursor: pointer;
 }
 
-.contact-cta__cookies:hover,
-.contact-cta__cookies:focus-visible {
-  text-decoration-thickness: 2px;
+.contact-cta__legal a,
+.contact-cta__cookies {
+  color: #fff;
+  text-decoration: none;
+}
+
+.contact-cta__cookies {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
 }
 
 .contact-cta__button.sp-box {
@@ -2619,10 +2621,6 @@ a[href]:is(:hover, :focus-visible):not(:active) {
     flex-direction: column;
     width: 100%;
     gap: 8px;
-  }
-
-  .contact-cta__cookies {
-    order: 0;
   }
 
   .contact-cta__actions .contact-cta__button {

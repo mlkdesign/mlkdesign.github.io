@@ -326,8 +326,10 @@ const CASE_TRANSLATIONS = {
     "projectRequest": "Project request",
     "close": "Close",
     "socialMedia": "Social media",
-    "finalButton": "view CV",
-    "privacyPolicy": "Privacy Policy"
+    "privacyPolicy": "Privacy Policy",
+    "legalInformation": "Legal Information",
+    "cookieSettings": "Cookie Settings",
+    "finalButton": "view CV"
   },
   "uk": {
     "navAbout": "про мене",
@@ -359,8 +361,10 @@ const CASE_TRANSLATIONS = {
     "projectRequest": "Заявка на проєкт",
     "close": "Закрити",
     "socialMedia": "Соціальні мережі",
-    "finalButton": "переглянути CV",
-    "privacyPolicy": "Політика конфіденційності"
+    "privacyPolicy": "Політика конфіденційності",
+    "legalInformation": "Юридична інформація",
+    "cookieSettings": "Налаштування cookie",
+    "finalButton": "переглянути CV"
   }
 };
 

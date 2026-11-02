@@ -565,8 +565,10 @@ const UI_TRANSLATIONS = {
     "experienceDou": "View on DOU",
     "downloadCv": "view my CV",
     "cvFile": "Jack-Milka-CV.pdf",
-    "finalButton": "view CV",
-    "privacyPolicy": "Privacy Policy"
+    "privacyPolicy": "Privacy Policy",
+    "legalInformation": "Legal Information",
+    "cookieSettings": "Cookie Settings",
+    "finalButton": "view CV"
   },
   "uk": {
     "pageTitle": "Jack Milka — UI/UX та digital-дизайнер",
@@ -620,8 +622,10 @@ const UI_TRANSLATIONS = {
     "experienceDou": "Переглянути на DOU",
     "downloadCv": "переглянути CV",
     "cvFile": "Jack-Milka-CV-UA.pdf",
-    "finalButton": "переглянути CV",
-    "privacyPolicy": "Політика конфіденційності"
+    "privacyPolicy": "Політика конфіденційності",
+    "legalInformation": "Юридична інформація",
+    "cookieSettings": "Налаштування cookie",
+    "finalButton": "переглянути CV"
   }
 };
 
@@ -838,7 +842,9 @@ const I18N_TEXT_BINDINGS = {
   worksProcess: '.works-process-lead',
   finalTitle: '.contact-cta__title',
   navContactFinal: '.contact-cta__button .btn__line',
-  privacyPolicy: '.contact-cta__legal a',
+  privacyPolicy: '.contact-cta__legal a[href$="privacy-policy/"]',
+  legalInformation: '.contact-cta__legal a[href$="legal/"]',
+  cookieSettings: '.contact-cta__legal [data-cookie-settings]',
   cookieTitle: '.cookie-banner__title',
   cookieDescription: '.cookie-banner__description',
   accept: '.cookie-banner__button--accept .nav-link-line',
