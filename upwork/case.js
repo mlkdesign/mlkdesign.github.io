@@ -318,7 +318,6 @@ const CASE_TRANSLATIONS = {
     "navSkills": "skills",
     "navExperience": "experience",
     "formSuccess": "Request sent. I'll get back to you soon.",
-    "formError": "I could not send your request. Please try again or contact me via Telegram or WhatsApp.",
     "formRequired": "Please complete all three fields and enter a valid email address.",
     "formNotice": "Your information will be used to respond to your inquiry. Learn more in the <a href=\"../privacy-policy/\" target=\"_blank\" rel=\"noopener\">Privacy Policy</a>.",
     "formSending": "sending…",
@@ -327,23 +326,24 @@ const CASE_TRANSLATIONS = {
     "projectRequest": "Project request",
     "close": "Close",
     "socialMedia": "Social media",
-    "finalButton": "view CV"
+    "finalButton": "view CV",
+    "privacyPolicy": "Privacy Policy"
   },
   "uk": {
     "navAbout": "про мене",
     "navWorks": "роботи",
-    "navContact": "зв’язатися",
+    "navContact": "переглянути CV",
     "navMenu": "меню",
     "back": "назад",
     "toolsSkillsLabel": "інструменти та навички",
     "footerTitle": "Маєте ідею проєкту? Нумо втілимо її разом.",
     "offerTitle": "Сподобався проєкт?",
-    "offerDescription": "Давайте створимо для вас такий самий сильний продукт.",
-    "startProject": "працюймо разом",
+    "offerDescription": "У моєму CV — досвід, навички та вибрані роботи.",
+    "startProject": "переглянути моє CV",
     "visitSite": "переглянути сайт",
     "relatedTitle": "Вам також може сподобатися",
     "relatedIntro": "Інші проєкти з портфоліо — в один клік.",
-    "worksCta": "наступним може бути ваш проєкт",
+    "worksCta": "переглянути моє CV",
     "formName": "ім’я",
     "formEmail": "електронна пошта",
     "formDetails": "деталі проєкту",
@@ -351,7 +351,6 @@ const CASE_TRANSLATIONS = {
     "navSkills": "навички",
     "navExperience": "досвід",
     "formSuccess": "Заявку надіслано. Я зв’яжуся з вами найближчим часом.",
-    "formError": "Не вдалося надіслати заявку. Спробуйте ще раз або напишіть мені в Telegram чи WhatsApp.",
     "formRequired": "Заповніть усі три поля та вкажіть коректну електронну адресу.",
     "formNotice": "Ваші дані будуть використані для відповіді на ваш запит. Докладніше — у <a href=\"../privacy-policy/\" target=\"_blank\" rel=\"noopener\">Політиці конфіденційності</a>.",
     "formSending": "надсилаю…",
@@ -360,15 +359,16 @@ const CASE_TRANSLATIONS = {
     "projectRequest": "Заявка на проєкт",
     "close": "Закрити",
     "socialMedia": "Соціальні мережі",
-    "finalButton": "зв’язатися"
+    "finalButton": "переглянути CV",
+    "privacyPolicy": "Політика конфіденційності"
   }
 };
 
-const languagePreferenceKey = 'jack-milka-language';
+const languagePreferenceKey = 'jack-milka-upwork-language';
 let activeLanguage = 'en';
 
 try {
-  const storedLanguage = 'en'; // Upwork edition is English only.
+  const storedLanguage = localStorage.getItem(languagePreferenceKey);
   if (storedLanguage === 'uk' || storedLanguage === 'en') {
     activeLanguage = storedLanguage;
   } else {
@@ -384,6 +384,7 @@ const applyCaseLanguage = () => {
     ...activeProject.copy[activeLanguage],
   };
   document.documentElement.lang = activeLanguage;
+  document.querySelectorAll('[data-upwork-cv]').forEach((link) => link.setAttribute('href', activeLanguage === 'uk' ? 'Jack-Milka-CV-UA.pdf' : 'Jack-Milka-CV.pdf'));
   document.title = strings.pageTitle;
   const publishedUrl = new URL(activeProject.pageUrl || `case.html?project=${activeProjectKey}`, 'https://mlkdesign.github.io/upwork/');
   document.querySelector('link[rel="canonical"]')?.setAttribute('href', publishedUrl.href);

@@ -31,7 +31,7 @@
     <link rel="preload" href="../milka-cv/assets/fonts/NotoSans-300.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="../milka-cv/style.css?v=20261101-bars" />
     <link rel="stylesheet" href="../milka-cv/case.css?v=20261101-title" />
-    <style>.nav-menu .book { margin-left: auto; } a.case-start { text-decoration: none; } .case-info__copy.has-sequence:not(.is-sequence-visible) > a.case-start { opacity: 0; } .contact-cta__legal { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; font-size: 0.72rem; letter-spacing: 0.08em; } .contact-cta__legal a { color: #fff; text-decoration: none; }</style>
+    <style>a.case-start { text-decoration: none; } .case-info__copy.has-sequence:not(.is-sequence-visible) > a.case-start { opacity: 0; } .contact-cta__legal { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; font-size: 0.72rem; letter-spacing: 0.08em; } .contact-cta__legal a { color: #fff; text-decoration: none; }</style>
     <script type="text/javascript">
       (function(c,l,a,r,i,t,y){
           c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -91,7 +91,22 @@
                 <span class="nav-link-line" data-case-i18n="navWorks">selected works</span>
               </span>
             </a>
-            <a class="book" href="Jack-Milka-CV.pdf" target="_blank" rel="noopener">
+            <div class="language-switcher" aria-label="Language">
+              <button type="button" data-language="uk" aria-pressed="false">
+                <span class="nav-link-mask">
+                  <span class="nav-link-line">укр</span>
+                  <span class="nav-link-line">укр</span>
+                </span>
+              </button>
+              <span class="language-switcher__separator" aria-hidden="true">/</span>
+              <button type="button" data-language="en" aria-pressed="false">
+                <span class="nav-link-mask">
+                  <span class="nav-link-line">eng</span>
+                  <span class="nav-link-line">eng</span>
+                </span>
+              </button>
+            </div>
+            <a class="book" href="Jack-Milka-CV.pdf" target="_blank" rel="noopener" data-upwork-cv>
               <span class="nav-link-mask">
                 <span class="nav-link-line" data-case-i18n="navContact">view CV</span>
                 <span class="nav-link-line" data-case-i18n="navContact">view CV</span>
@@ -122,10 +137,15 @@
           <a href="index.html#about-me"><span class="mobile-menu-modal__label" data-case-i18n="navAbout">about me</span></a>
           <a href="index.html#experience"><span class="mobile-menu-modal__label" data-case-i18n="navExperience">experience</span></a>
           <a href="index.html#works"><span class="mobile-menu-modal__label" data-case-i18n="navWorks">selected works</span></a>
-          <a href="Jack-Milka-CV.pdf" target="_blank" rel="noopener"><span class="mobile-menu-modal__label" data-case-i18n="navContact">view CV</span></a>
+          <a href="Jack-Milka-CV.pdf" target="_blank" rel="noopener" data-upwork-cv><span class="mobile-menu-modal__label" data-case-i18n="navContact">view CV</span></a>
         </nav>
 
         <div class="mobile-menu-modal__bottom">
+          <div class="language-switcher" aria-label="Language">
+            <button type="button" data-language="uk" aria-pressed="false">укр</button>
+            <span class="language-switcher__separator" aria-hidden="true">/</span>
+            <button type="button" data-language="en" aria-pressed="false">eng</button>
+          </div>
         </div>
       </div>
     </aside>
@@ -160,7 +180,7 @@
               </dl>
 
               <div class="case-actions">
-                <a class="case-start corner-frame" href="Jack-Milka-CV.pdf" target="_blank" rel="noopener">
+                <a class="case-start corner-frame" href="Jack-Milka-CV.pdf" target="_blank" rel="noopener" data-upwork-cv>
                   <span class="btn__mask">
                     <span class="btn__line" data-case-i18n="startProject">let&#x27;s work together</span>
                     <span class="btn__line" data-case-i18n="startProject">let&#x27;s work together</span>
@@ -238,7 +258,7 @@
               </a>
             </article>
             <article class="work-card work-card--cta">
-              <a class="work-card__cta" href="Jack-Milka-CV.pdf" target="_blank" rel="noopener"><span data-case-i18n="worksCta">view my CV</span></a>
+              <a class="work-card__cta" href="Jack-Milka-CV.pdf" target="_blank" rel="noopener" data-upwork-cv><span data-case-i18n="worksCta">view my CV</span></a>
             </article>
           </div>
         </div>
@@ -263,7 +283,7 @@
       <div class="contact-cta__inner">
         <h2 class="contact-cta__title" data-reveal data-case-i18n-html="footerTitle">Have a project in mind? Let&#x27;s make it happen.</h2>
         <div class="contact-cta__actions">
-          <a class="contact-cta__button sp-box" href="Jack-Milka-CV.pdf" target="_blank" rel="noopener">
+          <a class="contact-cta__button sp-box" href="Jack-Milka-CV.pdf" target="_blank" rel="noopener" data-upwork-cv>
             <span class="btn__mask">
               <span class="btn__line" data-case-i18n="finalButton">view CV</span>
               <span class="btn__line" data-case-i18n="finalButton">view CV</span>
@@ -272,7 +292,7 @@
           <button class="contact-cta__cookies" type="button" data-cookie-settings>cookie settings</button>
         </div>
         <nav class="contact-cta__legal" aria-label="Legal">
-          <a href="privacy-policy/">Privacy Policy</a>
+          <a href="privacy-policy/" data-case-i18n="privacyPolicy">Privacy Policy</a>
         </nav>
       </div>
     </section>
@@ -289,7 +309,7 @@
           <img src="../milka-cv/assets/cross.svg" alt="" aria-hidden="true" />
         </button>
         <div class="case-offer__actions">
-          <a class="case-offer__button case-offer__button--primary" href="Jack-Milka-CV.pdf" target="_blank" rel="noopener">
+          <a class="case-offer__button case-offer__button--primary" href="Jack-Milka-CV.pdf" target="_blank" rel="noopener" data-upwork-cv>
             <span class="nav-link-mask">
               <span class="nav-link-line" data-case-i18n="startProject">let&#x27;s work together</span>
               <span class="nav-link-line" data-case-i18n="startProject">let&#x27;s work together</span>

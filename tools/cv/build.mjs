@@ -1,4 +1,4 @@
-// Builds assets/cv/Jack-Milka-CV-{EN,UA,RU}.pdf and the contact-free upwork/Jack-Milka-CV.pdf from tools/cv/cv.html.
+// Builds assets/cv/Jack-Milka-CV-{EN,UA,RU}.pdf and the contact-free upwork/Jack-Milka-CV{,-UA}.pdf from tools/cv/cv.html.
 // Set CV_PREVIEW_DIR to also render JPEG page previews there for review.
 // Usage: see tools/cv/README.md.
 import { createRequire } from 'node:module';
@@ -24,6 +24,7 @@ const META = {
   uk: { query: 'lang=uk', file: 'assets/cv/Jack-Milka-CV-UA.pdf', lang: 'uk-UA', title: 'Jack Milka — Резюме — UI/UX та продуктовий дизайнер', subject: 'Резюме Jack Milka, UI/UX та продуктовий дизайнер' },
   // Upwork edition: no personal contacts, links point into the /upwork/ copy of the site.
   upwork: { query: 'lang=en&edition=upwork', file: 'upwork/Jack-Milka-CV.pdf', lang: 'en-US', title: 'Jack Milka — CV — UI/UX & Digital Product Designer', subject: 'Curriculum vitae of Jack Milka, UI/UX & Digital Product Designer' },
+  'upwork-uk': { query: 'lang=uk&edition=upwork', file: 'upwork/Jack-Milka-CV-UA.pdf', lang: 'uk-UA', title: 'Jack Milka — Резюме — UI/UX та продуктовий дизайнер', subject: 'Резюме Jack Milka, UI/UX та продуктовий дизайнер' },
 };
 
 const footer = `

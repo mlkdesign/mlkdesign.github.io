@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Generate the contact-free, English-only Upwork edition of the site into upwork/.
+"""Generate the contact-free Upwork edition of the site into upwork/.
 
 The edition is a copy of index.html, case.html, pandawin.html, app.js and case.js with:
 - no personal contact details (email, messengers, social profiles, Freelancehunt profile, project form);
-- every "contact me" / project-form action turned into a link to upwork/Jack-Milka-CV.pdf;
-- no language switcher (English only);
+- every "contact me" / project-form action turned into a link to the contact-free CV in upwork/
+  (Jack-Milka-CV.pdf in English, Jack-Milka-CV-UA.pdf in Ukrainian);
+- English and Ukrainian, like the main site, with its own stored language (English until the visitor switches);
 - shared CSS, images and analytics loaded from the personal site at /milka-cv/.
 
 The deploy workflow publishes this folder at https://mlkdesign.github.io/upwork/ (site root, next to /milka-cv/),
@@ -12,7 +13,7 @@ so shared files are referenced as ../milka-cv/… To preview locally, serve a fo
 (this repository) sit side by side.
 
 Run from the repository root after changing the main pages:  python3 tools/upwork/build.py
-The CV PDF itself comes from tools/cv/build.mjs (the "upwork" edition).
+The CV PDFs themselves come from tools/cv/build.mjs (the "upwork" and "upwork-uk" editions).
 Every rewrite is asserted, so a markup change in the main site fails loudly instead of leaking contacts.
 """
 import re
@@ -23,7 +24,9 @@ OUT = ROOT / 'upwork'
 BASE_URL = 'https://mlkdesign.github.io/upwork/'
 SHARED = '../milka-cv/'  # personal site, relative to /upwork/
 CV = 'Jack-Milka-CV.pdf'
-CV_LINK = f'href="{CV}" target="_blank" rel="noopener"'
+CV_UK = 'Jack-Milka-CV-UA.pdf'
+# data-upwork-cv lets app.js / case.js point every CV link at the PDF in the page's language.
+CV_LINK = f'href="{CV}" target="_blank" rel="noopener" data-upwork-cv'
 CLARITY = '''  <script type="text/javascript">
       (function(c,l,a,r,i,t,y){
           c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -39,7 +42,7 @@ FORBIDDEN = [
     r'formspree',
 ]
 # Markup that must be gone from the generated pages (JS may still mention these selectors).
-FORBIDDEN_MARKUP = [r'data-open-form', r'class="language-switcher"', r'data-language=', r'class="form-modal"', r'class="social-links"']
+FORBIDDEN_MARKUP = [r'data-open-form', r'class="form-modal"', r'class="social-links"']
 
 
 def replace_once(text, old, new, label):
@@ -99,11 +102,10 @@ def common_html(text, page, label):
     text = re.sub(r'https://mlkdesign\.github\.io/milka-cv/(?!assets/)([^"]*)', lambda m: BASE_URL + m.group(1), text)
     text = text.replace(f'{BASE_URL}index.html', BASE_URL)
     text = replace_once(text, '<meta name="viewport"', '<meta name="robots" content="noindex" />\n    <meta name="viewport"', label)
-    # The language switcher used to push "contact me" to the right edge; the CV link takes over that role.
     # The case-page CTA becomes a link, so it must not pick up link underlining, and the site-wide resting
     # opacity for links must not show it before its entrance animation starts.
     # The Privacy Policy row copies the studio site's .contact-cta__legal rules (that CSS is not in the personal style.css).
-    text = replace_once(text, '</head>', '  <style>.nav-menu .book { margin-left: auto; } a.case-start { text-decoration: none; }'
+    text = replace_once(text, '</head>', '  <style>a.case-start { text-decoration: none; }'
                         ' .case-info__copy.has-sequence:not(.is-sequence-visible) > a.case-start { opacity: 0; }'
                         ' .contact-cta__legal { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem;'
                         ' font-size: 0.72rem; letter-spacing: 0.08em; }'
@@ -111,8 +113,7 @@ def common_html(text, page, label):
     # Microsoft Clarity for this edition (its own project, separate from the studio's); see the privacy policy.
     text = replace_once(text, '</head>', CLARITY + '\n  </head>', label)
 
-    # English only, no contact routes.
-    text = remove_elements(text, r'<div class="language-switcher"', 'div', f'{label} language switcher')
+    # No contact routes.
     text = remove_elements(text, r'<div class="mobile-menu-modal__socials">', 'div', f'{label} mobile socials', 1)
     text = remove_elements(text, r'<div class="form-modal"', 'div', f'{label} form modal', 1)
 
@@ -132,7 +133,7 @@ def common_html(text, page, label):
     assert actions >= 0, f'{label}: closing call to action'
     _, end = element_span(text, actions, 'div')
     text = (text[:end] + '\n        <nav class="contact-cta__legal" aria-label="Legal">'
-            '\n          <a href="privacy-policy/">Privacy Policy</a>\n        </nav>' + text[end:])
+            '\n          <a href="privacy-policy/" data-case-i18n="privacyPolicy">Privacy Policy</a>\n        </nav>' + text[end:])
     return text
 
 
@@ -163,23 +164,45 @@ def build_case(name):
 
 
 def drop_contact_strings(text, label):
-    """Remove translation entries that carry messenger handles or phone numbers."""
-    text, removed = re.subn(r'\n\s*"(telegramContact|whatsappContact)": "[^"]*",?', '', text)
-    assert removed >= 2, f'{label}: contact strings {removed}'
+    """Remove translation entries that carry messenger handles, phone numbers or point to the messengers (the form error), in both languages."""
+    text, removed = re.subn(r'\n\s*"(telegramContact|whatsappContact|formError)": "[^"]*",?', '', text)
+    assert removed == 6, f'{label}: contact strings {removed}'
     return text
+
+
+LANGUAGE_KEY = 'jack-milka-upwork-language'
+
+
+def cv_strings(text, label):
+    """Contact actions in both translation tables become "view CV"; the Privacy Policy link gets its label."""
+    for key, en, uk, en_new, uk_new in [
+        ('navContact', 'contact me', 'зв’язатися', 'view CV', 'переглянути CV'),
+        ('worksCta', 'your project could be next', 'наступним може бути ваш проєкт', 'view my CV', 'переглянути моє CV'),
+    ]:
+        text = replace_once(text, f'"{key}": "{en}"', f'"{key}": "{en_new}"', label)
+        text = replace_once(text, f'"{key}": "{uk}"', f'"{key}": "{uk_new}"', label)
+    text = replace_once(text, '"finalButton": "get in touch"', '"finalButton": "view CV",\n    "privacyPolicy": "Privacy Policy"', label)
+    text = replace_once(text, '"finalButton": "зв’язатися"', '"finalButton": "переглянути CV",\n    "privacyPolicy": "Політика конфіденційності"', label)
+    return text
+
+
+def own_language_key(text, label):
+    """The Upwork edition keeps its own language choice, apart from the main site on the same origin, so it opens in English."""
+    return replace_once(text, "const languagePreferenceKey = 'jack-milka-language';", f"const languagePreferenceKey = '{LANGUAGE_KEY}';", label)
 
 
 def build_app_js():
     text = (ROOT / 'app.js').read_text()
     label = 'app.js'
     text = replace_once(text, '"cvFile": "assets/cv/Jack-Milka-CV-EN.pdf"', f'"cvFile": "{CV}"', label)
+    text = replace_once(text, '"cvFile": "assets/cv/Jack-Milka-CV-UA.pdf"', f'"cvFile": "{CV_UK}"', label)
     text = re.sub(r"(['\"])assets/", rf"\1{SHARED}assets/", text)
-    text = replace_once(text, '"navContact": "contact me"', '"navContact": "view CV"', label)
-    text = replace_once(text, '"worksCta": "your project could be next"', '"worksCta": "view my CV"', label)
-    text = replace_once(text, '"finalButton": "get in touch"', '"finalButton": "view CV"', label)
-    # English only: ignore the language stored by the main site on the same origin.
-    text = replace_once(text, "  const storedLanguage = localStorage.getItem(languagePreferenceKey);\n  if (storedLanguage === 'uk' || storedLanguage === 'en') {",
-                        "  const storedLanguage = 'en'; // Upwork edition is English only.\n  if (storedLanguage === 'uk' || storedLanguage === 'en') {", label)
+    text = cv_strings(text, label)
+    # The CV links, the mobile-menu CV item and the Privacy Policy link follow the language too.
+    text = replace_once(text, "['[data-hero-cv], [data-cv-link]', 'href', 'cvFile'],", "['[data-hero-cv], [data-cv-link], [data-upwork-cv]', 'href', 'cvFile'],", label)
+    text = replace_once(text, '.mobile-menu-modal__links a[data-open-form] .mobile-menu-modal__label', '.mobile-menu-modal__links a[data-upwork-cv] .mobile-menu-modal__label', label)
+    text = replace_once(text, "  navContactFinal: '.contact-cta__button .btn__line',", "  navContactFinal: '.contact-cta__button .btn__line',\n  privacyPolicy: '.contact-cta__legal a',", label)
+    text = own_language_key(text, label)
     text = drop_contact_strings(text, label)
     return '// Generated by tools/upwork/build.py from app.js — edit the source, then regenerate.\n' + text
 
@@ -196,25 +219,28 @@ def build_case_js():
     text = replace_once(text, "visitUrl: 'storm-traffic/'", f"visitUrl: '{SHARED}storm-traffic/'", label)
     text = replace_once(text, "visitUrl: 'blackring/'", f"visitUrl: '{SHARED}blackring/'", label)
     text = replace_once(text, "'https://mlkdesign.github.io/milka-cv/');", f"'{BASE_URL}');", label)
-    text = replace_once(text, '"navContact": "contact me"', '"navContact": "view CV"', label)
+    text = cv_strings(text, label)
     text = replace_once(text, '"startProject": "let\'s work together"', '"startProject": "view my CV"', label)
+    text = replace_once(text, '"startProject": "працюймо разом"', '"startProject": "переглянути моє CV"', label)
     text = replace_once(text, '"offerDescription": "Let’s build something just as strong for you."', '"offerDescription": "My CV covers experience, skills and selected work."', label)
-    text = replace_once(text, '"finalButton": "get in touch"', '"finalButton": "view CV"', label)
-    text = replace_once(text, '"worksCta": "your project could be next"', '"worksCta": "view my CV"', label)
+    text = replace_once(text, '"offerDescription": "Давайте створимо для вас такий самий сильний продукт."', '"offerDescription": "У моєму CV — досвід, навички та вибрані роботи."', label)
+    # Every CV link opens the PDF in the page's language.
+    text = replace_once(text, '  document.documentElement.lang = activeLanguage;\n  document.title = strings.pageTitle;',
+                        f"  document.documentElement.lang = activeLanguage;\n  document.querySelectorAll('[data-upwork-cv]').forEach((link) => link.setAttribute('href', activeLanguage === 'uk' ? '{CV_UK}' : '{CV}'));\n  document.title = strings.pageTitle;", label)
     # Without a public site to show, drop the "visit this site" button instead of opening the image.
     text = replace_once(text, '    else visitLink.href = activeProject.visitUrl || activeProject.image;',
                         '    else if (activeProject.visitUrl) visitLink.href = activeProject.visitUrl;\n    else visitLink.remove();', label)
-    text = replace_once(text, "  const storedLanguage = localStorage.getItem(languagePreferenceKey);\n  if (storedLanguage === 'uk' || storedLanguage === 'en') {",
-                        "  const storedLanguage = 'en'; // Upwork edition is English only.\n  if (storedLanguage === 'uk' || storedLanguage === 'en') {", label)
+    text = own_language_key(text, label)
     text = drop_contact_strings(text, label)
     return '// Generated by tools/upwork/build.py from case.js — edit the source, then regenerate.\n' + text
 
 
-PRIVACY_DATE = '31 October 2026'
+PRIVACY_EFFECTIVE, PRIVACY_EFFECTIVE_UK = '31 October 2026', '31 жовтня 2026 року'
+PRIVACY_UPDATED, PRIVACY_UPDATED_UK = '2 November 2026', '2 листопада 2026 року'
 
 
 def build_privacy():
-    """The Upwork edition's own privacy policy: the studio policy's layout and stylesheet, no direct contact routes."""
+    """The Upwork edition's own privacy policy in English and Ukrainian: the studio policy's layout and stylesheet, no direct contact routes."""
     return f'''<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -224,6 +250,8 @@ def build_privacy():
     <meta name="theme-color" content="#0b0b0b" />
     <meta name="color-scheme" content="dark" />
     <title>Privacy Policy — Jack Milka</title>
+    <meta name="title-en" content="Privacy Policy — Jack Milka" />
+    <meta name="title-uk" content="Політика конфіденційності — Jack Milka" />
     <meta name="description" content="How the Upwork edition of Jack Milka’s portfolio handles personal data while you browse it." />
     <link rel="canonical" href="{BASE_URL}privacy-policy/" />
     <link rel="icon" href="../../milka-cv/assets/jm-favicon.svg" type="image/svg+xml" />
@@ -235,18 +263,24 @@ def build_privacy():
     <header class="legal-header">
       <a class="legal-brand" href="../">MLK.DESIGN</a>
       <nav class="legal-header__links" aria-label="Legal">
-        <a class="legal-header__back" href="../">back to portfolio</a>
-        <a href="./" aria-current="page">privacy</a>
+        <a class="legal-header__back" href="../"><span lang="en">back to portfolio</span><span lang="uk">до портфоліо</span></a>
+        <a href="./" aria-current="page"><span lang="en">privacy</span><span lang="uk">конфіденційність</span></a>
+        <div class="legal-language" aria-label="Language">
+          <button type="button" data-language="uk" aria-pressed="false">укр</button>
+          <span aria-hidden="true">/</span>
+          <button type="button" data-language="en" aria-pressed="true">eng</button>
+        </div>
       </nav>
     </header>
 
+    <!-- English -->
     <main class="legal-main" lang="en">
       <div class="legal-hero">
         <p class="legal-hero__label">privacy policy</p>
         <div class="legal-hero__body">
           <h1 class="legal-title">Privacy Policy</h1>
           <p class="legal-intro">This policy explains what personal data this portfolio receives while you browse it, why, who helps process it and what rights you have. It describes how this edition of the website actually works today.</p>
-          <p class="legal-dates">Effective from {PRIVACY_DATE} · Last updated {PRIVACY_DATE}</p>
+          <p class="legal-dates">Effective from {PRIVACY_EFFECTIVE} · Last updated {PRIVACY_UPDATED}</p>
         </div>
       </div>
 
@@ -398,6 +432,8 @@ def build_privacy():
           <table class="legal-table">
             <thead><tr><th>Name</th><th>Purpose</th><th>Kept for</th></tr></thead>
             <tbody>
+              <tr><td>{LANGUAGE_KEY}</td><td>Remembers the language you chose (uk / en)</td><td>Until you clear your browser data</td></tr>
+              <tr><td>jack-milka-language-scroll-reset</td><td>Returns the page to the top after you change the language</td><td>Deleted right after use</td></tr>
               <tr><td>jack-milka-cookie-preference</td><td>Remembers your analytics choice</td><td>Until you change it or clear your browser data</td></tr>
             </tbody>
           </table>
@@ -410,16 +446,221 @@ def build_privacy():
           <h2>Questions &amp; Updates</h2>
           <p>For any question about your data, send a message through Upwork.</p>
           <p>We update this policy when the way the website works changes. The date at the top shows the latest version.</p>
-          <p>Effective from {PRIVACY_DATE}. Last updated {PRIVACY_DATE}.</p>
+          <p>Effective from {PRIVACY_EFFECTIVE}. Last updated {PRIVACY_UPDATED}.</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Українська -->
+    <main class="legal-main" lang="uk">
+      <div class="legal-hero">
+        <p class="legal-hero__label">політика конфіденційності</p>
+        <div class="legal-hero__body">
+          <h1 class="legal-title">Політика конфіденційності</h1>
+          <p class="legal-intro">Ця політика пояснює, які персональні дані отримує це портфоліо, поки ви його переглядаєте, навіщо, хто допомагає їх обробляти та які права ви маєте. Вона описує, як ця версія сайту працює насправді.</p>
+          <p class="legal-dates">Діє з {PRIVACY_EFFECTIVE_UK} · Останнє оновлення {PRIVACY_UPDATED_UK}</p>
+        </div>
+      </div>
+
+      <section class="legal-section">
+        <p class="legal-section__index">01</p>
+        <div class="legal-section__body">
+          <h2>Вступ</h2>
+          <p>Це версія портфоліо Jack Milka (Євгенія Мілки), UI/UX та продуктового дизайнера, для Upwork за адресою {BASE_URL}. Тут зібрано кейси й CV для клієнтів, які знайшли Jack на Upwork.</p>
+          <p>На сайті немає форми зв’язку й облікових записів. Тут не можна придбати послуги, оплатити їх чи укласти договір; усе спілкування й робота відбуваються на Upwork.</p>
+        </div>
+      </section>
+
+      <section class="legal-section">
+        <p class="legal-section__index">02</p>
+        <div class="legal-section__body">
+          <h2>Володілець персональних даних</h2>
+          <dl class="legal-facts">
+            <div><dt>Володілець</dt><dd>ФОП Мілка Євгеній Володимирович</dd></div>
+            <div><dt>Країна реєстрації</dt><dd>Україна</dd></div>
+            <div><dt>Питання щодо даних</dt><dd>Через повідомлення Upwork — у вакансії чи контракті на Upwork, де ви отримали посилання на це портфоліо</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="legal-section">
+        <p class="legal-section__index">03</p>
+        <div class="legal-section__body">
+          <h2>Які дані ми отримуємо</h2>
+          <h3>Технічні дані</h3>
+          <p>Коли ви відкриваєте сайт, хостинг (GitHub Pages) і сервіси, що доставляють JavaScript-бібліотеки сайту (unpkg.com, esm.sh), отримують вашу IP-адресу та дані браузера, як і будь-який вебсервер. Так само й під час відкриття CV.</p>
+          <h3>Статистика відвідувань (Google Analytics)</h3>
+          <p>Лише після того, як ви натиснете «прийняти» в банері cookie, Google Analytics 4 фіксує переглянуті сторінки, пристрій, браузер і приблизне місцезнаходження, визначене за з’єднанням, а також кліки на фіксований набір елементів: відкриття кейсу, відкриття сайту проєкту та відкриття CV.</p>
+          <h3>Статистика відвідувань (Microsoft Clarity)</h3>
+          <p>Microsoft Clarity фіксує, як відвідувачі користуються сторінками: кліки, прокручування й рух миші, з яких складає теплові карти й записи сесій, а також переглянуті сторінки, пристрій, браузер і приблизне місцезнаходження, визначене за з’єднанням. Clarity не чекає на банер cookie.</p>
+          <p>Рекламних пікселів і рекламних профілів ми не використовуємо.</p>
+          <h3>Повідомлення на Upwork</h3>
+          <p>Те, що ви надсилаєте через Upwork, обробляє Upwork за власною політикою конфіденційності. Цей сайт цих даних не отримує.</p>
+        </div>
+      </section>
+
+      <section class="legal-section">
+        <p class="legal-section__index">04</p>
+        <div class="legal-section__body">
+          <h2>Як ми використовуємо дані</h2>
+          <ul>
+            <li>Щоб розуміти, які роботи та сторінки цікаві відвідувачам (Google Analytics, лише за вашою згодою).</li>
+            <li>Щоб бачити, як відвідувачі користуються сайтом, і прибирати те, що їм заважає (Microsoft Clarity).</li>
+            <li>Щоб сайт працював безпечно й справно.</li>
+          </ul>
+          <p>Ми не використовуємо ці дані для маркетингу і не продаємо та не передаємо персональні дані в оренду.</p>
+        </div>
+      </section>
+
+      <section class="legal-section">
+        <p class="legal-section__index">05</p>
+        <div class="legal-section__body">
+          <h2>Правові підстави</h2>
+          <p>Ми обробляємо персональні дані відповідно до Закону України «Про захист персональних даних», а якщо до вас застосовується Загальний регламент ЄС про захист даних (GDPR), — також відповідно до нього.</p>
+          <table class="legal-table">
+            <thead><tr><th>Мета</th><th>Підстава</th></tr></thead>
+            <tbody>
+              <tr><td>Хостинг і безпека сайту</td><td>Законний інтерес у безпечній і справній роботі сайту — ст. 6(1)(f) GDPR</td></tr>
+              <tr><td>Статистика відвідувань (Google Analytics)</td><td>Ваша згода, надана в банері cookie, — ст. 6(1)(a) GDPR; ст. 11 Закону України «Про захист персональних даних». Її можна будь-коли відкликати.</td></tr>
+              <tr><td>Статистика відвідувань (Microsoft Clarity)</td><td>Законний інтерес розуміти, як користуються сайтом, і покращувати його, — ст. 6(1)(f) GDPR. Ви можете будь-коли заперечити або заблокувати cookie Clarity в браузері.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="legal-section">
+        <p class="legal-section__index">06</p>
+        <div class="legal-section__body">
+          <h2>Сторонні сервіси</h2>
+          <table class="legal-table">
+            <thead><tr><th>Сервіс</th><th>Що робить</th><th>Які дані отримує</th></tr></thead>
+            <tbody>
+              <tr><td>GitHub Pages (GitHub, Inc., США)</td><td>Хостинг сайту</td><td>IP-адреса та дані браузера кожного відвідувача; GitHub зберігає IP-адреси відвідувачів у журналах з міркувань безпеки</td></tr>
+              <tr><td>unpkg.com, esm.sh</td><td>Доставляють відкриті JavaScript-бібліотеки, які сайт використовує для анімації та прокручування</td><td>IP-адреса та дані браузера під час завантаження сторінки</td></tr>
+              <tr><td>Google Analytics 4 (Google)</td><td>Статистика відвідувань, після вашої згоди</td><td>Випадковий ідентифікатор відвідувача в cookie, переглянуті сторінки, дані пристрою й браузера, приблизне місцезнаходження, фіксовані події взаємодії, описані вище. Google signals і персоналізацію реклами вимкнено.</td></tr>
+              <tr><td>Microsoft Clarity (Microsoft Corporation, США)</td><td>Теплові карти й записи сесій</td><td>Кліки, прокручування й рух миші, переглянуті сторінки, дані пристрою й браузера, приблизне місцезнаходження за IP-адресою, випадковий ідентифікатор відвідувача в cookie</td></tr>
+            </tbody>
+          </table>
+          <p>Шрифти завантажуються з самого сайту. На сайті немає вбудованих відео, віджетів соцмереж чи CAPTCHA. Посилання на сайти проєктів, сторінки компаній і Behance відкривають їх лише після вашого кліку.</p>
+        </div>
+      </section>
+
+      <section class="legal-section">
+        <p class="legal-section__index">07</p>
+        <div class="legal-section__body">
+          <h2>Строки зберігання</h2>
+          <ul>
+            <li><strong>Журнали хостингу й доставки</strong> — зберігаються постачальниками, наведеними вище, за їхніми правилами.</li>
+            <li><strong>Google Analytics</strong> — зберігає дані подій протягом строку, встановленого в нашому акаунті (2 місяці, стандартне значення GA4), а потім видаляє їх.</li>
+            <li><strong>Microsoft Clarity</strong> — зберігає записи й статистику протягом строків, які Microsoft встановлює для сервісу, а потім видаляє їх.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="legal-section">
+        <p class="legal-section__index">08</p>
+        <div class="legal-section__body">
+          <h2>Міжнародна передача даних</h2>
+          <p>Володілець даних перебуває в Україні. GitHub, Google і Microsoft обробляють дані в США та інших країнах. Ці постачальники зазначають, що захищають міжнародну передачу за допомогою Рамкової угоди ЄС — США про конфіденційність даних (Data Privacy Framework) та/або Стандартних договірних положень Європейської комісії. Щодо України наразі немає рішення ЄС про адекватність захисту даних.</p>
+        </div>
+      </section>
+
+      <section class="legal-section">
+        <p class="legal-section__index">09</p>
+        <div class="legal-section__body">
+          <h2>Ваші права</h2>
+          <p>Залежно від законодавства, що до вас застосовується, ви можете попросити нас:</p>
+          <ul>
+            <li>повідомити, чи обробляємо ми ваші дані, і надати їх копію (доступ);</li>
+            <li>виправити неточні чи неповні дані;</li>
+            <li>видалити дані, якщо немає підстав їх зберігати;</li>
+            <li>обмежити обробку, доки розглядається питання щодо неї;</li>
+            <li>припинити обробку, що ґрунтується на нашому законному інтересі (заперечення);</li>
+            <li>відкликати згоду будь-коли, якщо обробка ґрунтується на згоді.</li>
+          </ul>
+          <p>Надішліть запит через повідомлення Upwork. Ми відповідаємо протягом одного місяця і можемо попросити підтвердити, що запит надіслали саме ви. Відкликати згоду на аналітику можна будь-коли самостійно за посиланням «cookie settings» внизу кожної сторінки.</p>
+          <p>Ви також можете поскаржитися до наглядового органу: в ЄС/ЄЕЗ — до органу із захисту даних країни, де ви живете чи працюєте; в Україні — до Уповноваженого Верховної Ради України з прав людини. Також ви можете звернутися до суду.</p>
+        </div>
+      </section>
+
+      <section class="legal-section">
+        <p class="legal-section__index">10</p>
+        <div class="legal-section__body">
+          <h2>Безпека</h2>
+          <p>Сайт працює лише через HTTPS і не запитує у вас жодних персональних даних. Жоден спосіб передачі чи зберігання даних не є абсолютно захищеним, тому ми не можемо гарантувати абсолютну безпеку.</p>
+        </div>
+      </section>
+
+      <section class="legal-section">
+        <p class="legal-section__index">11</p>
+        <div class="legal-section__body">
+          <h2>Cookie та аналітика</h2>
+          <p>Google Analytics вимкнено за замовчуванням: доки ви не натиснете «прийняти», скрипт аналітики не завантажується й нічого не передається Google. «Відхилити» залишає аналітику вимкненою, а сайт працює так само. Змінити чи відкликати вибір можна будь-коли за посиланням «cookie settings» внизу сторінки; відкликання видаляє cookie аналітики.</p>
+          <p>Microsoft Clarity не чекає на банер і може встановлювати наведені нижче cookie; Microsoft також може встановлювати власні cookie на своєму домені clarity.ms. Їх можна заблокувати чи видалити в налаштуваннях браузера, і сайт працюватиме так само.</p>
+          <table class="legal-table">
+            <thead><tr><th>Назва</th><th>Призначення</th><th>Строк</th></tr></thead>
+            <tbody>
+              <tr><td>_ga</td><td>Google Analytics: розрізняє відвідування з різних браузерів (лише після згоди)</td><td>До 2 років</td></tr>
+              <tr><td>_ga_4RJRW3679Y</td><td>Google Analytics: зберігає стан поточного відвідування (лише після згоди)</td><td>До 2 років</td></tr>
+              <tr><td>_clck</td><td>Microsoft Clarity: зберігає той самий випадковий ідентифікатор відвідувача між відвідуваннями</td><td>До 1 року</td></tr>
+              <tr><td>_clsk</td><td>Microsoft Clarity: об’єднує переглянуті сторінки в одну сесію</td><td>1 день</td></tr>
+            </tbody>
+          </table>
+          <h3>Локальне сховище</h3>
+          <table class="legal-table">
+            <thead><tr><th>Назва</th><th>Призначення</th><th>Строк</th></tr></thead>
+            <tbody>
+              <tr><td>{LANGUAGE_KEY}</td><td>Пам’ятає обрану мову (uk / en)</td><td>Доки ви не очистите дані браузера</td></tr>
+              <tr><td>jack-milka-language-scroll-reset</td><td>Повертає сторінку нагору після зміни мови</td><td>Видаляється одразу після використання</td></tr>
+              <tr><td>jack-milka-cookie-preference</td><td>Пам’ятає ваш вибір щодо аналітики</td><td>Доки ви не зміните вибір чи не очистите дані браузера</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="legal-section">
+        <p class="legal-section__index">12</p>
+        <div class="legal-section__body">
+          <h2>Питання та оновлення</h2>
+          <p>З будь-яких питань щодо ваших даних напишіть через Upwork.</p>
+          <p>Ми оновлюємо цю політику, коли змінюється робота сайту. Дата вгорі показує актуальну версію.</p>
+          <p>Діє з {PRIVACY_EFFECTIVE_UK}. Останнє оновлення {PRIVACY_UPDATED_UK}.</p>
         </div>
       </section>
     </main>
 
     <footer class="legal-footer">
-      <a href="./">Privacy Policy</a>
-      <a href="../">Back to the portfolio</a>
+      <a href="./"><span lang="en">Privacy Policy</span><span lang="uk">Політика конфіденційності</span></a>
+      <a href="../"><span lang="en">Back to the portfolio</span><span lang="uk">Повернутися до портфоліо</span></a>
       <span class="legal-footer__copy">© 2026 Jack Milka</span>
     </footer>
+    <script>
+      // Same stored language as the rest of the Upwork edition; English until the visitor switches.
+      (() => {{
+        const key = '{LANGUAGE_KEY}';
+        let language = 'en';
+        try {{
+          if (localStorage.getItem(key) === 'uk') language = 'uk';
+        }} catch {{
+          // Storage unavailable: English.
+        }}
+        const apply = (next) => {{
+          language = next;
+          document.documentElement.lang = next;
+          document.title = document.querySelector(`meta[name="title-${{next}}"]`).content;
+          document.querySelectorAll('[data-language]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.language === next)));
+        }};
+        apply(language);
+        document.querySelectorAll('[data-language]').forEach((button) => button.addEventListener('click', () => {{
+          try {{
+            localStorage.setItem(key, button.dataset.language);
+          }} catch {{
+            // The switch still applies to this page.
+          }}
+          apply(button.dataset.language);
+        }}));
+      }})();
+    </script>
   </body>
 </html>
 '''

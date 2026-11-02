@@ -544,7 +544,6 @@ const UI_TRANSLATIONS = {
     "formRequest": "request",
     "formSending": "sending…",
     "formSuccess": "Request sent. I'll get back to you soon.",
-    "formError": "I could not send your request. Please try again or contact me via Telegram or WhatsApp.",
     "formRequired": "Please complete all three fields and enter a valid email address.",
     "formNotice": "Your information will be used to respond to your inquiry. Learn more in the <a href=\"../privacy-policy/\" target=\"_blank\" rel=\"noopener\">Privacy Policy</a>.",
     "primaryNavigation": "Primary navigation",
@@ -566,14 +565,15 @@ const UI_TRANSLATIONS = {
     "experienceDou": "View on DOU",
     "downloadCv": "view my CV",
     "cvFile": "Jack-Milka-CV.pdf",
-    "finalButton": "view CV"
+    "finalButton": "view CV",
+    "privacyPolicy": "Privacy Policy"
   },
   "uk": {
     "pageTitle": "Jack Milka — UI/UX та digital-дизайнер",
     "preloader": "Створюю цифрові продукти.",
     "navWorks": "роботи",
     "navAbout": "про мене",
-    "navContact": "зв’язатися",
+    "navContact": "переглянути CV",
     "navMenu": "меню",
     "heroButton": "переглянути CV",
     "heroTitle": "Я перетворюю складні ідеї на інтуїтивні цифрові продукти, якими легко користуватися.",
@@ -585,7 +585,7 @@ const UI_TRANSLATIONS = {
     "statProjects": "Реалізованих<br>проєктів",
     "worksIntro": "Добірка цифрових продуктів, вебсайтів і візуальних рішень, які я створив для різних брендів і компаній.",
     "worksTitle": "Обрані роботи",
-    "worksCta": "наступним може бути ваш проєкт",
+    "worksCta": "переглянути моє CV",
     "worksProcess": "Мій підхід поєднує продуманий дизайн, зрозумілість та увагу до деталей.",
     "finalTitle": "Маєте ідею проєкту? Нумо втілимо її разом.",
     "cookieTitle": "Налаштування cookie",
@@ -599,7 +599,6 @@ const UI_TRANSLATIONS = {
     "formRequest": "надіслати",
     "formSending": "надсилаю…",
     "formSuccess": "Заявку надіслано. Я зв’яжуся з вами найближчим часом.",
-    "formError": "Не вдалося надіслати заявку. Спробуйте ще раз або напишіть мені в Telegram чи WhatsApp.",
     "formRequired": "Заповніть усі три поля та вкажіть коректну електронну адресу.",
     "formNotice": "Ваші дані будуть використані для відповіді на ваш запит. Докладніше — у <a href=\"../privacy-policy/\" target=\"_blank\" rel=\"noopener\">Політиці конфіденційності</a>.",
     "primaryNavigation": "Основна навігація",
@@ -620,8 +619,9 @@ const UI_TRANSLATIONS = {
     "experienceLinkedin": "Переглянути LinkedIn",
     "experienceDou": "Переглянути на DOU",
     "downloadCv": "переглянути CV",
-    "cvFile": "../milka-cv/assets/cv/Jack-Milka-CV-UA.pdf",
-    "finalButton": "зв’язатися"
+    "cvFile": "Jack-Milka-CV-UA.pdf",
+    "finalButton": "переглянути CV",
+    "privacyPolicy": "Політика конфіденційності"
   }
 };
 
@@ -817,7 +817,7 @@ const I18N_TEXT_BINDINGS = {
   navWorks: '.nav-menu a[href="#works"] .nav-link-line, .mobile-menu-modal__links a[href="#works"] .mobile-menu-modal__label',
   navAbout: '.nav-menu a[href="#about-me"] .nav-link-line, .mobile-menu-modal__links a[href="#about-me"] .mobile-menu-modal__label',
   navExperience: '.nav-menu a[href="#experience"] .nav-link-line, .mobile-menu-modal__links a[href="#experience"] .mobile-menu-modal__label',
-  navContact: '.nav-menu .book .nav-link-line, .form-modal__contact-spacer, .mobile-menu-modal__links a[data-open-form] .mobile-menu-modal__label',
+  navContact: '.nav-menu .book .nav-link-line, .form-modal__contact-spacer, .mobile-menu-modal__links a[data-upwork-cv] .mobile-menu-modal__label',
   navMenu: '.nav-toggle .nav-link-line',
   heroButton: '.hero .btn__line',
   heroTitle: '.hero h1',
@@ -838,6 +838,7 @@ const I18N_TEXT_BINDINGS = {
   worksProcess: '.works-process-lead',
   finalTitle: '.contact-cta__title',
   navContactFinal: '.contact-cta__button .btn__line',
+  privacyPolicy: '.contact-cta__legal a',
   cookieTitle: '.cookie-banner__title',
   cookieDescription: '.cookie-banner__description',
   accept: '.cookie-banner__button--accept .nav-link-line',
@@ -851,7 +852,7 @@ const I18N_TEXT_BINDINGS = {
 
 const I18N_HTML_KEYS = new Set(['statYears', 'statProjects', 'formNotice']);
 const languageButtons = Array.from(document.querySelectorAll('[data-language]'));
-const languagePreferenceKey = 'jack-milka-language';
+const languagePreferenceKey = 'jack-milka-upwork-language';
 const languageScrollResetKey = 'jack-milka-language-scroll-reset';
 let activeLanguage = 'en';
 
@@ -951,7 +952,7 @@ const applyLanguage = (language) => {
     ['.social-link--whatsapp, .contact-tile--whatsapp', 'aria-label', 'whatsappContact'],
     ['.social-links, .form-modal__contacts', 'aria-label', 'socialMedia'],
     // The CV follows the site language: EN → English PDF, УКР → Ukrainian PDF.
-    ['[data-hero-cv], [data-cv-link]', 'href', 'cvFile'],
+    ['[data-hero-cv], [data-cv-link], [data-upwork-cv]', 'href', 'cvFile'],
     ['.cookie-banner', 'aria-label', 'cookieTitle'],
     ['.cookie-banner__close', 'aria-label', 'cookieClose'],
   ];
@@ -977,7 +978,7 @@ const applyLanguage = (language) => {
 };
 
 try {
-  const storedLanguage = 'en'; // Upwork edition is English only.
+  const storedLanguage = localStorage.getItem(languagePreferenceKey);
   if (storedLanguage === 'uk' || storedLanguage === 'en') {
     activeLanguage = storedLanguage;
   } else {
