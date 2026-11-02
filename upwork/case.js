@@ -388,7 +388,7 @@ const applyCaseLanguage = () => {
     ...activeProject.copy[activeLanguage],
   };
   document.documentElement.lang = activeLanguage;
-  document.querySelectorAll('[data-upwork-cv]').forEach((link) => link.setAttribute('href', activeLanguage === 'uk' ? 'Jack-Milka-CV-UA.pdf' : 'Jack-Milka-CV.pdf'));
+  document.querySelectorAll('[data-upwork-cv]').forEach((link) => link.setAttribute('href', activeLanguage === 'uk' ? 'Jack-Milka-CV-UA.pdf?v=20261103' : 'Jack-Milka-CV.pdf?v=20261103'));
   document.title = strings.pageTitle;
   const publishedUrl = new URL(activeProject.pageUrl || `case.html?project=${activeProjectKey}`, 'https://mlkdesign.github.io/upwork/');
   document.querySelector('link[rel="canonical"]')?.setAttribute('href', publishedUrl.href);

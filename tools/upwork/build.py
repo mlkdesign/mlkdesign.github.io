@@ -23,8 +23,11 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'upwork'
 BASE_URL = 'https://mlkdesign.github.io/upwork/'
 SHARED = '../milka-cv/'  # personal site, relative to /upwork/
-CV = 'Jack-Milka-CV.pdf'
-CV_UK = 'Jack-Milka-CV-UA.pdf'
+# The version query makes browsers fetch a rebuilt CV instead of a cached copy; bump it with every CV rebuild
+# (and the cvFile versions in app.js).
+CV_VERSION = '?v=20261103'
+CV = 'Jack-Milka-CV.pdf' + CV_VERSION
+CV_UK = 'Jack-Milka-CV-UA.pdf' + CV_VERSION
 # data-upwork-cv lets app.js / case.js point every CV link at the PDF in the page's language.
 CV_LINK = f'href="{CV}" target="_blank" rel="noopener" data-upwork-cv'
 CLARITY = '''  <script type="text/javascript">
@@ -188,8 +191,9 @@ def own_language_key(text, label):
 def build_app_js():
     text = (ROOT / 'app.js').read_text()
     label = 'app.js'
-    text = replace_once(text, '"cvFile": "assets/cv/Jack-Milka-CV-EN.pdf"', f'"cvFile": "{CV}"', label)
-    text = replace_once(text, '"cvFile": "assets/cv/Jack-Milka-CV-UA.pdf"', f'"cvFile": "{CV_UK}"', label)
+    text = re.sub(r'"cvFile": "assets/cv/Jack-Milka-CV-EN\.pdf[^"]*"', f'"cvFile": "{CV}"', text, count=1)
+    text = re.sub(r'"cvFile": "assets/cv/Jack-Milka-CV-UA\.pdf[^"]*"', f'"cvFile": "{CV_UK}"', text, count=1)
+    assert text.count(f'"cvFile": "{CV}"') == 1 and text.count(f'"cvFile": "{CV_UK}"') == 1, f'{label}: cvFile'
     text = re.sub(r"(['\"])assets/", rf"\1{SHARED}assets/", text)
     text = cv_strings(text, label)
     # The CV links and the mobile-menu CV item follow the language too.
