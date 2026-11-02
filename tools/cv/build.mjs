@@ -18,18 +18,19 @@ const PREVIEW = process.env.CV_PREVIEW_DIR;
 if (PREVIEW) mkdirSync(PREVIEW, { recursive: true });
 
 // key: preview prefix · query: cv.html parameters · file: output path from the repository root.
+// author: the name in the footer and the PDF properties (Ukrainian and Russian CVs use the local form of the name).
 const META = {
   en: { query: 'lang=en', file: 'assets/cv/Jack-Milka-CV-EN.pdf', lang: 'en-US', title: 'Jack Milka — CV — UI/UX & Digital Product Designer', subject: 'Curriculum vitae of Jack Milka, UI/UX & Digital Product Designer' },
-  ru: { query: 'lang=ru', file: 'assets/cv/Jack-Milka-CV-RU.pdf', lang: 'ru-RU', title: 'Jack Milka — Резюме — UI/UX и продуктовый дизайнер', subject: 'Резюме Jack Milka, UI/UX и продуктовый дизайнер' },
-  uk: { query: 'lang=uk', file: 'assets/cv/Jack-Milka-CV-UA.pdf', lang: 'uk-UA', title: 'Jack Milka — Резюме — UI/UX та продуктовий дизайнер', subject: 'Резюме Jack Milka, UI/UX та продуктовий дизайнер' },
+  ru: { query: 'lang=ru', file: 'assets/cv/Jack-Milka-CV-RU.pdf', lang: 'ru-RU', author: 'Милка Евгений', title: 'Милка Евгений — Резюме — UI/UX и продуктовый дизайнер', subject: 'Резюме Милка Евгений, UI/UX и продуктовый дизайнер' },
+  uk: { query: 'lang=uk', file: 'assets/cv/Jack-Milka-CV-UA.pdf', lang: 'uk-UA', author: 'Мілка Євгеній', title: 'Мілка Євгеній — Резюме — UI/UX та продуктовий дизайнер', subject: 'Резюме Мілка Євгеній, UI/UX та продуктовий дизайнер' },
   // Upwork edition: no personal contacts, links point into the /upwork/ copy of the site.
   upwork: { query: 'lang=en&edition=upwork', file: 'upwork/Jack-Milka-CV.pdf', lang: 'en-US', title: 'Jack Milka — CV — UI/UX & Digital Product Designer', subject: 'Curriculum vitae of Jack Milka, UI/UX & Digital Product Designer' },
-  'upwork-uk': { query: 'lang=uk&edition=upwork', file: 'upwork/Jack-Milka-CV-UA.pdf', lang: 'uk-UA', title: 'Jack Milka — Резюме — UI/UX та продуктовий дизайнер', subject: 'Резюме Jack Milka, UI/UX та продуктовий дизайнер' },
+  'upwork-uk': { query: 'lang=uk&edition=upwork', file: 'upwork/Jack-Milka-CV-UA.pdf', lang: 'uk-UA', author: 'Мілка Євгеній', title: 'Мілка Євгеній — Резюме — UI/UX та продуктовий дизайнер', subject: 'Резюме Мілка Євгеній, UI/UX та продуктовий дизайнер' },
 };
 
-const footer = `
+const footer = (name) => `
   <div style="width:100%;padding:0 16mm;display:flex;justify-content:space-between;font:6.5pt Helvetica,Arial,sans-serif;letter-spacing:0.12em;color:#8a8a8a;">
-    <span>JACK MILKA — MLK.DESIGN</span>
+    <span>${name.toUpperCase()} — MLK.DESIGN</span>
     <span><span class="pageNumber"></span> / <span class="totalPages"></span></span>
   </div>`;
 
@@ -46,7 +47,7 @@ try {
       printBackground: true,
       displayHeaderFooter: true,
       headerTemplate: '<span></span>',
-      footerTemplate: footer,
+      footerTemplate: footer(meta.author || 'Jack Milka'),
       tagged: true,
       outline: false,
     });
@@ -54,9 +55,9 @@ try {
 
     const doc = await PDFDocument.load(pdf);
     doc.setTitle(meta.title, { showInWindowTitleBar: true });
-    doc.setAuthor('Jack Milka');
+    doc.setAuthor(meta.author || 'Jack Milka');
     doc.setSubject(meta.subject);
-    doc.setKeywords(['Jack Milka', 'UI/UX', 'Product Design', 'CV', 'MLK.DESIGN']);
+    doc.setKeywords([...new Set(['Jack Milka', meta.author || 'Jack Milka']), 'UI/UX', 'Product Design', 'CV', 'MLK.DESIGN']);
     doc.setCreator('MLK.DESIGN');
     doc.setProducer('MLK.DESIGN');
     doc.setLanguage(meta.lang);
