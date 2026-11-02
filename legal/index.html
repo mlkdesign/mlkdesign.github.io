@@ -26,7 +26,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content="https://mlkdesign.github.io/assets/og-image.jpg?v=20261029" />
     <link rel="preload" href="../assets/fonts/NotoSans-300.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="../legal.css?v=20261029" />
+    <link rel="stylesheet" href="../legal.css?v=20261103" />
     <!-- Microsoft Clarity: heatmaps and session recordings, described in the privacy policy. -->
     <script type="text/javascript">
       (function(c,l,a,r,i,t,y){
@@ -34,6 +34,8 @@
           t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
           y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
       })(window, document, "clarity", "script", "z63evie3lq");
+      // A visitor who turned Clarity off in Cookie Settings (cookies.js) stays off.
+      try { if (localStorage.getItem('mlk-cookie-preference') === 'declined') clarity('consentv2', { ad_Storage: 'denied', analytics_Storage: 'denied' }); } catch {}
     </script>
   </head>
   <body>
@@ -161,9 +163,11 @@
       <a href="../privacy-policy/"><span lang="en">Privacy Policy</span><span lang="uk">Політика конфіденційності</span></a>
       <a href="./"><span lang="en">Legal Information</span><span lang="uk">Юридична інформація</span></a>
       <a href="../"><span lang="en">Back to MLK.STUDIO</span><span lang="uk">Повернутися на MLK.STUDIO</span></a>
+      <button class="legal-footer__cookies" type="button" data-cookie-settings><span lang="en">Cookie Settings</span><span lang="uk">Налаштування cookie</span></button>
       <span class="legal-footer__copy">© 2026 MLK.STUDIO</span>
     </footer>
 
     <script src="../legal.js?v=20261029"></script>
+    <script src="../cookies.js?v=20261103" defer></script>
   </body>
 </html>

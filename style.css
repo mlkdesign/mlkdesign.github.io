@@ -3000,9 +3000,27 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   letter-spacing: 0.08em;
 }
 
-.contact-cta__legal a {
+.contact-cta__legal a,
+.contact-cta__legal .contact-cta__cookies {
   color: #fff;
   text-decoration: none;
+}
+
+/* Cookie Settings is a button, so it copies the resting and hover opacity of the links beside it. */
+.contact-cta__legal .contact-cta__cookies {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  opacity: var(--link-opacity-rest);
+  transition: opacity 0.3s var(--ease);
+}
+
+.contact-cta__legal .contact-cta__cookies:hover,
+.contact-cta__legal .contact-cta__cookies:focus-visible {
+  opacity: var(--link-opacity-hover);
 }
 
 @media (max-width: 800px) {

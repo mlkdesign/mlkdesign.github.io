@@ -323,6 +323,7 @@ const CASE_TRANSLATIONS = {
     formNotice: 'Your information will be used to respond to your inquiry. Learn more in our <a href="privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.',
     privacyPolicy: 'Privacy Policy',
     legalInformation: 'Legal Information',
+    cookieSettings: 'Cookie Settings',
   },
   uk: {
     navServices: 'послуги',
@@ -352,6 +353,7 @@ const CASE_TRANSLATIONS = {
     formNotice: 'Ваші дані будуть використані для відповіді на ваш запит. Докладніше — у нашій <a href="privacy-policy/" target="_blank" rel="noopener">Політиці конфіденційності</a>.',
     privacyPolicy: 'Політика конфіденційності',
     legalInformation: 'Юридична інформація',
+    cookieSettings: 'Налаштування cookie',
   },
 };
 

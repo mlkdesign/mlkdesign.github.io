@@ -262,8 +262,20 @@ a {
   text-decoration: none;
 }
 
+.legal-footer__cookies {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+
 .legal-footer a:hover,
-.legal-footer a:focus-visible {
+.legal-footer a:focus-visible,
+.legal-footer__cookies:hover,
+.legal-footer__cookies:focus-visible {
   color: var(--text);
 }
 

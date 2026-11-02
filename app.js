@@ -529,6 +529,7 @@ const UI_TRANSLATIONS = {
     formNotice: 'Your information will be used to respond to your inquiry. Learn more in our <a href="privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.',
     privacyPolicy: 'Privacy Policy',
     legalInformation: 'Legal Information',
+    cookieSettings: 'Cookie Settings',
     legalNavigation: 'Legal',
     telegramContact: 'Contact us on Telegram, @EugeneMilka',
     whatsappContact: 'Contact us on WhatsApp, +380 73 826 53 54',
@@ -577,6 +578,7 @@ const UI_TRANSLATIONS = {
     formNotice: 'Ваші дані будуть використані для відповіді на ваш запит. Докладніше — у нашій <a href="privacy-policy/" target="_blank" rel="noopener">Політиці конфіденційності</a>.',
     privacyPolicy: 'Політика конфіденційності',
     legalInformation: 'Юридична інформація',
+    cookieSettings: 'Налаштування cookie',
     legalNavigation: 'Юридична інформація',
     telegramContact: 'Написати нам у Telegram, @EugeneMilka',
     whatsappContact: 'Написати нам у WhatsApp, +380 73 826 53 54',
@@ -753,6 +755,7 @@ const I18N_TEXT_BINDINGS = {
   formNotice: '.request-form__notice',
   privacyPolicy: '.contact-cta__legal a[href="privacy-policy/"]',
   legalInformation: '.contact-cta__legal a[href="legal/"]',
+  cookieSettings: '.contact-cta__legal [data-cookie-settings]',
 };
 
 const I18N_HTML_KEYS = new Set(['statYears', 'statProjects', 'statTeam', 'finalTitle', 'formNotice']);
