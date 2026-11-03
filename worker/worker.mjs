@@ -83,7 +83,16 @@ export default {
             body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: `MLK.STUDIO — new request\n\nName: ${name}\nEmail: ${email}\n\n${details}\n\nID: ${id}`, link_preview_options: { is_disabled: true } }), signal: AbortSignal.timeout(8000),
           });
           const result = await response.json();
-          if (!response.ok || !result.ok) console.error('telegram_delivery_failed', { requestId: id });
+          if (!response.ok || !result.ok) {
+            const description = String(result.description || '').toLowerCase();
+            const reason = description.includes('chat not found') ? 'chat_not_found'
+              : description.includes('blocked') ? 'bot_blocked'
+              : description.includes('initiate conversation') ? 'start_required'
+              : response.status === 401 ? 'invalid_token'
+              : response.status === 404 ? 'invalid_token_or_endpoint'
+              : response.status === 429 ? 'rate_limited' : 'telegram_error';
+            console.error('telegram_delivery_failed', { requestId: id, status: response.status, errorCode: result.error_code, reason });
+          }
         } catch { console.error('telegram_delivery_failed', { requestId: id }); }
       })());
     }
