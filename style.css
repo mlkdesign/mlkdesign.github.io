@@ -2175,6 +2175,11 @@ a[data-fade].is-in:focus-visible {
     --service-sticky-top: calc(env(safe-area-inset-top, 0px) + 4rem);
   }
 
+  /* The pixel grid sets the canvas height to fit the logo (app.js). */
+  .pixels {
+    height: auto;
+  }
+
   body.mobile-menu-open {
     overscroll-behavior: none;
   }
