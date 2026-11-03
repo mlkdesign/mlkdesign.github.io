@@ -99,6 +99,8 @@ export default {
               : response.status === 404 ? 'invalid_token_or_endpoint'
               : response.status === 429 ? 'rate_limited' : 'telegram_error';
             console.error('telegram_delivery_failed', { requestId: id, status: response.status, errorCode: result.error_code, reason });
+          } else {
+            console.info('telegram_delivery_succeeded', { requestId: id, source: sourceId });
           }
         } catch { console.error('telegram_delivery_failed', { requestId: id }); }
       })());
