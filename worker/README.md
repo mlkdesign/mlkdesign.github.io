@@ -2,7 +2,9 @@
 
 Worker: https://mlk-studio-requests.mlkdesignweb.workers.dev
 
-Форма: https://mlkdesign.github.io/ (`index.html` → `.request-form`, обработчик в `app.js`).
+Формы: https://mlkdesign.github.io/ (ветка main) и https://mlkdesign.github.io/milka-cv/ (ветка milka-cv). В обеих: `index.html` → `.request-form`, обработчик в `app.js`.
+
+Поле `source` принимает только `mlk-studio` или `milka-cv`. Worker добавляет фиксированные название и URL источника в Telegram и Formspree. Для старой открытой вкладки без этого поля сохраняется источник основного сайта. Это метка источника, а не доказательство происхождения запроса; Turnstile проверяет общий hostname.
 
 Цепочка: форма → Worker `/submit` → Turnstile Siteverify → Formspree `meaajpvl` → уведомление Telegram при наличии секретов.
 
@@ -12,7 +14,7 @@ Worker: https://mlk-studio-requests.mlkdesignweb.workers.dev
 - Разрешён только origin `https://mlkdesign.github.io`, hostname `mlkdesign.github.io`, action `project_request`.
 - Лимит: 5 проверяемых заявок за 60 секунд с IP (локальный лимитер Cloudflare, не глобальная точная квота).
 - Formspree сохранён в HTML action и как серверный адрес доставки. В обычном JS-потоке заявка всегда проходит Worker; автоматического обхода Turnstile при ошибке нет. Публичный адрес Formspree сам по себе остаётся доступен напрямую: его собственная антиспам-защита настраивается в Formspree.
-- Telegram намеренно отключён: ранее раскрытый токен не использован, не сохранён в файлах и не отправлен в Telegram API.
+- Telegram включён владельцем после замены токена. Секреты хранятся в Cloudflare и не включены в файлы проекта.
 
 ## Что владельцу нужно добавить
 
@@ -47,6 +49,6 @@ npx wrangler deploy --config worker/wrangler.jsonc
 
 Для последней команды нужна авторизованная сессия Cloudflare владельца. Деплой через GitHub автоматически обновляет сайт, но не Worker. Изменения Worker публикуются отдельно. Конфиг сохраняет тот же rate-limit namespace `1001`.
 
-18 локальных тестов покрывают отказоустойчивость и доставку через заглушки сервисов. Live smoke проверяет доступность, CORS, отбрасывание чужого origin, невалидных полей, honeypot и поддельного токена; заявок он не отправляет. Полный тест Telegram возможен только после добавления нового токена и CHAT_ID.
+21 локальный тест покрывают отказоустойчивость и доставку через заглушки сервисов. Live smoke проверяет доступность, CORS, отбрасывание чужого origin, невалидных полей, honeypot и поддельного токена; заявок он не отправляет. Полный тест Telegram возможен только после добавления нового токена и CHAT_ID.
 
 Документация: https://developers.cloudflare.com/turnstile/get-started/server-side-validation/ и https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/

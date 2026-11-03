@@ -2878,6 +2878,7 @@ if (formModal) {
     const submission = new FormData(requestForm);
     const payload = Object.fromEntries(['name', 'email', 'details', 'website'].map((key) => [key, submission.get(key)]));
     payload.token = token;
+    payload.source = requestForm.dataset.source;
 
     const controller = new AbortController();
     const timeoutId = window.setTimeout(() => controller.abort(), 25000);

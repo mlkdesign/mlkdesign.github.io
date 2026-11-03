@@ -1,6 +1,10 @@
 const ORIGIN = 'https://mlkdesign.github.io';
 const FORMSPREE = 'https://formspree.io/f/meaajpvl';
 const MAX_BODY = 16384;
+const SOURCES = new Map([
+  ['mlk-studio', { label: 'MLK.STUDIO (основной сайт)', url: 'https://mlkdesign.github.io/' }],
+  ['milka-cv', { label: 'Jack Milka — milka-cv', url: 'https://mlkdesign.github.io/milka-cv/' }],
+]);
 
 async function readBody(request) {
   const reader = request.body?.getReader();
@@ -46,6 +50,9 @@ export default {
     let data;
     try { data = await readBody(request); } catch (error) { return reply(error.message === 'large' ? 413 : 400, { error: 'body' }); }
     if (!data || typeof data !== 'object' || Array.isArray(data)) return reply(400, { error: 'body' });
+    const sourceId = data.source === undefined ? 'mlk-studio' : data.source;
+    const source = SOURCES.get(sourceId);
+    if (!source) return reply(400, { error: 'source' });
     if (data.website) return reply(400, { error: 'validation' });
     const text = (key) => typeof data[key] === 'string' ? data[key].trim() : '';
     const name = text('name'), email = text('email'), details = text('details'), token = text('token');
@@ -70,7 +77,7 @@ export default {
     try {
       const delivery = await fetch(FORMSPREE, {
         method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ name, email, details, _subject: 'New project request from MLK.STUDIO', request_id: id }), signal: AbortSignal.timeout(8000),
+        body: JSON.stringify({ name, email, details, _subject: `New project request — ${source.label}`, source: source.label, source_url: source.url, request_id: id }), signal: AbortSignal.timeout(8000),
       });
       const result = await delivery.json().catch(() => null);
       if (!delivery.ok || !result || result.ok !== true || result.errors?.length) return reply(502, { error: 'delivery' });
@@ -80,7 +87,7 @@ export default {
         try {
           const response = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: `MLK.STUDIO — new request\n\nName: ${name}\nEmail: ${email}\n\n${details}\n\nID: ${id}`, link_preview_options: { is_disabled: true } }), signal: AbortSignal.timeout(8000),
+            body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: `Новая заявка\nСайт: ${source.label}\n${source.url}\n\nName: ${name}\nEmail: ${email}\n\n${details}\n\nID: ${id}`, link_preview_options: { is_disabled: true } }), signal: AbortSignal.timeout(8000),
           });
           const result = await response.json();
           if (!response.ok || !result.ok) {

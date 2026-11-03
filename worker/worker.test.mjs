@@ -22,3 +22,15 @@ for (const deliveryOk of [true,false]) test('delivery '+deliveryOk,async()=>{
  finally{globalThis.fetch=original;}
 });
 test('Telegram failure preserves Formspree acceptance',async()=>{const original=globalThis.fetch;const originalError=console.error;let logged=false;console.error=()=>{logged=true};globalThis.fetch=async(url)=>url.includes('siteverify')?Response.json({success:true,hostname:'mlkdesign.github.io',action:'project_request'}):url.includes('formspree')?Response.json({ok:true}):Response.json({ok:false},{status:500});try{const context=ctx();assert.equal((await worker.fetch(req(),env,context)).status,200);await Promise.all(context.pending);assert.ok(logged)}finally{globalThis.fetch=original;console.error=originalError}});
+for (const source of ['mlk-studio', 'milka-cv']) test('source is included in both deliveries: '+source, async()=>{
+ const original=globalThis.fetch;const calls=[];const context=ctx();
+ globalThis.fetch=async(url,options)=>{calls.push([url,options]);return Response.json(url.includes('siteverify')?{success:true,hostname:'mlkdesign.github.io',action:'project_request'}:{ok:true});};
+ try {
+  assert.equal((await worker.fetch(req({...valid,source}),env,context)).status,200);
+  await Promise.all(context.pending);
+  const form=JSON.parse(calls[1][1].body),telegram=JSON.parse(calls[2][1].body);
+  const expectedUrl='https://mlkdesign.github.io/'+(source==='milka-cv'?'milka-cv/':'');
+  assert.equal(form.source_url,expectedUrl);assert.ok(telegram.text.includes(expectedUrl));assert.ok(telegram.text.includes('Сайт: '+form.source));assert.ok(form._subject.includes(form.source));
+ }finally{globalThis.fetch=original;}
+});
+test('unrecognized source rejected',async()=>assert.equal((await worker.fetch(req({...valid,source:'https://evil.example'}),env,ctx())).status,400));
