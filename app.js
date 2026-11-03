@@ -2095,7 +2095,7 @@ document.querySelectorAll('[data-case-link]').forEach((link) => {
 });
 
 // ---------------------------------------------------------------------------
-// MLK / MLK.STUDIO pixel grid: one responsive Canvas 2D surface. The static grid is
+// MLK.STUDIO pixel grid: one responsive Canvas 2D surface. The static grid is
 // redrawn only on resize; rAF runs while hovered or while residual heat fades.
 // ---------------------------------------------------------------------------
 const pixelsSection = document.querySelector('.pixels');
@@ -2104,11 +2104,13 @@ const pixelsCanvas = pixelsSection?.querySelector('.pixels-canvas');
 if (pixelsSection && pixelsCanvas) {
   const PIXEL_SIZE = 16;
   const PIXEL_GAP = 4;
-  const PIXEL_STEP = PIXEL_SIZE + PIXEL_GAP;
+  // Mobile: cells shrink so MLK.STUDIO spans the full width, one cell per glyph
+  // column, three cells per glyph row, sitting on the bottom edge of the grid.
+  const PIXEL_MOBILE_GAP_RATIO = PIXEL_GAP / PIXEL_SIZE;
+  const PIXEL_MOBILE_ROW_SCALE = 3;
   const PIXEL_FADE_DURATION = 1000;
   const PIXEL_PATH_SAMPLE_STEP = 2;
-  const PIXEL_LOGO_DESKTOP = 'MLK.STUDIO';
-  const PIXEL_LOGO_MOBILE = 'MLK';
+  const PIXEL_LOGO_TEXT = 'MLK.STUDIO';
   const PIXEL_LOGO_HEIGHT = 7;
   const PIXEL_LOGO_INSET_CELLS = 1;
   const GLYPHS = {
@@ -2142,11 +2144,7 @@ if (pixelsSection && pixelsCanvas) {
     return { cells, width };
   };
 
-  const pixelLogos = {
-    desktop: buildPixelLogo(PIXEL_LOGO_DESKTOP),
-    mobile: buildPixelLogo(PIXEL_LOGO_MOBILE),
-  };
-  let activePixelLogo = pixelLogos.desktop;
+  const pixelLogo = buildPixelLogo(PIXEL_LOGO_TEXT);
 
   const parseHexColor = (value) => {
     const match = value.trim().match(/^#([\da-f]{6})$/i);
@@ -2170,16 +2168,20 @@ if (pixelsSection && pixelsCanvas) {
   let rows = 0;
   let gridOffsetX = 0;
   let gridOffsetY = 0;
+  let pixelSize = PIXEL_SIZE;
+  let pixelGap = PIXEL_GAP;
+  let pixelStep = PIXEL_SIZE + PIXEL_GAP;
+  const logoArea = { col: 0, row: 0, columns: 0, rows: 0 };
   let baseAlphas = new Float32Array(0);
   let heat = new Float32Array(0);
   let pixelsFrame = 0;
   let previousPixelsTime = 0;
 
   const isLogoCell = (col, row) => {
-    const logoColumns = columns - PIXEL_LOGO_INSET_CELLS * 2;
-    const logoRows = rows - PIXEL_LOGO_INSET_CELLS * 2;
-    const logoCol = col - PIXEL_LOGO_INSET_CELLS;
-    const logoRow = row - PIXEL_LOGO_INSET_CELLS;
+    const logoColumns = logoArea.columns;
+    const logoRows = logoArea.rows;
+    const logoCol = col - logoArea.col;
+    const logoRow = row - logoArea.row;
     if (
       logoColumns <= 0 ||
       logoRows <= 0 ||
@@ -2190,14 +2192,14 @@ if (pixelsSection && pixelsCanvas) {
     ) return false;
 
     const sourceCol = Math.min(
-      activePixelLogo.width - 1,
-      Math.floor((logoCol / logoColumns) * activePixelLogo.width),
+      pixelLogo.width - 1,
+      Math.floor((logoCol / logoColumns) * pixelLogo.width),
     );
     const sourceRow = Math.min(
       PIXEL_LOGO_HEIGHT - 1,
       Math.floor((logoRow / logoRows) * PIXEL_LOGO_HEIGHT),
     );
-    return activePixelLogo.cells.has(`${sourceCol},${sourceRow}`);
+    return pixelLogo.cells.has(`${sourceCol},${sourceRow}`);
   };
 
   const pixelColor = (baseAlpha, factor) => {
@@ -2221,10 +2223,10 @@ if (pixelsSection && pixelsCanvas) {
         const index = row * columns + col;
         context.fillStyle = pixelColor(baseAlphas[index], withHeat ? heat[index] : 0);
         context.fillRect(
-          gridOffsetX + col * PIXEL_STEP,
-          gridOffsetY + row * PIXEL_STEP,
-          PIXEL_SIZE,
-          PIXEL_SIZE,
+          gridOffsetX + col * pixelStep,
+          gridOffsetY + row * pixelStep,
+          pixelSize,
+          pixelSize,
         );
       }
     }
@@ -2235,11 +2237,11 @@ if (pixelsSection && pixelsCanvas) {
     const localY = y - gridOffsetY;
     if (localX < 0 || localY < 0) return -1;
 
-    const col = Math.floor(localX / PIXEL_STEP);
-    const row = Math.floor(localY / PIXEL_STEP);
+    const col = Math.floor(localX / pixelStep);
+    const row = Math.floor(localY / pixelStep);
     if (col < 0 || col >= columns || row < 0 || row >= rows) return -1;
-    if (localX - col * PIXEL_STEP >= PIXEL_SIZE) return -1;
-    if (localY - row * PIXEL_STEP >= PIXEL_SIZE) return -1;
+    if (localX - col * pixelStep >= pixelSize) return -1;
+    if (localY - row * pixelStep >= pixelSize) return -1;
     return row * columns + col;
   };
 
@@ -2301,11 +2303,33 @@ if (pixelsSection && pixelsCanvas) {
     pixelsCanvas.height = Math.max(1, Math.round(cssHeight * dpr));
     context?.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    columns = Math.max(0, Math.floor((cssWidth + PIXEL_GAP) / PIXEL_STEP));
-    rows = Math.max(0, Math.floor((cssHeight + PIXEL_GAP) / PIXEL_STEP));
-    activePixelLogo = mqMobile.matches ? pixelLogos.mobile : pixelLogos.desktop;
-    const gridWidth = columns > 0 ? columns * PIXEL_SIZE + (columns - 1) * PIXEL_GAP : 0;
-    const gridHeight = rows > 0 ? rows * PIXEL_SIZE + (rows - 1) * PIXEL_GAP : 0;
+    const mobileLogo = mqMobile.matches;
+    if (mobileLogo) {
+      const mobileColumns = pixelLogo.width + PIXEL_LOGO_INSET_CELLS * 2;
+      pixelSize = cssWidth / (mobileColumns + (mobileColumns - 1) * PIXEL_MOBILE_GAP_RATIO);
+      pixelGap = pixelSize * PIXEL_MOBILE_GAP_RATIO;
+    } else {
+      pixelSize = PIXEL_SIZE;
+      pixelGap = PIXEL_GAP;
+    }
+    pixelStep = pixelSize + pixelGap;
+
+    columns = Math.max(0, Math.floor((cssWidth + pixelGap) / pixelStep + 1e-6));
+    rows = Math.max(0, Math.floor((cssHeight + pixelGap) / pixelStep + 1e-6));
+    logoArea.col = PIXEL_LOGO_INSET_CELLS;
+    logoArea.columns = columns - PIXEL_LOGO_INSET_CELLS * 2;
+    if (mobileLogo) {
+      logoArea.rows = Math.min(
+        rows - PIXEL_LOGO_INSET_CELLS * 2,
+        PIXEL_LOGO_HEIGHT * PIXEL_MOBILE_ROW_SCALE,
+      );
+      logoArea.row = rows - PIXEL_LOGO_INSET_CELLS - logoArea.rows;
+    } else {
+      logoArea.rows = rows - PIXEL_LOGO_INSET_CELLS * 2;
+      logoArea.row = PIXEL_LOGO_INSET_CELLS;
+    }
+    const gridWidth = columns > 0 ? columns * pixelSize + (columns - 1) * pixelGap : 0;
+    const gridHeight = rows > 0 ? rows * pixelSize + (rows - 1) * pixelGap : 0;
     gridOffsetX = (cssWidth - gridWidth) / 2;
     gridOffsetY = (cssHeight - gridHeight) / 2;
     baseAlphas = new Float32Array(columns * rows);
