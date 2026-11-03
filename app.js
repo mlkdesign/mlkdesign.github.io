@@ -2105,7 +2105,7 @@ if (pixelsSection && pixelsCanvas) {
   const PIXEL_SIZE = 16;
   const PIXEL_GAP = 4;
   // Mobile: cells shrink so MLK.STUDIO spans the full width, one cell per glyph
-  // column, three cells per glyph row, sitting on the bottom edge of the grid.
+  // column and three per glyph row, and the grid is only as tall as the logo.
   const PIXEL_MOBILE_GAP_RATIO = PIXEL_GAP / PIXEL_SIZE;
   const PIXEL_MOBILE_ROW_SCALE = 3;
   const PIXEL_FADE_DURATION = 1000;
@@ -2294,25 +2294,29 @@ if (pixelsSection && pixelsCanvas) {
   };
 
   const resizePixels = () => {
+    const mobileLogo = mqMobile.matches;
+    if (!mobileLogo) pixelsCanvas.style.removeProperty('height');
     const rect = pixelsCanvas.getBoundingClientRect();
     cssWidth = rect.width;
     cssHeight = rect.height;
-    const dpr = window.devicePixelRatio || 1;
 
-    pixelsCanvas.width = Math.max(1, Math.round(cssWidth * dpr));
-    pixelsCanvas.height = Math.max(1, Math.round(cssHeight * dpr));
-    context?.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    const mobileLogo = mqMobile.matches;
     if (mobileLogo) {
       const mobileColumns = pixelLogo.width + PIXEL_LOGO_INSET_CELLS * 2;
+      const mobileRows = PIXEL_LOGO_HEIGHT * PIXEL_MOBILE_ROW_SCALE + PIXEL_LOGO_INSET_CELLS * 2;
       pixelSize = cssWidth / (mobileColumns + (mobileColumns - 1) * PIXEL_MOBILE_GAP_RATIO);
       pixelGap = pixelSize * PIXEL_MOBILE_GAP_RATIO;
+      cssHeight = mobileRows * pixelSize + (mobileRows - 1) * pixelGap;
+      pixelsCanvas.style.height = `${cssHeight}px`;
     } else {
       pixelSize = PIXEL_SIZE;
       pixelGap = PIXEL_GAP;
     }
     pixelStep = pixelSize + pixelGap;
+
+    const dpr = window.devicePixelRatio || 1;
+    pixelsCanvas.width = Math.max(1, Math.round(cssWidth * dpr));
+    pixelsCanvas.height = Math.max(1, Math.round(cssHeight * dpr));
+    context?.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     columns = Math.max(0, Math.floor((cssWidth + pixelGap) / pixelStep + 1e-6));
     rows = Math.max(0, Math.floor((cssHeight + pixelGap) / pixelStep + 1e-6));
