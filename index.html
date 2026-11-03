@@ -659,6 +659,8 @@
         <div class="form-modal__side">
           <form
             class="request-form"
+            data-worker-url="https://mlk-studio-requests.mlkdesignweb.workers.dev/submit"
+            data-turnstile-sitekey="0x4AAAAAAFyX-XjklHFqLwJR"
             data-clarity-mask="true"
             action="https://formspree.io/f/meaajpvl"
             method="POST"
@@ -669,20 +671,23 @@
             <div class="request-form__row">
               <label class="request-field" for="request-name">
                 <span>name</span>
-                <input id="request-name" name="name" type="text" autocomplete="name" required />
+                <input id="request-name" name="name" type="text" autocomplete="name" maxlength="120" required />
               </label>
 
               <label class="request-field" for="request-email">
                 <span>email</span>
-                <input id="request-email" name="email" type="email" autocomplete="email" required />
+                <input id="request-email" name="email" type="email" autocomplete="email" maxlength="254" required />
               </label>
             </div>
 
             <label class="request-field" for="request-details">
               <span>project details</span>
-              <textarea id="request-details" name="details" rows="5" required></textarea>
+              <textarea id="request-details" name="details" rows="5" minlength="10" maxlength="2500" required></textarea>
             </label>
 
+            <div hidden aria-hidden="true"><input name="website" type="text" tabindex="-1" autocomplete="off" /></div>
+            <div id="request-turnstile"></div>
+            <noscript><p>Please enable JavaScript to send a request, or contact us via Telegram.</p></noscript>
             <div class="request-form__submit">
               <button class="request-btn sp-box" type="submit">
                 <span class="btn__mask">
@@ -700,7 +705,7 @@
       </div>
     </div>
 
-    <script type="module" src="app.js?v=20261103-pixels-fit"></script>
+    <script type="module" src="app.js?v=20261103-worker-turnstile"></script>
     <script src="cookies.js?v=20261103" defer></script>
   </body>
 </html>

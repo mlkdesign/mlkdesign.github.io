@@ -523,6 +523,7 @@ const UI_TRANSLATIONS = {
     formDetails: 'project details',
     formRequest: 'request',
     formSending: 'sending…',
+    formVerification: 'Please complete the security check. If it does not load, contact us via Telegram or WhatsApp.',
     formSuccess: "Request sent. We'll get back to you soon.",
     formError: 'We could not send your request. Please try again or contact us via Telegram or WhatsApp.',
     formRequired: 'Please complete all three fields and enter a valid email address.',
@@ -572,6 +573,7 @@ const UI_TRANSLATIONS = {
     formDetails: 'деталі проєкту',
     formRequest: 'надіслати',
     formSending: 'надсилаємо…',
+    formVerification: 'Пройдіть перевірку безпеки. Якщо вона не завантажується, напишіть нам у Telegram або WhatsApp.',
     formSuccess: 'Заявку надіслано. Ми зв’яжемося з вами найближчим часом.',
     formError: 'Не вдалося надіслати заявку. Спробуйте ще раз або напишіть нам у Telegram чи WhatsApp.',
     formRequired: 'Заповніть усі три поля та вкажіть коректну електронну адресу.',
@@ -2824,6 +2826,35 @@ if (formModal) {
     requestStatus.classList.toggle('is-error', state === 'error');
   };
 
+  // Load Turnstile only when the request modal is opened.
+  let turnstileId = null;
+  let turnstileLoading = null;
+  const ensureTurnstile = () => {
+    if (turnstileLoading) return turnstileLoading;
+    turnstileLoading = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      script.onload = () => {
+        try {
+          turnstileId = window.turnstile.render('#request-turnstile', {
+            sitekey: requestForm.dataset.turnstileSitekey,
+            action: 'project_request', theme: 'auto', size: 'flexible',
+          });
+          resolve();
+        } catch (error) { script.remove(); turnstileLoading = null; reject(error); }
+      };
+      script.onerror = () => { script.remove(); turnstileLoading = null; reject(new Error('Turnstile unavailable')); };
+      document.head.appendChild(script);
+    });
+    return turnstileLoading;
+  };
+  document.querySelectorAll('[data-open-form]').forEach((trigger) => {
+    trigger.addEventListener('click', () => ensureTurnstile().catch(() => {
+      setRequestStatus(UI_TRANSLATIONS[activeLanguage].formVerification, 'error');
+    }));
+  });
+
   formClose?.addEventListener('click', () => closeFormModal());
   requestForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -2838,27 +2869,36 @@ if (formModal) {
       return;
     }
 
+    const token = turnstileId !== null && window.turnstile?.getResponse(turnstileId);
+    if (!token) {
+      setRequestStatus(strings.formVerification, 'error');
+      ensureTurnstile().catch(() => {});
+      return;
+    }
     const submission = new FormData(requestForm);
+    const payload = Object.fromEntries(['name', 'email', 'details', 'website'].map((key) => [key, submission.get(key)]));
+    payload.token = token;
 
     const controller = new AbortController();
-    const timeoutId = window.setTimeout(() => controller.abort(), 15000);
+    const timeoutId = window.setTimeout(() => controller.abort(), 25000);
     requestSubmitting = true;
     requestForm.setAttribute('aria-busy', 'true');
     if (requestButton) requestButton.disabled = true;
     setRequestButtonLabel(strings.formSending);
 
     try {
-      const response = await fetch(requestForm.action, {
+      const response = await fetch(requestForm.dataset.workerUrl, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
-        body: submission,
+        body: JSON.stringify(payload),
         signal: controller.signal,
       });
       const result = await response.json().catch(() => null);
       const rejected = Array.isArray(result?.errors) && result.errors.length > 0;
-      if (!response.ok || rejected) throw new Error('Form submission failed');
+      if (!response.ok || rejected || result?.ok !== true) throw new Error('Form submission failed');
 
       requestForm.reset();
       setRequestStatus(strings.formSuccess, 'success');
@@ -2866,6 +2906,7 @@ if (formModal) {
       setRequestStatus(strings.formError, 'error');
     } finally {
       window.clearTimeout(timeoutId);
+      if (turnstileId !== null) window.turnstile?.reset(turnstileId);
       requestSubmitting = false;
       requestForm.removeAttribute('aria-busy');
       if (requestButton) requestButton.disabled = false;

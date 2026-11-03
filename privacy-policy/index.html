@@ -158,6 +158,8 @@
             <thead><tr><th>Service</th><th>What it does</th><th>Data it receives</th></tr></thead>
             <tbody>
               <tr><td>GitHub Pages (GitHub, Inc., USA)</td><td>Hosts the website</td><td>IP address and browser data of every visitor; GitHub keeps visitor IP addresses in logs for security purposes</td></tr>
+              <tr><td>Cloudflare</td><td>Protects the request form with Turnstile and validates requests through a Worker</td><td>Browser and network signals, IP address, name, email and project details</td></tr>
+              <tr><td>Telegram</td><td>Delivers private request notifications when configured</td><td>Name, email and project details</td></tr>
               <tr><td>Formspree (Formspree, Inc., USA)</td><td>Receives the project request form and forwards it to our mailbox</td><td>Name, email, project details, IP address and browser data of the person submitting</td></tr>
               <tr><td>Google (Gmail)</td><td>Our mailbox, where requests and emails arrive</td><td>Everything you send us by form or email</td></tr>
               <tr><td>unpkg.com, esm.sh</td><td>Deliver the open-source JavaScript libraries the site uses for animation and scrolling</td><td>IP address and browser data when the page loads</td></tr>
@@ -165,7 +167,7 @@
               <tr><td>Microsoft Clarity (Microsoft Corporation, USA)</td><td>Heatmaps and session recordings on the studio pages and project demos</td><td>Clicks, scrolling and mouse movement, pages viewed, device and browser data, approximate location derived from the IP address, a random visitor ID stored in cookies. What you type into the request form is not recorded.</td></tr>
             </tbody>
           </table>
-          <p>Fonts are served from this website itself, so opening the site does not send your data to Google Fonts. There are no embedded videos, social widgets or CAPTCHA. Links to Instagram, LinkedIn, Behance, Upwork, Telegram and WhatsApp only take you to those platforms when you click them. The Kowalski &amp; Partners project demo loads one image from Unsplash.</p>
+          <p>Fonts are served from this website itself, so opening the site does not send your data to Google Fonts. There are no embedded videos or social widgets. The request form uses Cloudflare Turnstile to prevent automated submissions. Cloudflare checks browser and network signals, and its Worker validates the request before forwarding it to Formspree. When Telegram notifications are configured, the request is also sent to our private Telegram chat. Links to Instagram, LinkedIn, Behance, Upwork, Telegram and WhatsApp only take you to those platforms when you click them. The Kowalski &amp; Partners project demo loads one image from Unsplash.</p>
           <p>If we work with you on a project, members of the studio team who take part in it may see your request.</p>
         </div>
       </section>
@@ -175,7 +177,7 @@
         <div class="legal-section__body">
           <h2>Data Retention</h2>
           <ul>
-            <li><strong>Requests that do not lead to a project</strong> — we delete them from the mailbox and from Formspree 12 months after our last exchange.</li>
+            <li><strong>Requests that do not lead to a project</strong> — we delete them from the mailbox, Formspree and Telegram notifications 12 months after our last exchange.</li>
             <li><strong>Requests that lead to a project</strong> — we keep the correspondence for as long as the contract runs and afterwards for as long as Ukrainian tax and accounting law requires, or as needed to settle a legal claim.</li>
             <li><strong>Hosting and delivery logs</strong> — kept by the providers listed above under their own retention rules.</li>
             <li><strong>Visit statistics</strong> — Google Analytics keeps event data for the retention period set in our account (2 months, the GA4 default), then deletes it.</li>
@@ -376,6 +378,8 @@
             <thead><tr><th>Сервіс</th><th>Що робить</th><th>Які дані отримує</th></tr></thead>
             <tbody>
               <tr><td>GitHub Pages (GitHub, Inc., США)</td><td>Хостинг сайту</td><td>IP-адреса та дані браузера кожного відвідувача; GitHub зберігає IP-адреси відвідувачів у журналах з міркувань безпеки</td></tr>
+              <tr><td>Cloudflare</td><td>Захищає форму через Turnstile та перевіряє заявки через Worker</td><td>Сигнали браузера й мережі, IP-адреса, ім’я, email та опис проєкту</td></tr>
+              <tr><td>Telegram</td><td>Доставляє приватні сповіщення про заявки, якщо їх налаштовано</td><td>Ім’я, email та опис проєкту</td></tr>
               <tr><td>Formspree (Formspree, Inc., США)</td><td>Приймає форму заявки й пересилає її на нашу пошту</td><td>Ім’я, пошта, деталі проєкту, IP-адреса та дані браузера відправника</td></tr>
               <tr><td>Google (Gmail)</td><td>Наша поштова скринька, куди надходять заявки й листи</td><td>Усе, що ви надсилаєте нам через форму чи пошту</td></tr>
               <tr><td>unpkg.com, esm.sh</td><td>Доставляють відкриті JavaScript-бібліотеки для анімації та прокручування</td><td>IP-адреса та дані браузера під час завантаження сторінки</td></tr>
@@ -383,7 +387,7 @@
               <tr><td>Microsoft Clarity (Microsoft Corporation, США)</td><td>Теплові карти й записи сесій на сторінках студії та демо проєктів</td><td>Кліки, прокручування й рух миші, переглянуті сторінки, дані пристрою й браузера, приблизне місцезнаходження за IP-адресою, випадковий ідентифікатор відвідувача в cookie. Те, що ви вводите у форму заявки, не записується.</td></tr>
             </tbody>
           </table>
-          <p>Шрифти завантажуються з самого сайту, тож відкриття сайту не передає ваші дані Google Fonts. На сайті немає вбудованих відео, віджетів соцмереж чи CAPTCHA. Посилання на Instagram, LinkedIn, Behance, Upwork, Telegram і WhatsApp відкривають ці платформи лише після вашого кліку. Демо проєкту Kowalski &amp; Partners завантажує одне зображення з Unsplash.</p>
+          <p>Шрифти завантажуються з самого сайту, тож відкриття сайту не передає ваші дані Google Fonts. На сайті немає вбудованих відео чи віджетів соцмереж. Форма заявки використовує Cloudflare Turnstile для захисту від автоматичних надсилань. Cloudflare перевіряє сигнали браузера й мережі, а Worker перевіряє заявку перед передачею до Formspree. Якщо сповіщення Telegram налаштовано, заявка також надсилається до нашого приватного чату Telegram. Посилання на Instagram, LinkedIn, Behance, Upwork, Telegram і WhatsApp відкривають ці платформи лише після вашого кліку. Демо проєкту Kowalski &amp; Partners завантажує одне зображення з Unsplash.</p>
           <p>Якщо ми працюємо з вами над проєктом, вашу заявку можуть бачити учасники команди студії, залучені до нього.</p>
         </div>
       </section>
@@ -393,7 +397,7 @@
         <div class="legal-section__body">
           <h2>Строки зберігання</h2>
           <ul>
-            <li><strong>Заявки, що не перейшли в проєкт</strong>, — видаляємо з пошти та з Formspree через 12 місяців після останнього спілкування.</li>
+            <li><strong>Заявки, що не перейшли в проєкт</strong>, — видаляємо з пошти, Formspree та сповіщень Telegram через 12 місяців після останнього спілкування.</li>
             <li><strong>Заявки, що перейшли в проєкт</strong>, — зберігаємо листування протягом дії договору, а після — стільки, скільки вимагає податкове й бухгалтерське законодавство України або потрібно для врегулювання правових вимог.</li>
             <li><strong>Журнали хостингу й доставки</strong> — зберігаються постачальниками, наведеними вище, за їхніми правилами.</li>
             <li><strong>Статистика відвідувань</strong> — Google Analytics зберігає дані подій протягом строку, встановленого в нашому акаунті (2 місяці, стандартне значення GA4), а потім видаляє їх.</li>
