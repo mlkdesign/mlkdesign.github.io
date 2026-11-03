@@ -95,6 +95,15 @@ for (const page of pages) {
     <meta name="description" content="${page.description}" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="style.css?v=${VERSION}" />
+    <!-- Microsoft Clarity for this demo site, described in the studio privacy policy; Cookie Settings on the studio pages turns it off here too. -->
+    <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "z7vt7rz7pz");
+      try { if (localStorage.getItem('mlk-cookie-preference') === 'declined') clarity('consentv2', { ad_Storage: 'denied', analytics_Storage: 'denied' }); } catch {}
+    </script>
   </head>
   <body>
     <div id="root" data-page="${page.referral ? "referral" : "home"}">${body}</div>

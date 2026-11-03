@@ -109,6 +109,15 @@ def head(r, title, description):
     <link rel="preload" href="{r}assets/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="{r}style.css?v=20261031-2" />
     <script>document.documentElement.classList.add('js');</script>
+    <!-- Microsoft Clarity for this demo site, described in the studio privacy policy; Cookie Settings on the studio pages turns it off here too. -->
+    <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){{
+          c[a]=c[a]||function(){{(c[a].q=c[a].q||[]).push(arguments)}};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      }})(window, document, "clarity", "script", "z7vswlu7gb");
+      try {{ if (localStorage.getItem('mlk-cookie-preference') === 'declined') clarity('consentv2', {{ ad_Storage: 'denied', analytics_Storage: 'denied' }}); }} catch {{}}
+    </script>
   </head>
   <body>
 '''

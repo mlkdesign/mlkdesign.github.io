@@ -233,7 +233,7 @@ def build_case_js():
 
 
 PRIVACY_EFFECTIVE, PRIVACY_EFFECTIVE_UK = '31 October 2026', '31 жовтня 2026 року'
-PRIVACY_UPDATED, PRIVACY_UPDATED_UK = '2 November 2026', '2 листопада 2026 року'
+PRIVACY_UPDATED, PRIVACY_UPDATED_UK = '3 November 2026', '3 листопада 2026 року'
 
 
 def build_privacy():
@@ -360,7 +360,7 @@ def build_privacy():
               <tr><td>Microsoft Clarity (Microsoft Corporation, USA)</td><td>Heatmaps and session recordings</td><td>Clicks, scrolling and mouse movement, pages viewed, device and browser data, approximate location derived from the IP address, a random visitor ID stored in cookies</td></tr>
             </tbody>
           </table>
-          <p>Fonts are served from this website itself. There are no embedded videos, social widgets or CAPTCHA. Links to project sites, company pages and Behance only take you there when you click them.</p>
+          <p>Fonts are served from this website itself. There are no embedded videos, social widgets or CAPTCHA. Links to project sites, company pages and Behance only take you there when you click them. The project demo sites this portfolio opens (under /milka-cv/) use Microsoft Clarity in the same way, each in its own Clarity project.</p>
         </div>
       </section>
 
@@ -538,7 +538,7 @@ def build_privacy():
               <tr><td>Microsoft Clarity (Microsoft Corporation, США)</td><td>Теплові карти й записи сесій</td><td>Кліки, прокручування й рух миші, переглянуті сторінки, дані пристрою й браузера, приблизне місцезнаходження за IP-адресою, випадковий ідентифікатор відвідувача в cookie</td></tr>
             </tbody>
           </table>
-          <p>Шрифти завантажуються з самого сайту. На сайті немає вбудованих відео, віджетів соцмереж чи CAPTCHA. Посилання на сайти проєктів, сторінки компаній і Behance відкривають їх лише після вашого кліку.</p>
+          <p>Шрифти завантажуються з самого сайту. На сайті немає вбудованих відео, віджетів соцмереж чи CAPTCHA. Посилання на сайти проєктів, сторінки компаній і Behance відкривають їх лише після вашого кліку. Демо-сайти проєктів, які відкриває це портфоліо (у /milka-cv/), так само використовують Microsoft Clarity, кожен у власному проєкті Clarity.</p>
         </div>
       </section>
 
