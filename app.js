@@ -525,6 +525,7 @@ const UI_TRANSLATIONS = {
     formSending: 'sending…',
     formVerification: 'Please complete the security check. If it does not load, contact us via Telegram or WhatsApp.',
     formSuccess: "Request sent. We'll get back to you soon.",
+    formSuccessTitle: "Thank you! Your request has been sent.",
     formError: 'We could not send your request. Please try again or contact us via Telegram or WhatsApp.',
     formRequired: 'Please complete all three fields and enter a valid email address.',
     formNotice: 'Your information will be used to respond to your inquiry. Learn more in our <a href="privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.',
@@ -575,6 +576,7 @@ const UI_TRANSLATIONS = {
     formSending: 'надсилаємо…',
     formVerification: 'Пройдіть перевірку безпеки. Якщо вона не завантажується, напишіть нам у Telegram або WhatsApp.',
     formSuccess: 'Заявку надіслано. Ми зв’яжемося з вами найближчим часом.',
+    formSuccessTitle: 'Дякуємо! Вашу заявку успішно надіслано.',
     formError: 'Не вдалося надіслати заявку. Спробуйте ще раз або напишіть нам у Telegram чи WhatsApp.',
     formRequired: 'Заповніть усі три поля та вкажіть коректну електронну адресу.',
     formNotice: 'Ваші дані будуть використані для відповіді на ваш запит. Докладніше — у нашій <a href="privacy-policy/" target="_blank" rel="noopener">Політиці конфіденційності</a>.',
@@ -2826,6 +2828,80 @@ if (formModal) {
     requestStatus.classList.toggle('is-error', state === 'error');
   };
 
+  // Request result: a centred white dialog over a dimmed page. A sent request closes the form
+  // behind it; an error keeps the form (and what was typed) open underneath.
+  const resultCloseIcon = formClose?.querySelector('img')?.getAttribute('src') || 'assets/cross.svg';
+  const requestResult = document.createElement('div');
+  requestResult.className = 'request-result';
+  requestResult.hidden = true;
+  requestResult.innerHTML = `
+    <div class="request-result__backdrop" data-result-close></div>
+    <div class="request-result__dialog" role="dialog" aria-modal="true" aria-labelledby="request-result-message">
+      <button class="request-result__close" type="button" data-result-close>
+        <img src="${resultCloseIcon}" alt="" aria-hidden="true" />
+      </button>
+      <span class="request-result__icon" aria-hidden="true"><img src="${resultCloseIcon}" alt="" /></span>
+      <p class="request-result__message" id="request-result-message"></p>
+    </div>`;
+  document.body.appendChild(requestResult);
+  const resultDialog = requestResult.querySelector('.request-result__dialog');
+  const resultClose = requestResult.querySelector('.request-result__close');
+  const resultMessage = requestResult.querySelector('.request-result__message');
+  const RESULT_TRANSITION_MS = prefersReducedMotion ? 0 : 400;
+  let resultOpen = false;
+  let resultHideTimer = 0;
+  let resultReturnFocus = null;
+
+  const openRequestResult = (state, returnFocus = null) => {
+    const strings = UI_TRANSLATIONS[activeLanguage];
+    clearTimeout(resultHideTimer);
+    resultReturnFocus = returnFocus;
+    requestResult.classList.toggle('is-success', state === 'success');
+    requestResult.classList.toggle('is-error', state === 'error');
+    resultDialog.setAttribute('role', state === 'error' ? 'alertdialog' : 'dialog');
+    resultMessage.textContent = state === 'success' ? strings.formSuccessTitle : strings.formError;
+    resultClose.setAttribute('aria-label', strings.close);
+    formModal.inert = true;
+    // Last in the body, so it stays above overlays added later at the same z-index (cookie panel).
+    if (requestResult.nextElementSibling) document.body.appendChild(requestResult);
+    document.documentElement.classList.add('request-result-open');
+    lenis?.stop();
+    resultOpen = true;
+    requestResult.hidden = false;
+    void requestResult.offsetWidth;
+    requestResult.classList.add('is-open');
+    resultClose.focus({ preventScroll: true });
+  };
+
+  const closeRequestResult = () => {
+    if (!resultOpen) return;
+    resultOpen = false;
+    requestResult.classList.remove('is-open');
+    document.documentElement.classList.remove('request-result-open');
+    if (modalOpen) formModal.inert = false;
+    else if (!modalClosing) lenis?.start();
+    resultHideTimer = window.setTimeout(() => { requestResult.hidden = true; }, RESULT_TRANSITION_MS);
+    resultReturnFocus?.focus({ preventScroll: true });
+    resultReturnFocus = null;
+  };
+
+  requestResult.querySelectorAll('[data-result-close]').forEach((element) => {
+    element.addEventListener('click', closeRequestResult);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (!resultOpen) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      closeRequestResult();
+    } else if (event.key === 'Tab') {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      resultClose.focus({ preventScroll: true });
+    }
+  });
+
   // Load Turnstile only when the request modal is opened.
   let turnstileId = null;
   let turnstileLoading = null;
@@ -2902,9 +2978,12 @@ if (formModal) {
       if (!response.ok || rejected || result?.ok !== true) throw new Error('Form submission failed');
 
       requestForm.reset();
-      setRequestStatus(strings.formSuccess, 'success');
+      const returnFocus = modalTrigger;
+      openRequestResult('success', returnFocus);
+      // The form slides away behind the dialog; the page stays still until the dialog closes.
+      closeFormModal(() => { if (resultOpen) lenis?.stop(); });
     } catch {
-      setRequestStatus(strings.formError, 'error');
+      openRequestResult('error', requestButton);
     } finally {
       window.clearTimeout(timeoutId);
       if (turnstileId !== null) window.turnstile?.reset(turnstileId);
@@ -2916,7 +2995,7 @@ if (formModal) {
   });
 
   document.addEventListener('keydown', (event) => {
-    if (!modalOpen) return;
+    if (!modalOpen || resultOpen) return;
     if (event.key === 'Escape') {
       event.preventDefault();
       closeFormModal();

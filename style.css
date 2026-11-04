@@ -3185,3 +3185,150 @@ a[href]:is(:hover, :focus-visible):not(:active) {
     transition: none !important;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Request result: a white dialog in the middle of a dimmed page (app.js).
+   Success: the heading sits in the bottom-left corner. Error: a red circle
+   with the white close cross, the message under it.
+   --------------------------------------------------------------------------- */
+html.request-result-open,
+html.request-result-open body {
+  overflow: hidden;
+}
+
+.request-result {
+  --result-pad: clamp(24px, 3vw, 40px);
+  position: fixed;
+  inset: 0;
+  /* Above the cookie banner (same z-index, moved last in the DOM on open), under the custom cursor. */
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--page-inset);
+  color: #0a0a0a;
+  font-family: var(--font);
+  font-weight: 300;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+
+.request-result[hidden] {
+  display: none;
+}
+
+.request-result.is-open {
+  opacity: 1;
+}
+
+.request-result__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.6);
+}
+
+.request-result__dialog {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(640px, 100%);
+  min-height: min(420px, calc(100dvh - 2 * var(--page-inset)));
+  padding: var(--result-pad);
+  background: #fff;
+  transform: translateY(16px);
+  transition: transform 0.5s var(--ease);
+}
+
+.request-result.is-open .request-result__dialog {
+  transform: none;
+}
+
+.request-result__close {
+  position: absolute;
+  top: var(--result-pad);
+  right: var(--result-pad);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.4s var(--ease);
+}
+
+.request-result__close:hover,
+.request-result__close:focus-visible {
+  transform: rotate(180deg);
+}
+
+.request-result__close img {
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+
+.request-result__icon {
+  display: none;
+}
+
+.request-result__message {
+  margin: 0;
+}
+
+.request-result.is-success .request-result__message {
+  margin-top: auto;
+  max-width: 12em;
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.request-result.is-error .request-result__dialog {
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  text-align: center;
+}
+
+.request-result.is-error .request-result__icon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #e5321f;
+}
+
+.request-result__icon img {
+  display: block;
+  width: 64px;
+  height: 64px;
+  filter: brightness(0) invert(1);
+}
+
+.request-result.is-error .request-result__message {
+  max-width: 24rem;
+  color: rgba(10, 10, 10, 0.72);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 767px) {
+  .request-result__dialog {
+    min-height: min(360px, calc(100dvh - 2 * var(--page-inset)));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .request-result,
+  .request-result__dialog,
+  .request-result__close {
+    transition: none;
+  }
+}
