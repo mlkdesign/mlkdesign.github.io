@@ -656,8 +656,8 @@ const TEAM_TRANSLATIONS = {
   en: [
     {
       name: 'Anastasiia Tuhai',
-      role: 'HR Manager',
-      description: 'Builds a thoughtful team culture and brings together people who thrive on ambitious, collaborative work.',
+      role: 'Content Manager',
+      description: 'Creates and curates engaging content, maintains a consistent brand voice, and brings fresh ideas to our digital presence.',
     },
     {
       name: 'Kate Grigorova',
@@ -688,8 +688,8 @@ const TEAM_TRANSLATIONS = {
   uk: [
     {
       name: 'Анастасія Тугай',
-      role: 'HR-менеджер',
-      description: 'Розвиває продуману командну культуру та об’єднує людей, яким близька амбітна спільна робота.',
+      role: 'Контент-менеджер',
+      description: 'Створює та добирає цікавий контент, підтримує послідовний голос бренду й привносить свіжі ідеї в нашу цифрову присутність.',
     },
     {
       name: 'Катерина Григорова',
@@ -1717,7 +1717,7 @@ if (
   const TEAM_PARALLAX_STRENGTH = 24;
   const TEAM_ROTATION_DELAY = 4000;
   const ROLE_LAYOUT = [
-    { role: 'HR Manager', colFromRight: 1, row: 0 },
+    { role: 'Content Manager', colFromRight: 1, row: 0 },
     { role: 'Project Manager', colFromRight: 3, row: 1 },
     { role: 'Full-Stack Developer', colFromRight: 0, row: 2 },
     { role: 'Illustrator', colFromRight: 2, row: 3 },
