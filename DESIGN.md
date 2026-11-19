@@ -138,7 +138,7 @@
 ## Awards
 
 - Preserve the Swiss grid and existing typography. The heading sits above the certificates at the main right-column anchor, using the Selected works heading scale and reveal animation; only the small introduction remains on the left.
-- The desktop gallery occupies 70% of its original right-column width. Keep three equal portrait tiles in a row, adapting to one column on phones. Use the full right column at tablet widths for legibility.
+- Keep three 300 px portrait tiles in a row (930 px including gaps) until the right column runs out of room; only then scale the three columns down to fit. Do not change tile size with page scroll. At 800 px and below, use a native horizontal scroll strip with 300 px cards (82vw on narrow phones), a glimpse of the next card, proximity snapping and no buttons. Keep the gallery keyboard-focusable and retain the existing localized section label.
 - TopDesignKing uses the official transparent ribbon-neon.png, displayed at 120 px instead of 80 px. Its tile uses rgba(255,255,255,0.1), matching the unheated logo pixels at the bottom of the site. Never use a fixed embed or fixed award badge.
 - Dates: MR.BONE 2026-11-20 and MLK.STUDIO 2026-10-31 from the supplied WD Awards PDFs; TopDesignKing 2026-11-19 supplied directly by the owner on 2026-11-19.
 - Keep certificate 1.06 scale and ribbon scale/10-degree hover and focus motion, visible keyboard focus and reduced-motion handling. English fallback and Ukrainian use the existing translation bindings.
