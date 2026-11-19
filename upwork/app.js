@@ -514,6 +514,16 @@ function setupReveal(el) {
 // ---------------------------------------------------------------------------
 const UI_TRANSLATIONS = {
   "en": {
+    navAwards: 'awards',
+    awardsTitle: 'Awards',
+    awardsDescription: 'Recognition for the details that make a difference. Selected projects acknowledged by WD Awards and TopDesignKing.',
+    awardAction: 'view award',
+    awardDateBone: '20 November 2026',
+    awardDateStudio: '31 October 2026',
+    awardDateKing: '19 November 2026',
+    awardAltBone: 'WD Awards certificate: MR.BONE, Favourite Web Design',
+    awardAltStudio: 'WD Awards certificate: MLK.STUDIO, Nominee',
+    awardAltRibbon: 'TopDesignKing ribbon badge',
     "pageTitle": "Jack Milka — UI/UX & Digital Product Designer",
     "preloader": "Creating digital experiences.",
     "navWorks": "selected works",
@@ -543,7 +553,9 @@ const UI_TRANSLATIONS = {
     "formDetails": "project details",
     "formRequest": "request",
     "formSending": "sending…",
+    "formVerification": "Please complete the security check. If it does not load, contact me via Telegram or WhatsApp.",
     "formSuccess": "Request sent. I'll get back to you soon.",
+    "formSuccessTitle": "Thank you! Your request has been sent.",
     "formRequired": "Please complete all three fields and enter a valid email address.",
     "formNotice": "Your information will be used to respond to your inquiry. Learn more in the <a href=\"../privacy-policy/\" target=\"_blank\" rel=\"noopener\">Privacy Policy</a>.",
     "primaryNavigation": "Primary navigation",
@@ -571,6 +583,16 @@ const UI_TRANSLATIONS = {
     "finalButton": "view CV"
   },
   "uk": {
+    navAwards: 'нагороди',
+    awardsTitle: 'Нагороди',
+    awardsDescription: 'Визнання уваги до деталей. Вибрані роботи, відзначені WD Awards та TopDesignKing.',
+    awardAction: 'до нагороди',
+    awardDateBone: '20 листопада 2026',
+    awardDateStudio: '31 жовтня 2026',
+    awardDateKing: '19 листопада 2026',
+    awardAltBone: 'Сертифікат WD Awards: MR.BONE, Favourite Web Design',
+    awardAltStudio: 'Сертифікат WD Awards: MLK.STUDIO, номінант',
+    awardAltRibbon: 'Бейдж TopDesignKing',
     "pageTitle": "Jack Milka — UI/UX та digital-дизайнер",
     "preloader": "Створюю цифрові продукти.",
     "navWorks": "роботи",
@@ -600,7 +622,9 @@ const UI_TRANSLATIONS = {
     "formDetails": "деталі проєкту",
     "formRequest": "надіслати",
     "formSending": "надсилаю…",
+    "formVerification": "Пройдіть перевірку безпеки. Якщо вона не завантажується, напишіть мені у Telegram або WhatsApp.",
     "formSuccess": "Заявку надіслано. Я зв’яжуся з вами найближчим часом.",
+    "formSuccessTitle": "Дякую! Вашу заявку успішно надіслано.",
     "formRequired": "Заповніть усі три поля та вкажіть коректну електронну адресу.",
     "formNotice": "Ваші дані будуть використані для відповіді на ваш запит. Докладніше — у <a href=\"../privacy-policy/\" target=\"_blank\" rel=\"noopener\">Політиці конфіденційності</a>.",
     "primaryNavigation": "Основна навігація",
@@ -816,6 +840,13 @@ const EXPERIENCE_TRANSLATIONS = {
 };
 
 const I18N_TEXT_BINDINGS = {
+  navAwards: '.nav-menu a[href="#awards"] .nav-link-line, .mobile-menu-modal__links a[href="#awards"] .mobile-menu-modal__label',
+  awardsTitle: '.awards-title',
+  awardsDescription: '.awards-description',
+  awardAction: '.award-action .social-link-line',
+  awardDateBone: '.award-date--bone',
+  awardDateStudio: '.award-date--studio',
+  awardDateKing: '.award-date--king',
   preloader: '.stair-reveal__text',
   navSkills: '.nav-menu a[href="#skills"] .nav-link-line, .mobile-menu-modal__links a[href="#skills"] .mobile-menu-modal__label',
   navWorks: '.nav-menu a[href="#works"] .nav-link-line, .mobile-menu-modal__links a[href="#works"] .mobile-menu-modal__label',
@@ -944,6 +975,9 @@ const applyLanguage = (language) => {
   });
 
   const attributeBindings = [
+    ['.award-image--bone', 'alt', 'awardAltBone'],
+    ['.award-image--studio', 'alt', 'awardAltStudio'],
+    ['.award-ribbon', 'alt', 'awardAltRibbon'],
     ['.site-header .nav', 'aria-label', 'primaryNavigation'],
     ['.mobile-menu-modal', 'aria-label', 'primaryNavigation'],
     ['.mobile-menu-modal__links', 'aria-label', 'primaryNavigation'],
@@ -2661,6 +2695,109 @@ if (formModal) {
     requestStatus.classList.toggle('is-error', state === 'error');
   };
 
+  // Request result: a centred white dialog over a dimmed page. A sent request closes the form
+  // behind it; an error keeps the form (and what was typed) open underneath.
+  const resultCloseIcon = formClose?.querySelector('img')?.getAttribute('src') || '../milka-cv/assets/cross.svg';
+  const requestResult = document.createElement('div');
+  requestResult.className = 'request-result';
+  requestResult.hidden = true;
+  requestResult.innerHTML = `
+    <div class="request-result__backdrop" data-result-close></div>
+    <div class="request-result__dialog" role="dialog" aria-modal="true" aria-labelledby="request-result-message">
+      <button class="request-result__close" type="button" data-result-close>
+        <img src="${resultCloseIcon}" alt="" aria-hidden="true" />
+      </button>
+      <span class="request-result__icon" aria-hidden="true"><img src="${resultCloseIcon}" alt="" /></span>
+      <p class="request-result__message" id="request-result-message"></p>
+    </div>`;
+  document.body.appendChild(requestResult);
+  const resultDialog = requestResult.querySelector('.request-result__dialog');
+  const resultClose = requestResult.querySelector('.request-result__close');
+  const resultMessage = requestResult.querySelector('.request-result__message');
+  const RESULT_TRANSITION_MS = prefersReducedMotion ? 0 : 400;
+  let resultOpen = false;
+  let resultHideTimer = 0;
+  let resultReturnFocus = null;
+
+  const openRequestResult = (state, returnFocus = null) => {
+    const strings = UI_TRANSLATIONS[activeLanguage];
+    clearTimeout(resultHideTimer);
+    resultReturnFocus = returnFocus;
+    requestResult.classList.toggle('is-success', state === 'success');
+    requestResult.classList.toggle('is-error', state === 'error');
+    resultDialog.setAttribute('role', state === 'error' ? 'alertdialog' : 'dialog');
+    resultMessage.textContent = state === 'success' ? strings.formSuccessTitle : strings.formError;
+    resultClose.setAttribute('aria-label', strings.close);
+    formModal.inert = true;
+    // Last in the body, so it stays above overlays added later at the same z-index (cookie panel).
+    if (requestResult.nextElementSibling) document.body.appendChild(requestResult);
+    document.documentElement.classList.add('request-result-open');
+    lenis?.stop();
+    resultOpen = true;
+    requestResult.hidden = false;
+    void requestResult.offsetWidth;
+    requestResult.classList.add('is-open');
+    resultClose.focus({ preventScroll: true });
+  };
+
+  const closeRequestResult = () => {
+    if (!resultOpen) return;
+    resultOpen = false;
+    requestResult.classList.remove('is-open');
+    document.documentElement.classList.remove('request-result-open');
+    if (modalOpen) formModal.inert = false;
+    else if (!modalClosing) lenis?.start();
+    resultHideTimer = window.setTimeout(() => { requestResult.hidden = true; }, RESULT_TRANSITION_MS);
+    resultReturnFocus?.focus({ preventScroll: true });
+    resultReturnFocus = null;
+  };
+
+  requestResult.querySelectorAll('[data-result-close]').forEach((element) => {
+    element.addEventListener('click', closeRequestResult);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (!resultOpen) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      closeRequestResult();
+    } else if (event.key === 'Tab') {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      resultClose.focus({ preventScroll: true });
+    }
+  });
+
+  // Load Turnstile only when the request modal is opened.
+  let turnstileId = null;
+  let turnstileLoading = null;
+  const ensureTurnstile = () => {
+    if (turnstileLoading) return turnstileLoading;
+    turnstileLoading = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      script.onload = () => {
+        try {
+          turnstileId = window.turnstile.render('#request-turnstile', {
+            sitekey: requestForm.dataset.turnstileSitekey,
+            action: 'project_request', theme: 'auto', size: 'flexible',
+          });
+          resolve();
+        } catch (error) { script.remove(); turnstileLoading = null; reject(error); }
+      };
+      script.onerror = () => { script.remove(); turnstileLoading = null; reject(new Error('Turnstile unavailable')); };
+      document.head.appendChild(script);
+    });
+    return turnstileLoading;
+  };
+  document.querySelectorAll('[data-open-form]').forEach((trigger) => {
+    trigger.addEventListener('click', () => ensureTurnstile().catch(() => {
+      setRequestStatus(UI_TRANSLATIONS[activeLanguage].formVerification, 'error');
+    }));
+  });
+
   formClose?.addEventListener('click', () => closeFormModal());
   requestForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -2676,36 +2813,50 @@ if (formModal) {
     }
 
     window.portfolioAnalytics?.track('contact_form_submit');
+    const token = turnstileId !== null && window.turnstile?.getResponse(turnstileId);
+    if (!token) {
+      setRequestStatus(strings.formVerification, 'error');
+      ensureTurnstile().catch(() => {});
+      return;
+    }
     const submission = new FormData(requestForm);
+    const payload = Object.fromEntries(['name', 'email', 'details', 'website'].map((key) => [key, submission.get(key)]));
+    payload.token = token;
+    payload.source = requestForm.dataset.source;
 
     const controller = new AbortController();
-    const timeoutId = window.setTimeout(() => controller.abort(), 15000);
+    const timeoutId = window.setTimeout(() => controller.abort(), 25000);
     requestSubmitting = true;
     requestForm.setAttribute('aria-busy', 'true');
     if (requestButton) requestButton.disabled = true;
     setRequestButtonLabel(strings.formSending);
 
     try {
-      const response = await fetch(requestForm.action, {
+      const response = await fetch(requestForm.dataset.workerUrl, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
-        body: submission,
+        body: JSON.stringify(payload),
         signal: controller.signal,
       });
       const result = await response.json().catch(() => null);
       const rejected = Array.isArray(result?.errors) && result.errors.length > 0;
-      if (!response.ok || rejected) throw new Error('Form submission failed');
+      if (!response.ok || rejected || result?.ok !== true) throw new Error('Form submission failed');
 
       window.portfolioAnalytics?.track('generate_lead', { form_id: 'project_request' });
       requestForm.reset();
-      setRequestStatus(strings.formSuccess, 'success');
+      const returnFocus = modalTrigger;
+      openRequestResult('success', returnFocus);
+      // The form slides away behind the dialog; the page stays still until the dialog closes.
+      closeFormModal(() => { if (resultOpen) lenis?.stop(); });
     } catch {
       window.portfolioAnalytics?.track('contact_form_error', { form_id: 'project_request' });
-      setRequestStatus(strings.formError, 'error');
+      openRequestResult('error', requestButton);
     } finally {
       window.clearTimeout(timeoutId);
+      if (turnstileId !== null) window.turnstile?.reset(turnstileId);
       requestSubmitting = false;
       requestForm.removeAttribute('aria-busy');
       if (requestButton) requestButton.disabled = false;
@@ -2714,7 +2865,7 @@ if (formModal) {
   });
 
   document.addEventListener('keydown', (event) => {
-    if (!modalOpen) return;
+    if (!modalOpen || resultOpen) return;
     if (event.key === 'Escape') {
       event.preventDefault();
       closeFormModal();

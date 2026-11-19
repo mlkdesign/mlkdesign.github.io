@@ -513,6 +513,16 @@ function setupReveal(el) {
 // ---------------------------------------------------------------------------
 const UI_TRANSLATIONS = {
   "en": {
+    navAwards: 'awards',
+    awardsTitle: 'Awards',
+    awardsDescription: 'Recognition for the details that make a difference. Selected projects acknowledged by WD Awards and TopDesignKing.',
+    awardAction: 'view award',
+    awardDateBone: '20 November 2026',
+    awardDateStudio: '31 October 2026',
+    awardDateKing: '19 November 2026',
+    awardAltBone: 'WD Awards certificate: MR.BONE, Favourite Web Design',
+    awardAltStudio: 'WD Awards certificate: MLK.STUDIO, Nominee',
+    awardAltRibbon: 'TopDesignKing ribbon badge',
     "pageTitle": "Jack Milka — UI/UX & Digital Product Designer",
     "preloader": "Creating digital experiences.",
     "navWorks": "selected works",
@@ -575,6 +585,16 @@ const UI_TRANSLATIONS = {
     "finalButton": "get in touch"
   },
   "uk": {
+    navAwards: 'нагороди',
+    awardsTitle: 'Нагороди',
+    awardsDescription: 'Визнання уваги до деталей. Вибрані роботи, відзначені WD Awards та TopDesignKing.',
+    awardAction: 'до нагороди',
+    awardDateBone: '20 листопада 2026',
+    awardDateStudio: '31 жовтня 2026',
+    awardDateKing: '19 листопада 2026',
+    awardAltBone: 'Сертифікат WD Awards: MR.BONE, Favourite Web Design',
+    awardAltStudio: 'Сертифікат WD Awards: MLK.STUDIO, номінант',
+    awardAltRibbon: 'Бейдж TopDesignKing',
     "pageTitle": "Jack Milka — UI/UX та digital-дизайнер",
     "preloader": "Створюю цифрові продукти.",
     "navWorks": "роботи",
@@ -825,6 +845,13 @@ const EXPERIENCE_TRANSLATIONS = {
 };
 
 const I18N_TEXT_BINDINGS = {
+  navAwards: '.nav-menu a[href="#awards"] .nav-link-line, .mobile-menu-modal__links a[href="#awards"] .mobile-menu-modal__label',
+  awardsTitle: '.awards-title',
+  awardsDescription: '.awards-description',
+  awardAction: '.award-action .social-link-line',
+  awardDateBone: '.award-date--bone',
+  awardDateStudio: '.award-date--studio',
+  awardDateKing: '.award-date--king',
   preloader: '.stair-reveal__text',
   navSkills: '.nav-menu a[href="#skills"] .nav-link-line, .mobile-menu-modal__links a[href="#skills"] .mobile-menu-modal__label',
   navWorks: '.nav-menu a[href="#works"] .nav-link-line, .mobile-menu-modal__links a[href="#works"] .mobile-menu-modal__label',
@@ -953,6 +980,9 @@ const applyLanguage = (language) => {
   });
 
   const attributeBindings = [
+    ['.award-image--bone', 'alt', 'awardAltBone'],
+    ['.award-image--studio', 'alt', 'awardAltStudio'],
+    ['.award-ribbon', 'alt', 'awardAltRibbon'],
     ['.site-header .nav', 'aria-label', 'primaryNavigation'],
     ['.mobile-menu-modal', 'aria-label', 'primaryNavigation'],
     ['.mobile-menu-modal__links', 'aria-label', 'primaryNavigation'],
