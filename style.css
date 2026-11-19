@@ -3280,6 +3280,19 @@ html.request-result-open body {
 
 .award-meta time { padding-block: 8px; }
 
+/* Thin right chevron follows the link font size in both locales. */
+.award-arrow {
+  display: block;
+  flex: 0 0 auto;
+  width: 0.625em;
+  height: 1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .award-action.social-link {
   min-height: 44px;
   margin: 0 0 0 auto;
