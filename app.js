@@ -508,11 +508,13 @@ const UI_TRANSLATIONS = {
     aboutTitle: 'We combine design and technology to turn ideas into digital products.',
     statsTitle: 'We build digital experiences that look exceptional and perform flawlessly. Every detail matters. Every decision has purpose. Strategy, design, and technology moving in the same direction.',
     statsIntro: 'A small team with years of experience turning ambitious ideas into digital products.',
+    navAwards: 'awards',
     awardsTitle: 'Awards',
     awardsDescription: 'Recognition for the details that make a difference. Selected work acknowledged by WD Awards and TopDesignKing.',
     awardAction: 'view award',
     awardDateBone: '20 November 2026',
     awardDateStudio: '31 October 2026',
+    awardDateKing: '19 November 2026',
     awardAltBone: 'WD Awards certificate: MR.BONE, Favourite Web Design',
     awardAltStudio: 'WD Awards certificate: MLK.STUDIO, Nominee',
     awardAltRibbon: 'TopDesignKing ribbon badge',
@@ -567,11 +569,13 @@ const UI_TRANSLATIONS = {
     aboutTitle: 'Ми поєднуємо дизайн і технології, щоб перетворювати ідеї на цифрові продукти.',
     statsTitle: 'Ми створюємо цифрові продукти, які мають винятковий вигляд і працюють бездоганно. Кожна деталь має значення. Кожне рішення має мету. Стратегія, дизайн і технології рухаються в одному напрямку.',
     statsIntro: 'Невелика команда з багаторічним досвідом перетворення амбітних ідей на цифрові продукти.',
+    navAwards: 'нагороди',
     awardsTitle: 'Нагороди',
     awardsDescription: 'Визнання уваги до деталей. Вибрані роботи, відзначені WD Awards та TopDesignKing.',
     awardAction: 'до нагороди',
     awardDateBone: '20 листопада 2026',
     awardDateStudio: '31 жовтня 2026',
+    awardDateKing: '19 листопада 2026',
     awardAltBone: 'Сертифікат WD Awards: MR.BONE, Favourite Web Design',
     awardAltStudio: 'Сертифікат WD Awards: MLK.STUDIO, номінант',
     awardAltRibbon: 'Бейдж TopDesignKing',
@@ -761,11 +765,13 @@ const I18N_TEXT_BINDINGS = {
   aboutTitle: '.about-title',
   statsTitle: '.stats-title',
   statsIntro: '.stats-intro',
+  navAwards: '.nav-menu a[href="#awards"] .nav-link-line, .mobile-menu-modal__links a[href="#awards"] .mobile-menu-modal__label',
   awardsTitle: '.awards-title',
   awardsDescription: '.awards-description',
   awardAction: '.award-action .social-link-line',
   awardDateBone: '.award-date--bone',
   awardDateStudio: '.award-date--studio',
+  awardDateKing: '.award-date--king',
   teamTitle: '.team-title',
   worksIntro: '.works-intro',
   worksTitle: '.works-title',
@@ -3135,27 +3141,5 @@ measureWorks();
     window.addEventListener('scroll', scheduleFooterOverlap, { passive: true });
     window.addEventListener('resize', scheduleFooterOverlap);
     updateFooterOverlap();
-  }
-}
-
-// WD Awards badge on touch screens: the first tap slides it out, a second tap opens the award page,
-// and a tap anywhere else or a scroll slides it back. Mouse users get the same on hover (CSS).
-{
-  const badge = document.querySelector('.wd-badge');
-  const touchScreen = window.matchMedia('(hover: none)');
-  if (badge) {
-    const closeBadge = () => badge.classList.remove('is-open');
-    badge.addEventListener('click', (event) => {
-      if (!touchScreen.matches || badge.classList.contains('is-open')) {
-        closeBadge();
-        return;
-      }
-      event.preventDefault();
-      badge.classList.add('is-open');
-    });
-    document.addEventListener('pointerdown', (event) => {
-      if (!badge.contains(event.target)) closeBadge();
-    }, { passive: true });
-    window.addEventListener('scroll', closeBadge, { passive: true });
   }
 }

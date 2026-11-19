@@ -717,6 +717,7 @@ h1 {
 .about-title[data-reveal],
 .stats-title[data-reveal],
 .team-title[data-reveal],
+.awards-title[data-reveal],
 .works-title[data-reveal],
 .contact-cta__title[data-reveal] {
   filter: blur(var(--reveal-blur));
@@ -727,6 +728,7 @@ h1 {
 .about-title[data-reveal].is-revealing,
 .stats-title[data-reveal].is-revealing,
 .team-title[data-reveal].is-revealing,
+.awards-title[data-reveal].is-revealing,
 .works-title[data-reveal].is-revealing,
 .contact-cta__title[data-reveal].is-revealing {
   will-change: filter;
@@ -736,6 +738,7 @@ h1 {
 .about-title[data-reveal].is-visible,
 .stats-title[data-reveal].is-visible,
 .team-title[data-reveal].is-visible,
+.awards-title[data-reveal].is-visible,
 .works-title[data-reveal].is-visible,
 .contact-cta__title[data-reveal].is-visible {
   filter: blur(0);
@@ -745,6 +748,7 @@ h1 {
 .about-title[data-reveal].is-visible.is-revealed,
 .stats-title[data-reveal].is-visible.is-revealed,
 .team-title[data-reveal].is-visible.is-revealed,
+.awards-title[data-reveal].is-visible.is-revealed,
 .works-title[data-reveal].is-visible.is-revealed,
 .contact-cta__title[data-reveal].is-visible.is-revealed {
   filter: none;
@@ -797,6 +801,7 @@ h1 {
   .hero h1[data-reveal],
   .about-title[data-reveal],
   .stats-title[data-reveal],
+  .awards-title[data-reveal],
   .works-title[data-reveal],
   .contact-cta__title[data-reveal] {
     filter: none;
@@ -1174,7 +1179,7 @@ h1 {
   opacity: 0.6;
 }
 
-/* Awards follow the statistics' four-column Swiss grid. */
+/* Awards keep the main grid anchor; the gallery is 70% of its original width. */
 .awards {
   position: relative;
   z-index: 20;
@@ -1184,17 +1189,30 @@ h1 {
 
 .awards-inner {
   display: grid;
-  grid-template-columns: var(--col-split) repeat(3, minmax(0, 1fr));
-  gap: 15px;
+  grid-template-columns: var(--col-split) minmax(0, 1fr);
+  gap: 3rem 15px;
   align-items: start;
 }
 
+.awards-intro { grid-column: 1; grid-row: 1; padding-top: 0.4em; }
+
 .awards-title {
-  margin: 0 0 1.4rem;
-  font-size: clamp(1.8rem, 3vw, 3.4rem);
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+  font-family: var(--font);
+  font-size: clamp(2rem, 4.2vw, 4.6rem);
   line-height: 1.05;
   letter-spacing: -0.03em;
   font-weight: 300;
+}
+
+.awards-list {
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+  width: 70%;
 }
 
 .awards-description {
@@ -1239,12 +1257,14 @@ h1 {
   transition: transform 0.55s var(--ease);
 }
 
-.award-media--ribbon { background: var(--text); }
+.award-media--ribbon { background: rgba(255, 255, 255, 0.1); }
 
 .award-ribbon {
   display: block;
-  width: 80px;
-  height: 80px;
+  width: 120px;
+  height: 120px;
+  max-width: 80%;
+  object-fit: contain;
   transition: transform 0.55s var(--ease);
 }
 
@@ -1298,14 +1318,19 @@ h1 {
 }
 
 @media (max-width: 1100px) {
-  .awards-inner { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .awards-intro { grid-column: 1 / -1; margin-bottom: 1.5rem; }
+  .awards-list { width: 100%; }
+}
+
+@media (max-width: 800px) {
+  .awards-inner { grid-template-columns: minmax(0, 1fr); gap: 1.6rem; }
+  .awards-intro { grid-column: 1; grid-row: 2; padding-top: 0; }
+  .awards-title { grid-column: 1; font-size: clamp(1.85rem, 8vw, 3.3rem); }
+  .awards-list { grid-column: 1; margin-top: 1.4rem; }
 }
 
 @media (max-width: 600px) {
   .awards { padding-block: 64px; }
-  .awards-inner { grid-template-columns: minmax(0, 1fr); row-gap: 36px; }
-  .awards-intro { margin-bottom: 0; }
+  .awards-list { grid-template-columns: minmax(0, 1fr); width: 70%; row-gap: 36px; }
   .award-kind { min-height: 0; }
 }
 
@@ -3221,116 +3246,6 @@ a[href]:is(:hover, :focus-visible):not(:active) {
   .contact-tile:nth-child(7) { grid-area: 5 / 1; }
 }
 
-/* WD Awards nominee badge: a white tab on the right edge, 50px under the menu; on hover it slides out and back. */
-@font-face {
-  font-family: 'WD Oswald';
-  src: url('assets/fonts/wd-oswald.woff2') format('woff2');
-  font-weight: 600;
-  font-display: swap;
-}
-
-.wd-badge {
-  position: fixed;
-  right: 0;
-  /* The menu bar ends 44px from the top (38px on phones). */
-  top: calc(env(safe-area-inset-top, 0px) + 94px);
-  /* Above the page, under the header, the request form and the intro overlays. */
-  z-index: 95;
-  display: flex;
-  width: 220px;
-  height: 150px;
-  color: #59394a;
-  background: #fff;
-  text-decoration: none;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
-  /* Only the 70px tab shows until hover; the text panel waits off the right edge. */
-  transform: translateX(150px);
-  /* The same gentle ease both ways: it slides out on hover and glides back when the cursor leaves.
-     Important, like the opacity: the site-wide link rule would otherwise replace the slide with its opacity fade. */
-  transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1) !important;
-  /* Links rest dimmed site-wide; the badge stays solid. */
-  opacity: 1 !important;
-}
-
-/* Mouse: open on hover. Touch screens open and close it with taps instead (the site script adds is-open),
-   so a sticky touch "hover" never keeps it out. */
-@media (hover: hover) {
-  .wd-badge:hover {
-    transform: none;
-  }
-}
-
-.wd-badge:focus-visible,
-.wd-badge.is-open {
-  transform: none;
-}
-
-.wd-badge:focus-visible {
-  outline: 2px solid #59394a;
-  outline-offset: -4px;
-}
-
-.wd-badge__tab {
-  flex: 0 0 70px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 0 14px;
-}
-
-.wd-badge__logo {
-  display: block;
-  width: 38px;
-  height: auto;
-  fill: currentColor;
-}
-
-.wd-badge__vertical {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font: 600 17px/1 'WD Oswald', 'Oswald', 'Arial Narrow', sans-serif;
-  letter-spacing: 0.14em;
-}
-
-.wd-badge__body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 12px;
-  padding: 0 16px 0 6px;
-}
-
-.wd-badge__title {
-  font: 600 29px/0.98 'WD Oswald', 'Oswald', 'Arial Narrow', sans-serif;
-  text-transform: uppercase;
-}
-
-.wd-badge__title span {
-  display: block;
-}
-
-.wd-badge__date {
-  font: 600 11px/1 'WD Oswald', 'Oswald', 'Arial Narrow', sans-serif;
-  letter-spacing: 0.06em;
-}
-
-@media (max-width: 800px) {
-  /* Phones: 30% smaller, still pinned to the right edge under the menu. */
-  .wd-badge {
-    top: calc(env(safe-area-inset-top, 0px) + 88px);
-    transform-origin: 100% 0;
-    scale: 0.7;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .wd-badge {
-    transition: none !important;
-  }
-}
-
 /* ---------------------------------------------------------------------------
    Request result: a white dialog in the middle of a dimmed page (app.js).
    Success: the heading sits in the bottom-left corner. Error: a red circle
@@ -3475,5 +3390,16 @@ html.request-result-open body {
   .request-result__dialog,
   .request-result__close {
     transition: none;
+  }
+}
+
+/* Extra navigation item: tighten spacing only where desktop space is limited. */
+@media (min-width: 801px) and (max-width: 1300px) {
+  .nav-menu:has(a[href="#awards"]) { column-gap: clamp(6px, 1vw, 13px); }
+  .nav-menu:has(a[href="#awards"]) a,
+  .nav-menu:has(a[href="#awards"]) .language-switcher button,
+  .nav-menu:has(a[href="#awards"]) .language-switcher__separator {
+    font-size: clamp(0.6rem, 0.85vw, 0.78rem);
+    letter-spacing: 0.1em;
   }
 }

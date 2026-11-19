@@ -73,9 +73,9 @@
 
 ## Awards
 
-- Preserve the personal-portfolio register, existing Swiss grid, Noto Sans 300, colors and motion tokens above. Place Awards between statistics and team.
-- Desktop: the statistics grid (`--col-split` + three equal columns, 15 px gaps), with a short localized introduction on the left and three equal portrait media tiles on the right. Preserve full PDF proportions; no certificate cropping at rest. Below 1101 px, place the introduction above the three tiles; below 601 px, stack the tiles.
-- Render supplied WD Awards PDFs as local 1600 px WebP previews. Dates come from the certificates: MR.BONE, 2026-11-20; MLK.STUDIO, 2026-10-31. TopDesignKing's project page provides no award date, so omit it. Never infer it from image upload paths.
-- Use the supplied TopDesignKing ribbon image inside a tile, never a fixed embed. A light surface preserves the black logo's contrast.
-- Each tile is one native link, including its right-aligned rolling text label and arrow. Certificate hover/focus uses the portfolio's 1.06 scale / 550 ms easing; the ribbon scales and rotates 10 degrees. Provide visible keyboard focus and disable transforms and transitions for reduced motion.
-- English fallback is present in HTML. Ukrainian copy, dates, link text and image descriptions use the existing translation system. No new framework, remote runtime assets or deployment workflow.
+- Preserve the Swiss grid and existing typography. The heading sits above the certificates at the main right-column anchor, using the Selected works heading scale and reveal animation; only the small introduction remains on the left.
+- The desktop gallery occupies 70% of its original right-column width. Keep three equal portrait tiles in a row, adapting to one column on phones. Use the full right column at tablet widths for legibility.
+- TopDesignKing uses the official transparent ribbon-neon.png, displayed at 120 px instead of 80 px. Its tile uses rgba(255,255,255,0.1), matching the unheated logo pixels at the bottom of the site. Never use a fixed embed or fixed award badge.
+- Dates: MR.BONE 2026-11-20 and MLK.STUDIO 2026-10-31 from the supplied WD Awards PDFs; TopDesignKing 2026-11-19 supplied directly by the owner on 2026-11-19.
+- Keep certificate 1.06 scale and ribbon scale/10-degree hover and focus motion, visible keyboard focus and reduced-motion handling. English fallback and Ukrainian use the existing translation bindings.
+- Add Awards to desktop, mobile and project-form navigation. Apply the same section to studio, personal portfolio and generated Upwork editions through their existing build/deployment process.
