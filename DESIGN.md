@@ -70,3 +70,12 @@
 ## Floating panels and the closing block
 
 - The case offer ("Like this project?") and the cookie banner sit 15 px from the viewport edges. While the orange closing block scrolls into view they lift by its visible height (`--footer-overlap`, set in JS), so they stay inside the dark area.
+
+## Awards
+
+- Preserve the personal-portfolio register, existing Swiss grid, Noto Sans 300, colors and motion tokens above. Place Awards between statistics and team.
+- Desktop: the statistics grid (`--col-split` + three equal columns, 15 px gaps), with a short localized introduction on the left and three equal portrait media tiles on the right. Preserve full PDF proportions; no certificate cropping at rest. Below 1101 px, place the introduction above the three tiles; below 601 px, stack the tiles.
+- Render supplied WD Awards PDFs as local 1600 px WebP previews. Dates come from the certificates: MR.BONE, 2026-11-20; MLK.STUDIO, 2026-10-31. TopDesignKing's project page provides no award date, so omit it. Never infer it from image upload paths.
+- Use the supplied TopDesignKing ribbon image inside a tile, never a fixed embed. A light surface preserves the black logo's contrast.
+- Each tile is one native link, including its right-aligned rolling text label and arrow. Certificate hover/focus uses the portfolio's 1.06 scale / 550 ms easing; the ribbon scales and rotates 10 degrees. Provide visible keyboard focus and disable transforms and transitions for reduced motion.
+- English fallback is present in HTML. Ukrainian copy, dates, link text and image descriptions use the existing translation system. No new framework, remote runtime assets or deployment workflow.
