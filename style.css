@@ -1179,7 +1179,7 @@ h1 {
   opacity: 0.6;
 }
 
-/* Awards keep the main grid anchor; the gallery is 70% of its original width. */
+/* Keep 300px award tiles until the right column needs them to scale down. */
 .awards {
   position: relative;
   z-index: 20;
@@ -1212,7 +1212,13 @@ h1 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 15px;
-  width: 70%;
+  width: min(100%, 930px);
+  min-width: 0;
+}
+
+.awards-list:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 4px;
 }
 
 .awards-description {
@@ -1330,21 +1336,31 @@ h1 {
   .award-link:hover .award-action { opacity: 1; }
 }
 
-@media (max-width: 1100px) {
-  .awards-list { width: 100%; }
-}
-
 @media (max-width: 800px) {
   .awards-inner { grid-template-columns: minmax(0, 1fr); gap: 1.6rem; }
   .awards-intro { grid-column: 1; grid-row: 2; padding-top: 0; }
   .awards-title { grid-column: 1; font-size: clamp(1.85rem, 8vw, 3.3rem); }
-  .awards-list { grid-column: 1; margin-top: 1.4rem; }
+  .awards-list {
+    grid-column: 1;
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: min(82vw, 300px);
+    width: auto;
+    margin: 1.4rem calc(-1 * var(--page-inset)) 0;
+    padding: 8px var(--page-inset) 12px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--page-inset);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .awards-list::-webkit-scrollbar { display: none; }
+  .award { scroll-snap-align: start; }
 }
 
 @media (max-width: 600px) {
   .awards { padding-block: 64px; }
-  .awards-list { grid-template-columns: minmax(0, 1fr); width: 70%; row-gap: 36px; }
-  .award-kind { min-height: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
