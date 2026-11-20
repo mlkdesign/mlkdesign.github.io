@@ -72,6 +72,24 @@ jobs:
         with:
           path: _site
 
+      # Artifact upload can complete before the Actions API indexes it for Pages.
+      - name: Wait for the Pages artifact to be indexed
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact_api="https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts"
+          for attempt in {1..12}; do
+            if curl --fail --silent --show-error "$artifact_api" > "$RUNNER_TEMP/pages-artifacts.json" &&
+              jq -e '.artifacts[] | select(.name == "github-pages" and .expired == false)' "$RUNNER_TEMP/pages-artifacts.json" > /dev/null; then
+              # Give the authenticated Pages metadata request time to see the same artifact.
+              sleep 10
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "The Pages artifact is not indexed yet; refusing to deploy an empty build." >&2
+          exit 1
+
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
