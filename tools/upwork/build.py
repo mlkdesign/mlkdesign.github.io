@@ -25,7 +25,7 @@ BASE_URL = 'https://mlkdesign.github.io/upwork/'
 SHARED = '../milka-cv/'  # personal site, relative to /upwork/
 # The version query makes browsers fetch a rebuilt CV instead of a cached copy; bump it with every CV rebuild
 # (and the cvFile versions in app.js).
-CV_VERSION = '?v=20261103'
+CV_VERSION = '?v=20261121'
 CV = 'Jack-Milka-CV.pdf' + CV_VERSION
 CV_UK = 'Jack-Milka-CV-UA.pdf' + CV_VERSION
 # data-upwork-cv lets app.js / case.js point every CV link at the PDF in the page's language.
