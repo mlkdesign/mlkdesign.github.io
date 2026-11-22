@@ -578,7 +578,7 @@ const UI_TRANSLATIONS = {
     "experienceLinkedin": "View LinkedIn",
     "experienceDou": "View on DOU",
     "downloadCv": "view my CV",
-    "cvFile": "assets/cv/Jack-Milka-CV-EN.pdf?v=20261122",
+    "cvFile": "assets/cv/Jack-Milka-CV-EN.pdf?v=20261122-contacts",
     "privacyPolicy": "Privacy Policy",
     "legalInformation": "Legal Information",
     "cookieSettings": "Cookie Settings",
