@@ -57,6 +57,63 @@ const forceThemeColor = () => {
 forceThemeColor();
 
 const CASE_PROJECTS = {
+  "banana-padel": {
+    "image": "assets/banana-padel/cover.jpg",
+    "pageUrl": "banana-padel.html",
+    "visitUrl": "https://apps.apple.com/ua/app/banana-padel-tournament-app/id6759613693?l=ru",
+    "copy": {
+      "en": {
+        "pageTitle": "Banana Padel: Tournament App — MLK.STUDIO",
+        "caseTitle": "Banana Padel",
+        "caseKicker": "Mobile app · SportsTech · iOS & Android",
+        "caseDescription": "We designed and developed a complete digital product for organizing padel tournaments: iOS and Android apps, an administration panel and a marketing website.",
+        "projectLabel": "project",
+        "projectValue": "Banana Padel: Tournament App",
+        "toolsSkillsLabel": "scope & delivery",
+        "delivery": "UI/UX design · iOS & Android development",
+        "skills": "Administration panel · Marketing website",
+        "imageAlt": "Banana Padel mobile app cover with player profiles and tournament screens",
+        "visitSite": "View on App Store",
+        "productIndex": "01 — product design",
+        "productTitle": "From tournament idea to a complete product",
+        "productText": "We shaped the product around the needs of players and tournament organizers. User journeys, interface structure and a consistent visual system bring tournament setup, participation, player profiles and results into one connected experience.",
+        "mobileIndex": "02 — iOS & Android",
+        "mobileTitle": "The tournament in your pocket",
+        "mobileText": "We designed and developed the mobile application for iOS and Android. The interface connects tournament discovery and participation with match information, scores and player ratings, keeping the experience consistent across both platforms.",
+        "adminIndex": "03 — administration",
+        "adminTitle": "A dedicated space to manage the product",
+        "adminText": "We designed and developed an administration panel for day-to-day product management. It gives the team a dedicated interface for managing the platform and supporting tournament operations.",
+        "websiteIndex": "04 — marketing website",
+        "websiteTitle": "A clear introduction to Banana Padel",
+        "websiteText": "We designed and developed a responsive marketing website that introduces the product, explains tournament formats and presents the key app features. Clear messaging and download paths guide visitors from discovering Banana Padel to installing the app."
+      },
+      "uk": {
+        "pageTitle": "Banana Padel: Tournament App — MLK.STUDIO",
+        "caseTitle": "Banana Padel",
+        "caseKicker": "Мобільний застосунок · SportsTech · iOS та Android",
+        "caseDescription": "Ми спроєктували й розробили повноцінний цифровий продукт для проведення турнірів із паделу: застосунки для iOS та Android, адміністративну панель і маркетинговий сайт.",
+        "projectLabel": "проєкт",
+        "projectValue": "Banana Padel: Tournament App",
+        "toolsSkillsLabel": "обсяг робіт",
+        "delivery": "UI/UX дизайн · Розробка для iOS та Android",
+        "skills": "Адміністративна панель · Маркетинговий сайт",
+        "imageAlt": "Обкладинка мобільного застосунку Banana Padel із профілями гравців та екранами турнірів",
+        "visitSite": "Переглянути в App Store",
+        "productIndex": "01 — дизайн продукту",
+        "productTitle": "Від ідеї турніру до цілісного продукту",
+        "productText": "Ми побудували продукт навколо потреб гравців та організаторів турнірів. Користувацькі сценарії, структура інтерфейсу й узгоджена візуальна система об’єднують створення турнірів, участь, профілі гравців і результати в єдиний досвід.",
+        "mobileIndex": "02 — iOS та Android",
+        "mobileTitle": "Турнір у вашій кишені",
+        "mobileText": "Ми спроєктували й розробили мобільний застосунок для iOS та Android. Інтерфейс поєднує пошук турнірів і участь у них з інформацією про матчі, рахунками та рейтингами гравців, зберігаючи послідовний досвід на обох платформах.",
+        "adminIndex": "03 — адміністрування",
+        "adminTitle": "Окремий простір для керування продуктом",
+        "adminText": "Ми спроєктували й розробили адміністративну панель для щоденного керування продуктом. Вона дає команді окремий інтерфейс для роботи з платформою та супроводу турнірних процесів.",
+        "websiteIndex": "04 — маркетинговий сайт",
+        "websiteTitle": "Зрозуміле знайомство з Banana Padel",
+        "websiteText": "Ми спроєктували й розробили адаптивний маркетинговий сайт, який знайомить із продуктом, пояснює формати турнірів і розкриває ключові можливості застосунку. Зрозумілі тексти та переходи до завантаження ведуть від знайомства з Banana Padel до встановлення застосунку."
+      }
+    }
+  },
   pandawin: {
     image: 'assets/pandawin/hero.jpg',
     pageUrl: 'pandawin.html',

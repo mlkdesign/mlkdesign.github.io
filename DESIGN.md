@@ -79,3 +79,9 @@
 - Dates: MR.BONE 2026-11-20 and MLK.STUDIO 2026-10-31 from the supplied WD Awards PDFs; TopDesignKing 2026-11-19 supplied directly by the owner on 2026-11-19.
 - Keep certificate 1.06 scale and ribbon scale/10-degree hover and focus motion, visible keyboard focus and reduced-motion handling. English fallback and Ukrainian use the existing translation bindings.
 - Add Awards to desktop, mobile and project-form navigation. Apply the same section to studio, personal portfolio and generated Upwork editions through their existing build/deployment process.
+
+## Banana Padel case
+
+- Studio website only for now. Add Banana Padel as the third Selected works card and the third entry in related projects, keeping the existing portfolio layout and transitions.
+- Use the supplied portrait cover as-is. The case uses the existing sticky information column and long-form story styles, with English and Ukrainian copy covering product design, iOS/Android development, the admin panel and marketing website. Add screenshots later; do not fabricate them or invent technology choices or delivery metrics.
+- Both project destination buttons say View on App Store (localized in Ukrainian) and open the owner-supplied Apple listing, never the marketing website. Keep a static canonical URL, project metadata and image description.

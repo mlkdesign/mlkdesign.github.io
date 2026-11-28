@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0b0b" />
+    <meta name="theme-color" content="#0b0b0b" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0b0b" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <title>Banana Padel: Tournament App — MLK.STUDIO</title>
+    <link rel="icon" href="favicon.ico" sizes="48x48" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="assets/favicon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <meta name="description" content="We designed and developed a complete digital product for organizing padel tournaments: iOS and Android apps, an administration panel and a marketing website." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://mlkdesign.github.io/banana-padel.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="MLK.STUDIO" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="uk_UA" />
+    <meta property="og:url" content="https://mlkdesign.github.io/banana-padel.html" />
+    <meta property="og:title" content="Banana Padel: Tournament App — MLK.STUDIO" />
+    <meta property="og:description" content="We designed and developed a complete digital product for organizing padel tournaments: iOS and Android apps, an administration panel and a marketing website." />
+    <meta property="og:image" content="https://mlkdesign.github.io/assets/banana-padel/cover.jpg" />
+    <meta property="og:image:width" content="735" />
+    <meta property="og:image:height" content="881" />
+    <meta property="og:image:alt" content="Banana Padel mobile app cover with player profiles and tournament screens" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Banana Padel: Tournament App — MLK.STUDIO" />
+    <meta name="twitter:description" content="We designed and developed a complete digital product for organizing padel tournaments: iOS and Android apps, an administration panel and a marketing website." />
+    <meta name="twitter:image" content="https://mlkdesign.github.io/assets/banana-padel/cover.jpg" />
+    <link rel="preload" href="assets/fonts/NotoSans-300.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="style.css?v=20261128-banana-padel" />
+    <link rel="stylesheet" href="case.css?v=20261101-title" />
+    <!-- Microsoft Clarity: heatmaps and session recordings, described in the privacy policy. -->
+    <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "z63evie3lq");
+      // A visitor who turned Clarity off in Cookie Settings (cookies.js) stays off.
+      try { if (localStorage.getItem('mlk-cookie-preference') === 'declined') clarity('consentv2', { ad_Storage: 'denied', analytics_Storage: 'denied' }); } catch {}
+    </script>
+  </head>
+  <body class="case-page" data-case-project="banana-padel">
+    <!-- iOS 26 Safari bars: a solid status bar and a clear toolbar from the first paint (.status-tint, .edge-shield in style.css). -->
+    <div class="status-tint" aria-hidden="true"></div>
+    <div class="edge-shield" aria-hidden="true"></div>
+    <div class="page-transition is-covered" aria-hidden="true">
+      <span class="page-transition__step" style="--i: 0"></span>
+      <span class="page-transition__step" style="--i: 1"></span>
+      <span class="page-transition__step" style="--i: 2"></span>
+      <span class="page-transition__step" style="--i: 3"></span>
+      <span class="page-transition__step" style="--i: 4"></span>
+      <span class="page-transition__step" style="--i: 5"></span>
+      <span class="page-transition__step" style="--i: 6"></span>
+      <span class="page-transition__step" style="--i: 7"></span>
+    </div>
+
+    <div class="noise" aria-hidden="true"></div>
+    <div class="top-blur" aria-hidden="true"></div>
+    <div class="cursor-dot" aria-hidden="true"></div>
+    <div class="cursor-ellipse" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="topbar">
+        <nav class="nav" aria-label="Primary navigation">
+          <a class="brand interactive" href="index.html#top" data-page-transition>
+            <span>MLK.STUDIO</span>
+          </a>
+          <div class="nav-menu">
+            <a href="index.html#services">
+              <span class="nav-link-mask">
+                <span class="nav-link-line" data-case-i18n="navServices">services</span>
+                <span class="nav-link-line" data-case-i18n="navServices">services</span>
+              </span>
+            </a>
+            <a href="index.html#about-us">
+              <span class="nav-link-mask">
+                <span class="nav-link-line" data-case-i18n="navAbout">about us</span>
+                <span class="nav-link-line" data-case-i18n="navAbout">about us</span>
+              </span>
+            </a>
+            <a href="index.html#team">
+              <span class="nav-link-mask">
+                <span class="nav-link-line" data-case-i18n="navTeam">team</span>
+                <span class="nav-link-line" data-case-i18n="navTeam">team</span>
+              </span>
+            </a>
+            <a href="index.html#works">
+              <span class="nav-link-mask">
+                <span class="nav-link-line" data-case-i18n="navWorks">our works</span>
+                <span class="nav-link-line" data-case-i18n="navWorks">our works</span>
+              </span>
+            </a>
+            <div class="language-switcher" aria-label="Language">
+              <button type="button" data-language="uk" aria-pressed="false">
+                <span class="nav-link-mask">
+                  <span class="nav-link-line">укр</span>
+                  <span class="nav-link-line">укр</span>
+                </span>
+              </button>
+              <span class="language-switcher__separator" aria-hidden="true">/</span>
+              <button type="button" data-language="en" aria-pressed="false">
+                <span class="nav-link-mask">
+                  <span class="nav-link-line">eng</span>
+                  <span class="nav-link-line">eng</span>
+                </span>
+              </button>
+            </div>
+            <a class="book" href="#" data-open-form>
+              <span class="nav-link-mask">
+                <span class="nav-link-line" data-case-i18n="navContact">contact us</span>
+                <span class="nav-link-line" data-case-i18n="navContact">contact us</span>
+              </span>
+            </a>
+          </div>
+          <button class="nav-toggle" type="button">
+            <span class="nav-link-mask">
+              <span class="nav-link-line" data-case-i18n="navMenu">menu</span>
+              <span class="nav-link-line" data-case-i18n="navMenu">menu</span>
+            </span>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <aside class="mobile-menu-modal" aria-hidden="true" aria-label="Mobile navigation">
+      <div class="mobile-menu-modal__panel">
+        <div class="mobile-menu-modal__top">
+          <a class="brand" href="index.html#top" data-page-transition>MLK.STUDIO</a>
+          <button class="mobile-menu-modal__close" type="button" aria-label="Close menu">
+            <img src="assets/cross.svg" alt="" aria-hidden="true" />
+          </button>
+        </div>
+
+        <nav class="mobile-menu-modal__links" aria-label="Mobile navigation links">
+          <a href="index.html#services"><span class="mobile-menu-modal__label" data-case-i18n="navServices">services</span></a>
+          <a href="index.html#about-us"><span class="mobile-menu-modal__label" data-case-i18n="navAbout">about us</span></a>
+          <a href="index.html#team"><span class="mobile-menu-modal__label" data-case-i18n="navTeam">team</span></a>
+          <a href="index.html#works"><span class="mobile-menu-modal__label" data-case-i18n="navWorks">our works</span></a>
+          <a href="#" data-open-form><span class="mobile-menu-modal__label" data-case-i18n="navContact">contact us</span></a>
+        </nav>
+
+        <div class="mobile-menu-modal__bottom">
+          <div class="language-switcher" aria-label="Language">
+            <button type="button" data-language="uk" aria-pressed="false">укр</button>
+            <span class="language-switcher__separator" aria-hidden="true">/</span>
+            <button type="button" data-language="en" aria-pressed="false">eng</button>
+          </div>
+          <div class="mobile-menu-modal__socials">
+            <a href="https://www.instagram.com/eugenemi/" target="_blank" rel="noopener noreferrer">instagram</a>
+            <a href="https://www.linkedin.com/in/yevhenii-milka-742434173" target="_blank" rel="noopener noreferrer">linkedin</a>
+            <a href="https://www.behance.net/eugenemilka" target="_blank" rel="noopener noreferrer">behance</a>
+            <a href="https://www.upwork.com/freelancers/~0120f121be81dd6bfc?mp_source=share" target="_blank" rel="noopener noreferrer">upwork</a>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="page-surface">
+      <main class="case-project" id="top">
+        <div class="case-project__layout">
+          <aside class="case-info">
+            <a class="case-back" href="index.html#works" data-page-transition>
+              <img class="case-back__icon" src="assets/caret-right.svg" alt="" aria-hidden="true" />
+              <span class="nav-link-mask">
+                <span class="nav-link-line" data-case-i18n="back">back</span>
+                <span class="nav-link-line" data-case-i18n="back">back</span>
+              </span>
+            </a>
+
+            <div class="case-info__copy">
+              <p class="case-kicker" data-case-i18n="caseKicker">Mobile app · SportsTech · iOS &amp; Android</p>
+              <h1 class="case-title" data-reveal data-reveal-on="load" data-case-i18n="caseTitle">Banana Padel</h1>
+              <p class="case-description" data-case-i18n="caseDescription">We designed and developed a complete digital product for organizing padel tournaments: iOS and Android apps, an administration panel and a marketing website.</p>
+
+              <dl class="case-meta">
+                <div>
+                  <dt data-case-i18n="projectLabel">project</dt>
+                  <dd><span data-case-i18n="projectValue">Banana Padel: Tournament App</span></dd>
+                </div>
+                <div>
+                  <dt data-case-i18n="toolsSkillsLabel">scope &amp; delivery</dt>
+                  <dd>
+                    <span data-case-i18n="delivery">UI/UX design · iOS &amp; Android development</span>
+                    <span data-case-i18n="skills">Administration panel · Marketing website</span>
+                  </dd>
+                </div>
+              </dl>
+
+              <div class="case-actions">
+                <button class="case-start corner-frame" type="button" data-open-form>
+                  <span class="btn__mask">
+                    <span class="btn__line" data-case-i18n="startProject">start your project</span>
+                    <span class="btn__line" data-case-i18n="startProject">start your project</span>
+                  </span>
+                </button>
+                <a class="social-link interactive case-visit" href="https://apps.apple.com/ua/app/banana-padel-tournament-app/id6759613693?l=ru" target="_blank" rel="noopener noreferrer" data-case-visit>
+                  <span class="social-link-mask">
+                    <span class="social-link-line" data-case-i18n="visitSite">View on App Store</span>
+                    <span class="social-link-line" data-case-i18n="visitSite">View on App Store</span>
+                  </span>
+                  <svg class="social-link__icon" viewBox="0 0 16 16" width="16" height="16" fill="none" aria-hidden="true" focusable="false">
+                    <path d="M6.5 2.5h-4v11h11v-4M9.5 2.5h4v4M13.5 2.5 7 9" stroke="currentColor" stroke-width="1.2" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </aside>
+
+          <div class="case-story">
+            <figure class="case-visual">
+              <img src="assets/banana-padel/cover.jpg" width="735" height="881" alt="Banana Padel mobile app cover with player profiles and tournament screens" data-case-i18n-alt="imageAlt" decoding="async" fetchpriority="high" />
+            </figure>
+            <section class="case-section" aria-labelledby="banana-product-title">
+              <p class="case-section__index" data-case-i18n="productIndex">01 — product design</p>
+              <h2 class="case-section__title" id="banana-product-title" data-case-i18n="productTitle">From tournament idea to a complete product</h2>
+              <p class="case-section__text" data-case-i18n="productText">We shaped the product around the needs of players and tournament organizers. User journeys, interface structure and a consistent visual system bring tournament setup, participation, player profiles and results into one connected experience.</p>
+            </section>
+            <section class="case-section" aria-labelledby="banana-mobile-title">
+              <p class="case-section__index" data-case-i18n="mobileIndex">02 — iOS &amp; Android</p>
+              <h2 class="case-section__title" id="banana-mobile-title" data-case-i18n="mobileTitle">The tournament in your pocket</h2>
+              <p class="case-section__text" data-case-i18n="mobileText">We designed and developed the mobile application for iOS and Android. The interface connects tournament discovery and participation with match information, scores and player ratings, keeping the experience consistent across both platforms.</p>
+            </section>
+            <section class="case-section" aria-labelledby="banana-admin-title">
+              <p class="case-section__index" data-case-i18n="adminIndex">03 — administration</p>
+              <h2 class="case-section__title" id="banana-admin-title" data-case-i18n="adminTitle">A dedicated space to manage the product</h2>
+              <p class="case-section__text" data-case-i18n="adminText">We designed and developed an administration panel for day-to-day product management. It gives the team a dedicated interface for managing the platform and supporting tournament operations.</p>
+            </section>
+            <section class="case-section" aria-labelledby="banana-website-title">
+              <p class="case-section__index" data-case-i18n="websiteIndex">04 — marketing website</p>
+              <h2 class="case-section__title" id="banana-website-title" data-case-i18n="websiteTitle">A clear introduction to Banana Padel</h2>
+              <p class="case-section__text" data-case-i18n="websiteText">We designed and developed a responsive marketing website that introduces the product, explains tournament formats and presents the key app features. Clear messaging and download paths guide visitors from discovering Banana Padel to installing the app.</p>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      <!-- Other cases: the open one is removed by case.js, the rest scroll sideways like Selected works. -->
+      <section class="works works--related" aria-labelledby="related-title">
+        <div class="works-inner">
+          <div class="works-head">
+            <p class="works-intro" data-case-i18n="relatedIntro">More projects from the portfolio, one click away.</p>
+            <h2 class="works-title" id="related-title" data-case-i18n="relatedTitle">You may also like</h2>
+          </div>
+        </div>
+        <div class="works-viewport">
+          <div class="works-track">
+            <article class="work-card" data-case-key="6">
+              <a class="work-card__link" href="case.html?project=6" data-page-transition aria-label="View Azerux case study">
+                <img src="assets/azerux/cover.jpg?v=20261029" alt="" loading="lazy" decoding="async" />
+              </a>
+            </article>
+            <article class="work-card" data-case-key="pandawin">
+              <a class="work-card__link" href="pandawin.html" data-page-transition aria-label="View PandaWin — Online Casino Platform case study">
+                <img src="assets/pandawin/cover.jpg?v=20261029" alt="" loading="lazy" decoding="async" />
+              </a>
+            </article>
+            <article class="work-card" data-case-key="banana-padel">
+              <a class="work-card__link" href="banana-padel.html" data-page-transition aria-label="View Banana Padel: Tournament App case study">
+                <img src="assets/banana-padel/cover.jpg" alt="" loading="lazy" decoding="async" />
+              </a>
+            </article>
+            <article class="work-card" data-case-key="1">
+              <a class="work-card__link" href="case.html?project=1" data-page-transition aria-label="View MR.BONE case study">
+                <img src="assets/work-case-1.jpg?v=20260719" alt="" loading="lazy" decoding="async" />
+              </a>
+            </article>
+            <article class="work-card" data-case-key="2">
+              <a class="work-card__link" href="case.html?project=2" data-page-transition aria-label="View Storm Traffic case study">
+                <img src="assets/work-case-2.jpg?v=20260719" alt="" loading="lazy" decoding="async" />
+              </a>
+            </article>
+            <article class="work-card" data-case-key="3">
+              <a class="work-card__link" href="case.html?project=3" data-page-transition aria-label="View Black Ring case study">
+                <img src="assets/work-case-3.jpg?v=20260719" alt="" loading="lazy" decoding="async" />
+              </a>
+            </article>
+            <article class="work-card" data-case-key="4">
+              <a class="work-card__link" href="case.html?project=4" data-page-transition aria-label="View Serenity case study">
+                <img src="assets/work-case-4.jpg?v=20260719" alt="" loading="lazy" decoding="async" />
+              </a>
+            </article>
+            <article class="work-card" data-case-key="5">
+              <a class="work-card__link" href="case.html?project=5" data-page-transition aria-label="View Kowalski &amp; Partners case study">
+                <img src="assets/work-case-5.jpg?v=20260719" alt="" loading="lazy" decoding="async" />
+              </a>
+            </article>
+            <article class="work-card work-card--cta">
+              <a class="work-card__cta" href="#" data-open-form><span data-case-i18n="worksCta">your project could be here</span></a>
+            </article>
+          </div>
+        </div>
+        <div class="works-inner works-bottom">
+          <div class="works-nav">
+            <button class="works-arrow works-arrow--prev" type="button" aria-label="Previous project">
+              <span class="works-arrow__icon" aria-hidden="true"></span>
+            </button>
+            <button class="works-arrow works-arrow--next" type="button" aria-label="Next project">
+              <span class="works-arrow__icon" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="pixels" aria-label="MLK.STUDIO">
+        <canvas class="pixels-canvas" aria-hidden="true"></canvas>
+      </section>
+    </div>
+
+    <section class="contact-cta">
+      <div class="contact-cta__inner">
+        <h2 class="contact-cta__title" data-reveal data-case-i18n-html="footerTitle">Still thinking?<br />Write to us right now!</h2>
+        <a class="contact-cta__button sp-box" href="#" data-open-form>
+          <span class="btn__mask">
+            <span class="btn__line" data-case-i18n="navContact">contact us</span>
+            <span class="btn__line" data-case-i18n="navContact">contact us</span>
+          </span>
+        </a>
+        <nav class="contact-cta__legal" aria-label="Legal">
+          <a href="privacy-policy/" data-case-i18n="privacyPolicy">Privacy Policy</a>
+          <a href="legal/" data-case-i18n="legalInformation">Legal Information</a>
+          <button class="contact-cta__cookies" type="button" data-cookie-settings data-case-i18n="cookieSettings">Cookie Settings</button>
+        </nav>
+      </div>
+    </section>
+
+    <aside class="case-offer" aria-hidden="true">
+      <div class="case-offer__copy">
+        <h2 class="case-offer__title" data-case-i18n="offerTitle">Like this project?</h2>
+        <p class="case-offer__description" data-case-i18n="offerDescription">
+          Let’s build something just as strong for you.
+        </p>
+      </div>
+      <div class="case-offer__controls">
+        <button class="case-offer__close" type="button" aria-label="Close">
+          <img src="assets/cross.svg" alt="" aria-hidden="true" />
+        </button>
+        <div class="case-offer__actions">
+          <button class="case-offer__button case-offer__button--primary" type="button" data-open-form>
+            <span class="nav-link-mask">
+              <span class="nav-link-line" data-case-i18n="startProject">start your project</span>
+              <span class="nav-link-line" data-case-i18n="startProject">start your project</span>
+            </span>
+          </button>
+          <a class="case-offer__button case-offer__button--secondary" href="https://apps.apple.com/ua/app/banana-padel-tournament-app/id6759613693?l=ru" target="_blank" rel="noopener noreferrer" data-case-visit>
+            <span class="nav-link-mask">
+              <span class="nav-link-line" data-case-i18n="visitSite">View on App Store</span>
+              <span class="nav-link-line" data-case-i18n="visitSite">View on App Store</span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <div class="form-modal" aria-hidden="true" aria-label="Project request" role="dialog" aria-modal="true">
+      <div class="form-modal__panel">
+        <header class="form-modal__header">
+          <div class="topbar">
+            <nav class="nav" aria-label="Modal navigation">
+              <a class="brand interactive" href="index.html#top">
+                <span>MLK.STUDIO</span>
+              </a>
+              <div class="nav-menu">
+                <a href="index.html#services">
+                  <span class="nav-link-mask">
+                    <span class="nav-link-line" data-case-i18n="navServices">services</span>
+                    <span class="nav-link-line" data-case-i18n="navServices">services</span>
+                  </span>
+                </a>
+                <a href="index.html#about-us">
+                  <span class="nav-link-mask">
+                    <span class="nav-link-line" data-case-i18n="navAbout">about us</span>
+                    <span class="nav-link-line" data-case-i18n="navAbout">about us</span>
+                  </span>
+                </a>
+                <a href="index.html#team">
+                  <span class="nav-link-mask">
+                    <span class="nav-link-line" data-case-i18n="navTeam">team</span>
+                    <span class="nav-link-line" data-case-i18n="navTeam">team</span>
+                  </span>
+                </a>
+                <a href="index.html#works">
+                  <span class="nav-link-mask">
+                    <span class="nav-link-line" data-case-i18n="navWorks">our works</span>
+                    <span class="nav-link-line" data-case-i18n="navWorks">our works</span>
+                  </span>
+                </a>
+                <div class="language-switcher" aria-label="Language">
+                  <button type="button" data-language="uk" aria-pressed="false">
+                    <span class="nav-link-mask">
+                      <span class="nav-link-line">укр</span>
+                      <span class="nav-link-line">укр</span>
+                    </span>
+                  </button>
+                  <span class="language-switcher__separator" aria-hidden="true">/</span>
+                  <button type="button" data-language="en" aria-pressed="false">
+                    <span class="nav-link-mask">
+                      <span class="nav-link-line">eng</span>
+                      <span class="nav-link-line">eng</span>
+                    </span>
+                  </button>
+                </div>
+                <span class="form-modal__contact-spacer" aria-hidden="true">contact us</span>
+              </div>
+              <button class="nav-toggle" type="button">
+                <span class="nav-link-mask">
+                  <span class="nav-link-line" data-case-i18n="navMenu">menu</span>
+                  <span class="nav-link-line" data-case-i18n="navMenu">menu</span>
+                </span>
+              </button>
+              <button class="form-modal__close" type="button" aria-label="Close">
+                <img src="assets/cross.svg" alt="" aria-hidden="true" />
+              </button>
+            </nav>
+          </div>
+        </header>
+
+        <div class="form-modal__media">
+          <nav class="form-modal__contacts" aria-label="Social media">
+            <a class="contact-tile contact-tile--email" style="--k: 0; --r: -2" href="mailto:mlkdesignweb@gmail.com" aria-label="Email, mlkdesignweb@gmail.com">
+              <svg class="contact-tile__icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M2 4h20v16H2V4Zm2 2v.38l8 5.2 8-5.2V6H4Zm16 2.77-8 5.2-8-5.2V18h16V8.77Z" />
+              </svg>
+              <span class="contact-tile__label">email</span>
+            </a>
+            <a class="contact-tile" style="--k: 3; --r: -2" href="https://www.instagram.com/eugenemi/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <svg class="contact-tile__icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M7.03.08c-1.28.06-2.15.27-2.91.57-.79.3-1.46.72-2.12 1.38C1.33 2.7.92 3.37.62 4.16.32 4.93.12 5.8.06 7.08 0 8.35-.01 8.76 0 12.02c0 3.26.02 3.67.08 4.95.06 1.27.27 2.15.57 2.91.3.79.72 1.46 1.39 2.12.67.67 1.34 1.08 2.13 1.38.76.3 1.64.5 2.91.56 1.28.06 1.69.07 4.95.06 3.26-.01 3.67-.02 4.95-.08 1.28-.06 2.15-.27 2.91-.57.79-.3 1.46-.72 2.12-1.38.67-.67 1.08-1.34 1.38-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.06-4.95 0-3.26-.02-3.67-.08-4.95-.06-1.28-.27-2.15-.57-2.91-.3-.79-.72-1.46-1.39-2.12C21.3 1.33 20.63.92 19.84.62 19.07.32 18.2.12 16.92.06 15.65.01 15.24 0 11.98 0 8.72.01 8.31.02 7.03.08m.14 21.7c-1.17-.05-1.81-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.42-2.23-.06-1.26-.07-1.64-.08-4.85 0-3.2.01-3.58.06-4.85.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.41-.42.81-.68 1.37-.9.43-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.08 3.2-.01 3.58 0 4.85.06 1.17.05 1.8.24 2.23.41.56.21.96.47 1.38.89.42.42.68.82.9 1.38.17.42.36 1.06.42 2.23.06 1.26.07 1.64.08 4.85 0 3.2-.01 3.58-.06 4.85-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.42-1.26.06-1.64.07-4.85.08-3.2 0-3.58-.01-4.85-.06M16.95 5.59a1.44 1.44 0 1 0 2.88 0 1.44 1.44 0 0 0-2.88 0M5.84 12.01a6.16 6.16 0 1 0 12.32-.02 6.16 6.16 0 0 0-12.32.02M8 12.01A4 4 0 1 1 12.01 16 4 4 0 0 1 8 12.01" />
+              </svg>
+              <span class="contact-tile__label">instagram</span>
+            </a>
+            <a class="contact-tile" style="--k: 1; --r: -1" href="https://www.linkedin.com/in/yevhenii-milka-742434173" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <svg class="contact-tile__icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.03-1.85-3.03-1.85 0-2.14 1.44-2.14 2.94v5.66H9.35V9h3.42v1.56h.04c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12Zm1.47 13.02H3.86V9h2.95v11.45ZM22.23 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45C23.2 24 24 23.23 24 22.27V1.73C24 .77 23.2 0 22.22 0h.01Z" />
+              </svg>
+              <span class="contact-tile__label">linkedin</span>
+            </a>
+            <a class="contact-tile" style="--k: 2; --r: 0" href="https://www.behance.net/eugenemilka" target="_blank" rel="noopener noreferrer" aria-label="Behance">
+              <svg class="contact-tile__icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M16.97 16.93a2.56 2.56 0 0 0 1.9.67 2.5 2.5 0 0 0 1.53-.47c.36-.24.64-.58.78-.99h2.59a5.1 5.1 0 0 1-1.9 2.9 5.29 5.29 0 0 1-3.1.88 5.84 5.84 0 0 1-2.28-.44 4.87 4.87 0 0 1-1.72-1.21 5.66 5.66 0 0 1-1.08-1.87 7.06 7.06 0 0 1-.39-2.4c0-.8.13-1.59.4-2.35a5.31 5.31 0 0 1 5.09-3.6 4.87 4.87 0 0 1 2.37.56c.66.36 1.23.87 1.67 1.49.44.65.76 1.37.94 2.13.2.82.27 1.67.21 2.51h-7.7c-.06.79.18 1.57.69 2.19ZM6.95 4.08c.65-.01 1.29.06 1.93.2.54.11 1.04.33 1.49.64.42.3.75.71.96 1.18.24.58.35 1.2.34 1.83a3.5 3.5 0 0 1-.51 1.96c-.37.56-.89 1-1.5 1.29.82.25 1.53.75 2.03 1.44.46.74.69 1.61.67 2.49a4.6 4.6 0 0 1-.43 2.03c-.27.56-.67 1.04-1.16 1.42-.51.38-1.08.65-1.68.8-.63.18-1.28.27-1.93.26H0V4.08h6.95Zm-.24 12.9c.31.01.62-.03.92-.1.28-.06.54-.17.76-.33.23-.16.42-.37.54-.62.14-.31.2-.66.19-1a2.08 2.08 0 0 0-.64-1.72 2.62 2.62 0 0 0-1.7-.5H3.24v4.27h3.47Zm13.64-5.96a2.13 2.13 0 0 0-1.66-.62 2.34 2.34 0 0 0-1.16.26c-.29.15-.54.36-.74.62-.18.24-.31.51-.39.79-.08.24-.12.49-.14.73h4.77c-.02-.66-.26-1.28-.68-1.78Zm-13.82-.65c.51.03 1.01-.13 1.43-.43.4-.35.61-.88.56-1.41.01-.31-.05-.61-.18-.9-.11-.22-.28-.4-.5-.53-.22-.13-.46-.22-.71-.27-.27-.06-.55-.08-.84-.08H3.24v3.63h3.29v-.01Zm15.09-5.25h-5.98v1.53h5.98V5.12Z" />
+              </svg>
+              <span class="contact-tile__label">behance</span>
+            </a>
+            <a class="contact-tile" style="--k: 0; --r: 0" href="https://www.upwork.com/freelancers/~0120f121be81dd6bfc?mp_source=share" target="_blank" rel="noopener noreferrer" aria-label="Upwork">
+              <svg class="contact-tile__icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M18.56 13.16c-1.1 0-2.13-.47-3.07-1.23l.23-1.08.01-.04c.2-1.14.84-3.06 2.83-3.06a2.7 2.7 0 1 1 0 5.41Zm0-8.14c-2.54 0-4.51 1.65-5.31 4.36-1.22-1.83-2.15-4.03-2.69-5.89H7.83v7.11a2.55 2.55 0 0 1-5.09 0V3.49H0v7.11a5.3 5.3 0 0 0 10.56 0V9.41c.53 1.11 1.18 2.23 1.98 3.22l-1.68 7.88h2.8l1.21-5.71a6.8 6.8 0 0 0 3.69 1.11A5.45 5.45 0 1 0 18.56 5.02Z" />
+              </svg>
+              <span class="contact-tile__label">upwork</span>
+            </a>
+            <a class="contact-tile contact-tile--telegram" style="--k: 3; --r: 1" href="https://t.me/EugeneMilka" target="_blank" rel="noopener noreferrer" aria-label="Contact us on Telegram, @EugeneMilka">
+              <svg class="contact-tile__icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M11.94 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0h-.06Zm4.97 7.22c.1 0 .32.03.46.14.12.1.16.23.17.33.02.09.04.3.02.47-.18 1.9-.96 6.5-1.36 8.63-.17.9-.5 1.2-.82 1.23-.7.06-1.22-.46-1.9-.9-1.05-.7-1.65-1.13-2.68-1.8-1.18-.78-.41-1.21.26-1.91.18-.18 3.25-2.98 3.31-3.23.01-.03.01-.15-.06-.21s-.17-.04-.25-.02c-.1.02-1.79 1.14-5.06 3.34-.48.33-.91.49-1.3.48-.43-.01-1.25-.24-1.87-.44-.75-.24-1.35-.37-1.3-.79.03-.21.33-.43.9-.66 3.5-1.52 5.83-2.53 7-3.01 3.33-1.39 4.02-1.63 4.48-1.64Z" />
+              </svg>
+              <span class="contact-tile__label">telegram</span>
+            </a>
+            <a class="contact-tile contact-tile--whatsapp" style="--k: 1; --r: 2" href="https://wa.me/380738265354" target="_blank" rel="noopener noreferrer" aria-label="Contact us on WhatsApp, +380 73 826 53 54">
+              <svg class="contact-tile__icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.96-.27-.1-.47-.15-.67.15-.2.29-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.18-.3-.02-.46.13-.61.13-.13.3-.34.44-.52.15-.17.2-.3.3-.49.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.91-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.08-.79.38-.27.29-1.04 1.01-1.04 2.47 0 1.47 1.06 2.88 1.21 3.08.15.2 2.1 3.2 5.08 4.48.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.12-.27-.2-.57-.34m-5.42 7.4h-.01a9.87 9.87 0 0 1-5.03-1.37l-.36-.22-3.74.99 1-3.65-.24-.38a9.86 9.86 0 0 1-1.51-5.26A9.9 9.9 0 0 1 12.06 2a9.82 9.82 0 0 1 9.87 9.9c0 5.45-4.44 9.88-9.88 9.88m8.41-18.29A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.69 1.45c6.55 0 11.89-5.34 11.89-11.9 0-3.17-1.23-6.15-3.48-8.41Z" />
+              </svg>
+              <span class="contact-tile__label">whatsapp</span>
+            </a>
+          </nav>
+        </div>
+
+        <div class="form-modal__side">
+          <form
+            class="request-form"
+            data-clarity-mask="true"
+            action="https://formspree.io/f/meaajpvl"
+            method="POST"
+            aria-describedby="case-request-status case-request-notice"
+            novalidate
+          >
+            <input type="hidden" name="_subject" value="New project request from MLK.STUDIO" />
+            <div class="request-form__row">
+              <label class="request-field" for="case-request-name">
+                <span data-case-i18n="formName">name</span>
+                <input id="case-request-name" name="name" type="text" autocomplete="name" required />
+              </label>
+
+              <label class="request-field" for="case-request-email">
+                <span data-case-i18n="formEmail">email</span>
+                <input id="case-request-email" name="email" type="email" autocomplete="email" required />
+              </label>
+            </div>
+
+            <label class="request-field" for="case-request-details">
+              <span data-case-i18n="formDetails">project details</span>
+              <textarea id="case-request-details" name="details" rows="5" required></textarea>
+            </label>
+
+            <div class="request-form__submit">
+              <button class="request-btn sp-box" type="submit">
+                <span class="btn__mask">
+                  <span class="btn__line" data-case-i18n="formRequest">request</span>
+                  <span class="btn__line" data-case-i18n="formRequest">request</span>
+                </span>
+              </button>
+              <div class="request-form__aside">
+                <p id="case-request-notice" class="request-form__notice" data-case-i18n-html="formNotice">Your information will be used to respond to your inquiry. Learn more in our <a href="privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>
+                <p id="case-request-status" class="request-form__status" role="status" aria-live="polite"></p>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="case.js?v=20261128-banana-padel"></script>
+    <script src="cookies.js?v=20261103" defer></script>
+  </body>
+</html>

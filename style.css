@@ -1729,6 +1729,10 @@ h1 {
   transition-delay: 0.63s;
 }
 
+.work-card:nth-child(9) {
+  transition-delay: 0.72s;
+}
+
 .work-card.is-in {
   opacity: 1;
   transform: none;
