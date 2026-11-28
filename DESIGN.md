@@ -84,4 +84,4 @@
 
 - Studio website only for now. Add Banana Padel as the third Selected works card and the third entry in related projects, keeping the existing portfolio layout and transitions.
 - Use the supplied portrait cover as-is. The case uses the existing sticky information column and long-form story styles, with English and Ukrainian copy covering product design, iOS/Android development, the admin panel and marketing website. Add screenshots later; do not fabricate them or invent technology choices or delivery metrics.
-- Both project destination buttons say View on App Store (localized in Ukrainian) and open the owner-supplied Apple listing, never the marketing website. Keep a static canonical URL, project metadata and image description.
+- The main case action says View on App Store (localized in Ukrainian) and opens the owner-supplied Apple listing. The floating offer action says visit this site and opens https://banana-padel.com. Keep a static canonical URL, project metadata and image description.
